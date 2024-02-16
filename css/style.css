@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'uni_sansheavy_caps';
-    src: url('/fonts/Uni\ Sans\ Heavy.otf') format('opentype'),
-        url('/fonts/Uni\ Sans\ Thin.otf') format('opentype');
+    src: url('/fonts/Uni_Sans_Heavy.otf') format('opentype'),
+        url('/fonts/Uni_Sans_Thin.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 
@@ -331,6 +331,10 @@ section#company-info p {
     justify-content: space-between;
 }
 
+.info-wrapper img {
+    width: 50%;
+}
+
 section#company-info iframe {
     width: 100%;
     height: 50vh;
@@ -339,6 +343,10 @@ section#company-info iframe {
 .socials {
     display: flex;
     justify-content: space-between;
+}
+
+.socials img {
+    width: 50%;
 }
 
 .socialswrapper {
