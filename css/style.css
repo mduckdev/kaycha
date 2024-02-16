@@ -15,7 +15,9 @@
     --black: rgba(0, 0, 0, 1);
     --transparent-black: rgba(0, 0, 0, 0.6);
     --transition-time: 150ms;
-    --yellow-icon: invert(79%) sepia(62%) saturate(941%) hue-rotate(354deg) brightness(100%) contrast(108%);
+    --yellow-filter: invert(79%) sepia(62%) saturate(941%) hue-rotate(354deg) brightness(100%) contrast(108%);
+    --yellow-filter-dim: invert(78%) sepia(31%) saturate(6632%) hue-rotate(12deg) brightness(102%) contrast(99%);
+    ;
     /* check https://codepen.io/sosuke/pen/Pjoqqp how it was generated */
 }
 
@@ -74,9 +76,10 @@ nav div.navigation-buttons a:hover {
     color: var(--yellow-dim);
 }
 
-#navigation .yellowbar {
+.yellowbar {
+    margin-top: 15px;
     height: 9px;
-    background-color: var(--yellow-dim);
+    background-color: var(--yellow);
     width: 100%;
 }
 
@@ -154,7 +157,7 @@ section.about-us div.pictogram-container {
 }
 
 section.about-us img {
-    filter: var(--yellow-icon);
+    filter: var(--yellow-filter);
     /* check https://codepen.io/sosuke/pen/Pjoqqp how it was generated */
     max-width: 100%;
 }
@@ -213,6 +216,7 @@ section.interested-in h3 {
 }
 
 .gallery-item img {
+    filter: sepia(0.7) saturate(3);
     width: 80%;
     height: 80%;
     object-fit: cover;
@@ -270,4 +274,98 @@ div.services-gallery img {
 
 div.services-description p {
     padding: 0 35px;
+}
+
+#contactForm {
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    width: 50%;
+}
+
+#contactForm input,
+#contactForm textarea {
+    border: none;
+    outline: none;
+    padding: 15px 0;
+    width: 100%;
+    transition: var(--transition-time);
+    text-indent: 10px;
+}
+
+#contactForm input::placeholder,
+#contactForm textarea::placeholder {
+    font-family: "Roboto", sans-serif;
+    font-size: 1.3em;
+}
+
+#contactForm button {
+    font-family: "uni_sansheavy_caps";
+    border: none;
+    border-radius: 10px;
+    background-color: var(--yellow);
+    padding: 15px;
+    font-size: 1.3em;
+    width: 100%;
+    transition: var(--transition-time);
+}
+
+#contactForm button:hover {
+    cursor: pointer;
+    background-color: var(--yellow-dim);
+}
+
+section#company-info p {
+    color: white;
+}
+
+.info-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 150%;
+    justify-content: space-between;
+}
+
+section#company-info iframe {
+    width: 100%;
+    height: 50vh;
+}
+
+.socials {
+    display: flex;
+    justify-content: space-between;
+}
+
+.socialswrapper {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    height: 300px;
+}
+
+.socialswrapper a {
+    margin-right: 30px;
+    width: 10%;
+}
+
+.socialswrapper img {
+    filter: var(--yellow-filter);
+    width: 100%;
+}
+
+.socialswrapper img:hover {
+    cursor: pointer;
+    filter: var(--yellow-filter-dim)
+}
+
+footer p {
+    color: white;
+    text-align: center;
+    font-size: 1.5em;
 }
