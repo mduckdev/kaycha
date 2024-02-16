@@ -342,8 +342,8 @@ section#company-info iframe {
     justify-content: space-between;
 }
 
-.socials img {
-    width: 50%;
+.socials>img {
+    width: 50vw;
 }
 
 .socialswrapper {
