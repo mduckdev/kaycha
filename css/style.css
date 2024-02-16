@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'uni_sansheavy_caps';
-    src: url('/fonts/Uni_Sans_Heavy.otf') format('opentype'),
-        url('/fonts/Uni_Sans_Thin.otf') format('opentype');
+    src: url('./fonts/Uni_Sans_Heavy.otf') format('opentype'),
+        url('./fonts/Uni_Sans_Thin.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 
@@ -92,7 +92,7 @@ section.welcome {
 }
 
 section.welcome {
-    background: url("/img/welcome-background.jpg");
+    background: url("./img/welcome-background.jpg");
     background-size: cover;
     height: 70vh;
 }
@@ -230,9 +230,6 @@ section.interested-in h3 {
     font-size: 1.25em;
 }
 
-#item-8 {
-    background: url("/img/gallery-8.jpg");
-}
 
 section#selling h2 {
     margin-top: 25px;
