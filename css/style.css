@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'uni_sansheavy_caps';
-    src: url('./fonts/Uni_Sans_Heavy.otf') format('opentype'),
-        url('./fonts/Uni_Sans_Thin.otf') format('opentype');
+    src: url('../fonts/Uni_Sans_Heavy.otf') format('opentype'),
+        url('../fonts/Uni_Sans_Thin.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 
