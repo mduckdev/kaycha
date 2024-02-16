@@ -7,6 +7,7 @@
 
 }
 
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 :root {
@@ -24,6 +25,11 @@
 * {
     margin: 0;
     padding: 0;
+}
+
+p {
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 h2 {
@@ -44,6 +50,15 @@ body {
 
 html {
     scroll-behavior: smooth;
+}
+
+section#navigation {
+    background-color: var(--black);
+    position: -webkit-sticky;
+    /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10000
 }
 
 .container {
@@ -138,9 +153,7 @@ section.welcome p {
 }
 
 section.about-us {
-    height: 35vh;
-    margin-top: 5vh;
-
+    margin-top: 25px;
 }
 
 
@@ -149,35 +162,55 @@ section.about-us div.pictograms-container {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: 10%;
+    gap: 5vw;
 }
 
 section.about-us div.pictogram-container {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 section.about-us img {
     filter: var(--yellow-filter);
     /* check https://codepen.io/sosuke/pen/Pjoqqp how it was generated */
-    max-width: 100%;
+    height: 8vw;
+    aspect-ratio: 1/1;
 }
 
 section.about-us p {
     margin-top: 10px;
     color: white;
     text-align: center;
+    font-size: 1.55em;
 }
 
 div#truck-icon {
     flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+div#truck-icon img {
+    margin-right: auto;
+    margin-left: auto;
+    aspect-ratio: 2/1;
     /*truck icon is not square so to make it bigger flex-grow is increased*/
 }
+
+
 
 section#buying p {
     font-family: "Roboto", sans-serif;
     margin-top: 25px;
     color: white;
     font-size: 2em;
+}
+
+section#buying>h2>p {
+    margin-top: 15px;
 }
 
 .img-wrapper {
@@ -197,7 +230,7 @@ section.interested-in {
 }
 
 section.interested-in h3 {
-    margin-top: 20px;
+    padding: 25px 0;
 }
 
 
@@ -211,7 +244,7 @@ section.interested-in h3 {
 .gallery-item {
     width: 20%;
     aspect-ratio: 1/1;
-    margin: 10px;
+    margin: 20px 10px;
     text-align: center;
 }
 
@@ -227,11 +260,14 @@ section.interested-in h3 {
 .gallery-item p {
     margin: 15px 0 0;
     color: var(--black);
-    font-size: 1.25em;
+    font-size: 1.75vw;
 }
 
 
-section#selling h2 {
+section#selling h2,
+section#offer h2,
+section#services h2,
+section#contact h2 {
     margin-top: 25px;
 
 }
@@ -316,11 +352,14 @@ div.services-description p {
     background-color: var(--yellow-dim);
 }
 
+
+
 section#company-info p {
     color: white;
 }
 
 .info-wrapper {
+    margin: 25px 0;
     width: 100%;
     display: flex;
     align-items: center;
@@ -373,4 +412,13 @@ footer p {
     color: white;
     text-align: center;
     font-size: 1.5em;
+}
+
+
+@media (max-width:1211px) {
+    .container {
+        width: 95%;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
