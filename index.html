@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
+    <script src="./js/scroll.js" defer></script>
+    <script src="./js/menu.js" defer></script>
     <title>KAYCHA HEAVY EQUIPMENT</title>
 </head>
 
@@ -13,14 +15,21 @@
     <section id="navigation">
         <div class="container">
             <nav class="navigation-bar">
-                <img src="./img/logo_kaycha_800x300.jpg" alt="Logo KAYCHA" srcset="" width="350">
-                <div class="navigation-buttons">
-                    <a href="#buying">SKUP</a>
-                    <a href="#selling">SPRZEDAŻ</a>
-                    <a href="#offer">OFERTA</a>
-                    <a href="#services">USŁUGI</a>
-                    <a href="#contact">KONTAKT</a>
-                </div>
+                <img onclick="topFunction()" src="./img/logo_kaycha_800x300.jpg" alt="Logo KAYCHA" srcset=""
+                    width="350">
+
+                <input id="menu-toggle" type="checkbox" />
+                <label class='menu-button-container' for="menu-toggle">
+                    <div class="burger-button">
+                    </div>
+                </label>
+                <ul class="navigation-buttons">
+                    <li><a href="#buying">SKUP</a></li>
+                    <li><a href="#selling">SPRZEDAŻ</a></li>
+                    <li><a href="#offer">OFERTA</a></li>
+                    <li><a href="#services">USŁUGI</a></li>
+                    <li><a href="#contact">KONTAKT</a></li>
+                </ul>
             </nav>
         </div>
         <div class="yellowbar"></div>

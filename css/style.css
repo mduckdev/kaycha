@@ -20,6 +20,7 @@
     --yellow-filter-dim: invert(78%) sepia(31%) saturate(6632%) hue-rotate(12deg) brightness(102%) contrast(99%);
     ;
     /* check https://codepen.io/sosuke/pen/Pjoqqp how it was generated */
+    --burger-button-line-height: 4px;
 }
 
 * {
@@ -67,18 +68,24 @@ section#navigation {
     margin-right: auto;
 }
 
-nav {
+nav.navigation-bar {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
-nav div.navigation-buttons {
+nav.navigation-bar img:hover {
+    cursor: pointer;
+}
+
+
+nav ul.navigation-buttons {
     display: flex;
     gap: 10px;
     align-items: center;
 }
 
-nav div.navigation-buttons a {
+nav ul.navigation-buttons a {
     text-decoration: none;
     color: white;
     font-family: "uni_sansheavy_caps";
@@ -87,8 +94,59 @@ nav div.navigation-buttons a {
     transition: var(--transition-time);
 }
 
-nav div.navigation-buttons a:hover {
+nav ul.navigation-buttons a:hover {
     color: var(--yellow-dim);
+}
+
+.burger-button,
+.burger-button::before,
+.burger-button::after {
+    display: block;
+    background-color: #fff;
+    position: absolute;
+    height: var(--burger-button-line-height);
+    width: 30px;
+    transition: transform 400ms cubic-bezier(0.23, 1, 0.32, 1);
+    border-radius: calc(var(--burger-button-line-height)/2);
+}
+
+.burger-button::before {
+    content: '';
+    margin-top: calc(-2*var(--burger-button-line-height));
+}
+
+.burger-button::after {
+    content: '';
+    margin-top: calc(2*var(--burger-button-line-height));
+}
+
+.menu-button-container {
+    margin: 0px 20px;
+    display: none;
+    height: calc(5*var(--burger-button-line-height));
+    width: 30px;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#menu-toggle {
+    display: none;
+}
+
+#menu-toggle:checked+.menu-button-container .burger-button::before {
+    margin-top: 0px;
+    transform: rotate(405deg);
+}
+
+#menu-toggle:checked+.menu-button-container .burger-button {
+    background: rgba(255, 255, 255, 0);
+}
+
+#menu-toggle:checked+.menu-button-container .burger-button::after {
+    margin-top: 0px;
+    transform: rotate(-405deg);
 }
 
 .yellowbar {
@@ -109,6 +167,7 @@ section.welcome {
 section.welcome {
     background: url("../img/welcome-background.jpg");
     background-size: cover;
+    background-position: center;
     height: 70vh;
 }
 
@@ -204,7 +263,7 @@ div#truck-icon img {
 
 section#buying p {
     font-family: "Roboto", sans-serif;
-    margin-top: 25px;
+    margin-bottom: 25px;
     color: white;
     font-size: 2em;
 }
@@ -258,9 +317,10 @@ section.interested-in h3 {
 }
 
 .gallery-item p {
+    text-align: center;
     margin: 15px 0 0;
     color: var(--black);
-    font-size: 1.75vw;
+    font-size: 1.55vw;
 }
 
 
@@ -420,5 +480,93 @@ footer p {
         width: 95%;
         margin-left: auto;
         margin-right: auto;
+    }
+}
+
+@media (max-width:1045px) {
+    section.about-us div.pictograms-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    section.about-us img {
+        height: 16vw;
+    }
+
+    .gallery-item p {
+        font-size: 2vw;
+    }
+}
+
+@media (max-width:860px) {
+
+    nav.navigation-bar {
+        flex-wrap: wrap;
+        position: relative;
+    }
+
+    .container {
+        width: 95%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    section#navigation .container {
+        width: 100%;
+    }
+
+    .menu-button-container {
+        display: flex;
+    }
+
+    nav.navigation-bar .navigation-buttons {
+        gap: 0px;
+        position: absolute;
+        top: 118%;
+        right: 0px;
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #menu-toggle~.navigation-buttons li {
+        display: none;
+        height: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        transition: height 400ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    #menu-toggle:checked~.navigation-buttons li {
+        margin-left: 0.7em;
+        display: block;
+        border-bottom: 1px solid white;
+        height: 2.5em;
+        padding: 0.5em;
+        transition: height 400ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+
+
+    .navigation-buttons>li {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 0.5em 0;
+        width: 100%;
+        color: white;
+        background-color: var(--black);
+    }
+
+    .navigation-buttons>li:not(:last-child) {
+        border-bottom: 1px solid #444;
+    }
+}
+
+@media (max-width:420px) {
+    nav.navigation-bar .navigation-buttons {
+        top: 116%;
     }
 }
