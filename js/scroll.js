@@ -14,3 +14,13 @@ const topFunction = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 }
+
+const scrollToSection = (sectionID) => {
+    const section = document.getElementById(sectionID);
+    const stickyMenuHeight = document.getElementById('navigation').offsetHeight;
+
+    if (section) {
+        const targetScrollPosition = section.offsetTop - stickyMenuHeight - 5;
+        window.scrollTo(0, targetScrollPosition);
+    }
+}

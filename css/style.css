@@ -96,6 +96,7 @@ nav ul.navigation-buttons a {
 
 nav ul.navigation-buttons a:hover {
     color: var(--yellow-dim);
+    cursor: pointer;
 }
 
 .burger-button,
