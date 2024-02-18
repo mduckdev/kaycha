@@ -10,6 +10,17 @@ module.exports = {
             errorCaptcha: "Wystąpił błąd podczas weryfikacji hCaptcha."
         }
     },
+    getAsync: (sql, params = [], db) => {
+        return new Promise((resolve, reject) => {
+            db.get(sql, params, (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            });
+        });
+    },
 
 
     validateContactForm: async (body, language, captchaSecretKey) => {
@@ -21,7 +32,7 @@ module.exports = {
             errorMessages: []
         }
 
-        if (!firstName || !lastName || !phoneNumber || !email || !city || !street || !homeNumber || !message) {
+        if (!firstName || !lastName || !phoneNumber || !email || !city || !street || !homeNumber || !message || !consent) {
             response.isValid = false;
             response.errorMessages.push(module.exports.dict[language].allFieldsRequired);
             return response;
@@ -50,7 +61,6 @@ module.exports = {
 
             const verificationResponse = await axios.post('https://hcaptcha.com/siteverify', params);
 
-            console.log(verificationResponse, params);
             if (!verificationResponse.data.success) {
                 response.isValid = false;
                 response.errorMessages.push(module.exports.dict[language].incorrectCaptcha);
@@ -64,10 +74,14 @@ module.exports = {
         return response;
     },
 
-    setupDB: (db) => {
+    setupDB: (db, username, password) => {
         db.serialize(() => {
-            db.run('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, firstName TEXT,lastName TEXT,phoneNumber TEXT, email TEXT,city TEXT,street TEXT,homeNumber TEXT,message TEXT)');
-            db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username VARCHAR(30),password VARCHAR(150))');
+            db.run('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, firstName VARCHAR(30),lastName VARCHAR(30),phoneNumber VARCHAR(15), email VARCHAR(50),city VARCHAR(30),street VARCHAR(30),homeNumber VARCHAR(5),message VARCHAR(2000))');
+            db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username VARCHAR(30) UNIQUE,password VARCHAR(150))');
+            if (!module.exports.getAsync("SELECT * FROM users WHERE username=?", [username], db)) {
+                db.run('INSERT INTO users(username,password) VALUES (?,?)', [username, password]);
+            }
+
         });
     }
 
