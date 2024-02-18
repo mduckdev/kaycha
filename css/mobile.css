@@ -77,7 +77,7 @@
     nav.navigation-bar .navigation-buttons {
         gap: 0px;
         position: absolute;
-        top: 118%;
+        top: 122%;
         right: 0px;
         flex-direction: column;
         width: 100%;
@@ -125,9 +125,12 @@
     }
 
     div.services-gallery {
-        width: 60%;
+        width: 75%;
     }
 
+    div.services-gallery p {
+        text-align: center;
+    }
 
 
     /* 860px */
@@ -203,13 +206,13 @@
     }
 
     section#buying p,
-    section#selling p {
+    section#selling p,
+    section#services div.services-description p,
+    section#offer p {
         font-size: 1.25em;
     }
 
-    section#services div.services-description p {
-        font-size: 1.3em;
-    }
+
 
     .info-wrapper {
         font-size: 1.3em;
