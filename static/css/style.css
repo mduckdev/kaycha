@@ -479,6 +479,7 @@ section#company-info iframe {
 
 .socials>img {
     width: 50vw;
+    aspect-ratio: 16/8;
 }
 
 .socialswrapper {

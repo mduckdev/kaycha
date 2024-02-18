@@ -1,0 +1,26 @@
+{
+  "name": "kaycha",
+  "version": "1.0.0",
+  "description": "Kaycha heavy equipment website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "excavators",
+    "heavy",
+    "machinery",
+    "heavy",
+    "equipment",
+    "trucks"
+  ],
+  "author": "mduckdev,kaycha",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
