@@ -22,6 +22,7 @@
 
 
 
+
     <title>KAYCHA HEAVY EQUIPMENT</title>
 </head>
 
@@ -224,9 +225,18 @@
                 <input required type="text" name="city" id="city" placeholder="Miejscowość:">
                 <input required type="text" name="street" id="street" placeholder="Ulica:">
                 <input required type="text" name="homeNumber" id="homeNumber" placeholder="Nr domu/mieszkania:">
-
-
                 <textarea name="message" id="message" cols="30" rows="10" placeholder="Treść wiadomości:"></textarea>
+                <div id="consent-checkbox">
+                    <input type="checkbox" id="consent" name="consent">
+                    <label for="consent">
+                        Wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie z
+                        <a href="./privacy-policy.txt" target="_blank">Polityką Prywatności</a>.
+                    </label>
+                </div>
+                <div class="h-captcha" data-sitekey="34c171cb-4ed8-4c0c-87e9-5623e4dde13b"></div>
+                <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+
+
                 <button type="submit">WYŚLIJ</button>
             </form>
             <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.19/build/js/intlTelInput.min.js"></script>
@@ -276,6 +286,7 @@
                 <!--items use flex-direction:row-reverse so they show in reverse on website-->
             </div>
         </div>
+        <p><a href="./privacy-policy.txt">Polityka prywatności</a></p>
         <p>Copyright KAYCHA & mduckdev 2024</p>
     </footer>
 

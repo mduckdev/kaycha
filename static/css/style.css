@@ -80,6 +80,7 @@ nav.navigation-bar img:hover {
 
 
 nav ul.navigation-buttons {
+    list-style-type: none;
     display: flex;
     gap: 10px;
     align-items: center;
@@ -398,6 +399,19 @@ div.services-description p {
     text-indent: 1em each-line;
 }
 
+#contact-form a,
+#contact-form label {
+    color: white
+}
+
+#contact-form div#consent-checkbox {
+    display: flex;
+}
+
+#contact-form div#consent-checkbox input {
+    width: 25%;
+}
+
 div.iti {
     width: 100%;
 }
@@ -510,4 +524,17 @@ footer p {
     color: white;
     text-align: center;
     font-size: 1.5em;
+}
+
+footer a {
+    color: white;
+}
+
+@media (min-width:1920px) {
+
+    section.welcome p {
+        text-align: left;
+        font-size: 1.75cqw;
+        margin: 0.4em 0;
+    }
 }

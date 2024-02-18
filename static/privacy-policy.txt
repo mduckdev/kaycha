@@ -1,0 +1,98 @@
+[PL]
+Polityka prywatności
+
+Data wejścia w życie: [Data]
+
+Dziękujemy za odwiedzenie naszej strony internetowej. Niniejsza polityka prywatności opisuje, jak zbieramy, używamy i przechowujemy dane osobowe zebrane podczas korzystania z naszej witryny.
+1. Dane zbierane przez formularz kontaktowy
+
+Gdy korzystasz z formularza kontaktowego na naszej stronie, prosimy o podanie następujących danych:
+
+    Imię i nazwisko
+    Adres
+    Adres e-mail
+    Numer telefonu
+    Treść wiadomości
+
+2. Cel zbierania danych
+
+Zebrane dane osobowe są wykorzystywane wyłącznie w celu udzielenia odpowiedzi na Twoje zapytanie lub dostarczenia informacji, o którą prosiłeś/aś. Dodatkowo, mogą być używane w celu późniejszej komunikacji dotyczącej naszych usług, aktualizacji lub informacji marketingowych (o ile wyraziłeś/aś na to zgodę).
+3. Przechowywanie danych
+
+Zebrane dane z formularza kontaktowego są przechowywane w naszej bazie danych w celu skutecznej obsługi Twojego zapytania. Dbamy o bezpieczeństwo tych danych i nie udostępniamy ich stronom trzecim bez Twojej zgody, z wyjątkiem sytuacji wynikających z obowiązujących przepisów prawa.
+
+4. reCAPTCHA
+
+Korzystamy z usługi reCAPTCHA od Google w celu zabezpieczenia formularzy przed automatycznym spamem. W trakcie korzystania z formularzy, reCAPTCHA może zbierać dane w celu oceny, czy użytkownik jest człowiekiem czy botem. W przypadku korzystania z reCAPTCHA, obowiązują [Warunki korzystania z reCAPTCHA](https://policies.google.com/terms?hl=en) oraz [Polityka prywatności Google](https://policies.google.com/privacy?hl=en).
+5. Mapa Google
+
+Na naszej stronie internetowej może być umieszczona mapa Google. Mapa ta nie używa plików cookie do zbierania danych. Jednakże, korzystanie z mapy podlega Polityce prywatności Google.
+6. Pliki cookie
+
+Nasza strona internetowa nie używa plików cookie do celów śledzenia użytkowników. Jednakże, możemy korzystać z narzędzi analizy ruchu bez przechowywania plików cookie w celu zbierania anonimowych informacji statystycznych.
+7. Udostępnianie danych
+
+Nie udostępniamy, nie sprzedajemy ani nie wymieniamy Twoich danych osobowych z innymi firmami lub stronom trzecimi bez Twojej zgody, z wyjątkiem sytuacji wynikających z obowiązujących przepisów prawa.
+8. Twoje prawa
+
+Masz prawo do dostępu do swoich danych osobowych, ich poprawiania, usuwania lub ograniczania przetwarzania. Masz również prawo do wniesienia skargi do organu nadzorczego ds. ochrony danych.
+9. Zmiany w polityce prywatności
+
+Zastrzegamy sobie prawo do wprowadzania zmian w niniejszej polityce prywatności. Aktualizacje będą publikowane na tej stronie, a data wejścia w życie zostanie zaktualizowana.
+9. Kontakt
+
+W przypadku pytań dotyczących niniejszej polityki prywatności prosimy o kontakt pod adresem [Twój adres e-mail].
+
+[Twoja firma/strona]
+[Adres]
+[Telefon]
+
+[EN]
+
+Privacy Policy
+
+Effective Date: [Date].
+
+Thank you for visiting our website. This privacy policy describes how we collect, use and store personal information collected when you use our website.
+1. data collected through the contact form
+
+When you use the contact form on our website, we ask you to provide the following data:
+
+    First and Last Name
+    Address
+    E-mail address
+    Phone number
+    Content of the message
+
+2 Purpose of data collection
+
+The personal data collected is used solely for the purpose of responding to your inquiry or providing the information you requested. In addition, they may be used for subsequent communication regarding our services, updates or marketing information (as long as you have given your consent).
+3 Data storage
+
+The collected data from the contact form is stored in our database in order to effectively handle your inquiry. We take care of the security of this data and do not share it with third parties without your consent, except under applicable law.
+4. reCAPTCHA
+
+We use the reCAPTCHA service from Google to protect forms from automated spam. When you use the forms, reCAPTCHA may collect data to assess whether you are a human or a bot. When using reCAPTCHA, the [Terms of Use of reCAPTCHA](https://policies.google.com/terms?hl=en) and [Google Privacy Policy](https://policies.google.com/privacy?hl=en) apply.
+
+5 Google Map
+
+Our website may include a Google map. This map does not use cookies to collect data. However, use of the map is subject to Google's Privacy Policy.
+6 Cookies
+
+Our website does not use cookies to track users. However, we may use traffic analysis tools without storing cookies to collect anonymous statistical information.
+7 Data Sharing
+
+We do not share, sell or exchange your personal data with other companies or third parties without your consent, except under applicable law.
+8 Your rights
+
+You have the right to access, correct, delete or limit the processing of your personal data. You also have the right to lodge a complaint with the data protection supervisory authority.
+9. changes to the privacy policy
+
+We reserve the right to make changes to this privacy policy. Updates will be posted on this page and the effective date will be updated.
+10 Contact.
+
+If you have any questions about this privacy policy, please contact us at [your email address].
+
+[Your company/website].
+[Address].
+[Phone].

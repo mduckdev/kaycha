@@ -6,3 +6,7 @@
 //     const googleMapsIframe = document.getElementById("google-maps-iframe");
 //     googleMapsIframe.setAttribute("style", "width:0px;height:0px;display:none");
 // }
+
+const renderCaptcha = () => {
+
+}
