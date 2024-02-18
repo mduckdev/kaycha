@@ -21,9 +21,9 @@ Zebrane dane osobowe są wykorzystywane wyłącznie w celu udzielenia odpowiedzi
 
 Zebrane dane z formularza kontaktowego są przechowywane w naszej bazie danych w celu skutecznej obsługi Twojego zapytania. Dbamy o bezpieczeństwo tych danych i nie udostępniamy ich stronom trzecim bez Twojej zgody, z wyjątkiem sytuacji wynikających z obowiązujących przepisów prawa.
 
-4. reCAPTCHA
+4.hCaptcha
 
-Korzystamy z usługi reCAPTCHA od Google w celu zabezpieczenia formularzy przed automatycznym spamem. W trakcie korzystania z formularzy, reCAPTCHA może zbierać dane w celu oceny, czy użytkownik jest człowiekiem czy botem. W przypadku korzystania z reCAPTCHA, obowiązują [Warunki korzystania z reCAPTCHA](https://policies.google.com/terms?hl=en) oraz [Polityka prywatności Google](https://policies.google.com/privacy?hl=en).
+Korzystamy z usługi hCaptcha w celu zabezpieczenia formularzy przed automatycznym spamem. W trakcie korzystania z formularzy, hCaptcha może zbierać dane w celu oceny, czy użytkownik jest człowiekiem czy botem. W przypadku korzystania z hCaptcha, obowiązują [Warunki korzystania z hCaptcha](https://www.hcaptcha.com/terms) oraz [Polityka prywatności hCaptcha](https://www.hcaptcha.com/privacy).
 5. Mapa Google
 
 Na naszej stronie internetowej może być umieszczona mapa Google. Mapa ta nie używa plików cookie do zbierania danych. Jednakże, korzystanie z mapy podlega Polityce prywatności Google.
@@ -70,9 +70,9 @@ The personal data collected is used solely for the purpose of responding to your
 3 Data storage
 
 The collected data from the contact form is stored in our database in order to effectively handle your inquiry. We take care of the security of this data and do not share it with third parties without your consent, except under applicable law.
-4. reCAPTCHA
+4. hCaptcha
 
-We use the reCAPTCHA service from Google to protect forms from automated spam. When you use the forms, reCAPTCHA may collect data to assess whether you are a human or a bot. When using reCAPTCHA, the [Terms of Use of reCAPTCHA](https://policies.google.com/terms?hl=en) and [Google Privacy Policy](https://policies.google.com/privacy?hl=en) apply.
+We use the hCaptcha service to protect forms from automated spam. When you use forms, hCaptcha may collect data to assess whether you are a human or a bot. When using hCaptcha, the [Terms of Use of hCaptcha](https://www.hcaptcha.com/terms) and [hCaptcha Privacy Policy](https://www.hcaptcha.com/privacy) apply.
 
 5 Google Map
 
