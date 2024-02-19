@@ -9,8 +9,8 @@ const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const { rateLimit } = require('express-rate-limit')
+const nodemailer = require("nodemailer");
 
-//const flash = require('connect-flash');
 const app = express();
 const port = process.env.PORT || 3000;
 const db = new sqlite3.Database(process.env.DB_FILE || "database.db");
@@ -18,7 +18,6 @@ setupDB(db, process.env.DEFAULT_USER, process.env.DEFAULT_PASSWORD);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
-//app.use(flash());
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -54,7 +53,16 @@ const limiter = rateLimit({
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     message: { isValid: false, errorMessages: ["Przekroczono limit zapytań. Proszę spróbować ponownie później."] }
-})
+});
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: true,
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
+    },
+});
 
 
 
@@ -119,7 +127,7 @@ app.post("/api/contact", async (req, res) => {
     const { firstName, lastName, phoneNumber, email, city, street, homeNumber, message } = req.body;
     const response = await validateContactForm(req.body, "PL", process.env.HCAPTCHA_PRIVATE_KEY);
     const { isValid } = response;
-    const clientIP = req.header('x-forwarded-for').split(",")[0] ||
+    const clientIP = req?.header('x-forwarded-for')?.split(",")[0] ||
         req.socket.remoteAddress;
     const clientPort = req.socket.remotePort;
     if (!isValid) {
