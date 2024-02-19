@@ -30,3 +30,4 @@ function fixAllSingleCharWordsInBody() {
     });
 }
 fixAllSingleCharWordsInBody();
+//window.onresize = () => { fixAllSingleCharWordsInBody(); };
