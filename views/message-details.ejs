@@ -1,0 +1,60 @@
+<!-- views/message-details.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szczegóły wiadomości</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <h1>Szczegóły wiadomości</h1>
+
+    <div>
+        <p><strong>Imię:</strong>
+            <%= message.firstName %>
+        </p>
+        <p><strong>Nazwisko:</strong>
+            <%= message.lastName %>
+        </p>
+        <p><strong>Numer telefonu:</strong>
+            <%= message.phoneNumber %>
+        </p>
+        <p><strong>Email:</strong>
+            <%= message.email %>
+        </p>
+        <p><strong>Miejscowość:</strong>
+            <%= message.city %>
+        </p>
+        <p><strong>Ulica:</strong>
+            <%= message.street %>
+        </p>
+        <p><strong>Nr domu:</strong>
+            <%= message.homeNumber %>
+        </p>
+        <p><strong>Ulica:</strong>
+            <%= message.street %>
+        </p>
+        <p><strong>Treść wiadomości:</strong>
+            <%= message.message %>
+        </p>
+        <p><strong>Data i czas:</strong>
+            <%= new Date(message.timestamp).toLocaleString() %>
+        </p>
+        <p><strong>Adres IP z którego wysłano wiadomość:</strong>
+            <%= message.ip_address %>
+        </p>
+        <p><strong>Numer portu z którego wysłano wiadomość:</strong>
+            <%= message.port_number %>
+        </p>
+        <!-- Dodaj inne informacje, które chcesz wyświetlić -->
+    </div>
+
+    <a href="/dashboard">Powrót do listy wiadomości</a>
+
+    <!-- ... (inne elementy) -->
+</body>
+
+</html>

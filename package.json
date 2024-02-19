@@ -4,7 +4,9 @@
   "description": "Kaycha heavy equipment website",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon index.js",
+    "prod": "export NODE_ENV=\"production\" && node index.js"
   },
   "keywords": [
     "excavators",
@@ -22,13 +24,16 @@
     "body-parser": "^1.20.2",
     "connect-flash": "^0.1.1",
     "dotenv": "^16.4.4",
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
     "express-session": "^1.18.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "nodemon": "^3.0.3"
   }
 }

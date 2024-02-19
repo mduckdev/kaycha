@@ -1,0 +1,119 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/table.css">
+    <link rel="stylesheet" href="./css/dashboard.css">
+    <title>KAYCHA | Dashboard</title>
+
+</head>
+
+<body>
+    <h1>Wiadomości:</h1>
+    <form action="/dashboard" method="GET">
+        <label for="search">Wyszukaj:</label>
+        <input type="text" id="search" name="search" placeholder="Szukaj...">
+
+        <label for="sortBy">Sortuj według:</label>
+        <select id="sortBy" name="sortBy">
+            <option value="timestamp">Data</option>
+            <option value="firstName">Imię</option>
+            <option value="lastName">Nazwisko</option>
+            <!-- Dodaj inne opcje sortowania -->
+        </select>
+
+        <label for="sortDirection">Kierunek sortowania:</label>
+        <input type="radio" id="ascending" name="sortDirection" value="asc">
+        <label for="ascending">Rosnąco</label>
+        <input type="radio" id="descending" name="sortDirection" value="desc" checked>
+        <label for="descending">Malejąco</label>
+
+        <button type="submit">Zastosuj</button>
+    </form>
+    <div class="tableContainer">
+        <table id="messagesTable">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
+                    <th>Numer telefonu</th>
+                    <th>Email</th>
+                    <th>Miejscowość</th>
+                    <th>Ulica</th>
+                    <th>Numer domu/mieszkania</th>
+                    <th>Treść wiadomości</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% messages.forEach(message=> { %>
+                    <tr>
+                        <td>
+                            <%= new Date(message.timestamp).toLocaleString() %>
+                        </td>
+                        <td>
+                            <%= message.firstName %>
+                        </td>
+                        <td>
+                            <%= message.lastName %>
+                        </td>
+                        <td>
+                            <%= message.phoneNumber %>
+                        </td>
+                        <td>
+                            <%= message.email %>
+                        </td>
+                        <td>
+                            <%= message.city %>
+                        </td>
+                        <td>
+                            <%= message.street %>
+                        </td>
+                        <td>
+                            <%= message.homeNumber %>
+                        </td>
+                        <td>
+                            <%= message.message.substring(0,100) %>...
+                        </td>
+                        <td>
+                            <a href="/message-details/<%= message.id %>">Szczegóły</a>
+                            <button class="delete-button" data-id="<%= message.id %>">Usuń</button>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Znajdź wszystkie przyciski usuwania
+            const deleteButtons = document.querySelectorAll('.delete-button');
+
+            // Dodaj obsługę kliknięcia dla każdego przycisku usuwania
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const messageId = button.getAttribute('data-id');
+                    // Wyślij żądanie do serwera w celu usunięcia rekordu o określonym ID
+                    fetch(`/delete-message/${messageId}`, { method: 'DELETE' })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Przeładuj stronę po pomyślnym usunięciu rekordu
+                            if (data.success) {
+                                window.location.reload();
+                            } else {
+                                console.error('Błąd podczas usuwania rekordu.');
+                            }
+                        })
+                        .catch(error => console.error('Błąd podczas wysyłania żądania:', error));
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

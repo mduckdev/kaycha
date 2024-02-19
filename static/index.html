@@ -218,7 +218,7 @@
     <section id="contact">
         <div class="container">
             <h2>KONTAKT</h2>
-            <form action="/api/contact" method="post" id="contact-form">
+            <form id="contact-form">
                 <input required type="text" name="firstName" id="firstName" placeholder="Imię:">
                 <input required type="text" name="lastName" id="lastName" placeholder="Nazwisko:">
                 <input required type="tel" name="phoneNumber" id="phoneNumber">
@@ -234,16 +234,17 @@
                         <a href="./privacy-policy.txt" target="_blank">Polityką Prywatności</a>.
                     </label>
                 </div>
-                <div class="h-captcha" data-sitekey="34c171cb-4ed8-4c0c-87e9-5623e4dde13b"></div>
+                <div id="h-captcha" class="h-captcha" data-sitekey="34c171cb-4ed8-4c0c-87e9-5623e4dde13b"></div>
                 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 
-
-                <button type="submit">WYŚLIJ</button>
+                <button id="submitButton" type="submit">WYŚLIJ</button>
             </form>
             <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.19/build/js/intlTelInput.min.js"></script>
             <script>
                 const input = document.querySelector("#phoneNumber");
                 window.intlTelInput(input, {
+                    autoInsertDialCode: true,
+                    nationalMoe: false,
                     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.19/build/js/utils.js",
                 });
             </script>

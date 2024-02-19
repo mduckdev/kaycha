@@ -32,7 +32,7 @@ module.exports = {
             errorMessages: []
         }
 
-        if (!firstName || !lastName || !phoneNumber || !email || !city || !street || !homeNumber || !message || !consent) {
+        if (!firstName || !lastName || !phoneNumber || !email || !city || !street || !homeNumber || !message || consent != "on") {
             response.isValid = false;
             response.errorMessages.push(module.exports.dict[language].allFieldsRequired);
             return response;
@@ -74,11 +74,12 @@ module.exports = {
         return response;
     },
 
-    setupDB: (db, username, password) => {
-        db.serialize(() => {
-            db.run('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, firstName VARCHAR(30),lastName VARCHAR(30),phoneNumber VARCHAR(15), email VARCHAR(50),city VARCHAR(30),street VARCHAR(30),homeNumber VARCHAR(5),message VARCHAR(2000))');
+    setupDB: async (db, username, password) => {
+        await db.serialize(async () => {
+            db.run('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, firstName VARCHAR(30),lastName VARCHAR(30),phoneNumber VARCHAR(15), email VARCHAR(50),city VARCHAR(30),street VARCHAR(30),homeNumber VARCHAR(5),message VARCHAR(2000), timestamp INTEGER,ip_address VARCHAR(25),port_number VARCHAR(10) )');
             db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username VARCHAR(30) UNIQUE,password VARCHAR(150))');
-            if (!module.exports.getAsync("SELECT * FROM users WHERE username=?", [username], db)) {
+            const isUser = await module.exports.getAsync("SELECT * FROM users WHERE username=?", [username], db);
+            if (!isUser) {
                 db.run('INSERT INTO users(username,password) VALUES (?,?)', [username, password]);
             }
 
