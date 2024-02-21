@@ -77,8 +77,8 @@ module.exports = {
     setupDB: async (db, username, password) => {
         await db.serialize(async () => {
             db.run('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, firstName VARCHAR(30),lastName VARCHAR(30),phoneNumber VARCHAR(15), email VARCHAR(50),city VARCHAR(30),street VARCHAR(30),homeNumber VARCHAR(5),message VARCHAR(2000), timestamp INTEGER,ip_address VARCHAR(25),port_number VARCHAR(10) )');
-            db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username VARCHAR(30) UNIQUE,password VARCHAR(150))');
-            const isUser = await module.exports.getAsync("SELECT * FROM users WHERE username=?", [username], db);
+            db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username VARCHAR(30) UNIQUE,password VARCHAR(150),email VARCHAR(50),mfa_enabled INTEGER, mfa_secret VARCHAR(100))');
+            const isUser = await module.exports.getAsync("SELECT * FROM users", [], db);
             if (!isUser) {
                 db.run('INSERT INTO users(username,password) VALUES (?,?)', [username, password]);
             }

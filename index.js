@@ -3,8 +3,6 @@ const bodyParser = require('body-parser');
 const bcrypt = require("bcrypt");
 const { validateContactForm, setupDB, getAsync } = require("./utils.js")
 require('dotenv').config()
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
@@ -17,35 +15,13 @@ const db = new sqlite3.Database(process.env.DB_FILE || "database.db");
 setupDB(db, process.env.DEFAULT_USER, process.env.DEFAULT_PASSWORD);
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { maxAge: 24 * 60 * 60 * 1000 } }));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.use(new LocalStrategy(
-    async (username, password, done) => {
-        const user = await getAsync("SELECT * FROM users WHERE username=?", [username], db);
-        const hashedPassword = user?.password || "";
-        if (user && bcrypt.compareSync(password, hashedPassword)) {
-            return done(null, user);
-        } else {
-            return done(null, false, { message: 'Invalid username or password' });
-        }
-    }
-));
 
 
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-    const user = await getAsync("SELECT * FROM users WHERE id=?", [id], db);
-    done(null, user);
-});
 
 const limiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
@@ -64,27 +40,68 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+const requireAuth = (req, res, next) => {
+    if (!req.session.user?.id) {
+        return res.redirect('/login');
+    } else {
+        next();
+    }
+};
+
 
 
 
 app.use("/", express.static("static"));
-
-
 app.get('/login', (req, res) => {
-
-    res.send('<h1>Login Page</h1><form action="/login" method="post"><input type="text" name="username" placeholder="Username" required><br><input type="password" name="password" placeholder="Password" required><br><button type="submit">Login</button></form>');
+    res.render("login");
 });
-app.post('/login', passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/login',
-    failureFlash: false
-}));
-app.get('/dashboard', (req, res) => {
-    if (!req.isAuthenticated()) {
-        res.redirect('/login');
-        res.end();
-        return;
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    const user = await getAsync("SELECT * FROM users WHERE username=?", [username], db);
+    const hashedPassword = user?.password || "";
+    if (user && bcrypt.compareSync(password, hashedPassword)) {
+        req.session.user = user;
+        return res.redirect("/dashboard")
+    } else {
+        return res.redirect("/login");
     }
+});
+
+
+app.get('/logout', (req, res) => {
+    req.session.user = null;
+    req.session.destroy((err) => {
+        if (err) console.error(err)
+        res.redirect("/");
+
+    })
+});
+app.post("/api/contact", limiter, async (req, res) => {
+    const { firstName, lastName, phoneNumber, email, city, street, homeNumber, message } = req.body;
+    const response = await validateContactForm(req.body, "PL", process.env.HCAPTCHA_PRIVATE_KEY);
+    const { isValid } = response;
+    const clientIP = req?.header('x-forwarded-for')?.split(",")[0] ||
+        req.socket.remoteAddress;
+    const clientPort = req.socket.remotePort;
+    if (!isValid) {
+        return res.send(JSON.stringify(response));
+    }
+    const timestamp = Date.now();
+
+    db.run("INSERT INTO messages(firstName,lastName,phoneNumber,email,city,street,homeNumber,message,timestamp,ip_address,port_number) VALUES (?,?,?,?,?,?,?,?,?,?,?)", [firstName, lastName, phoneNumber, email, city, street, homeNumber, message, timestamp, clientIP, clientPort], function (err) {
+        if (err) {
+            console.log("Error occured while adding message to database: " + err);
+        } {
+            console.log("Successfuly added new message to database from: " + firstName);
+        }
+    })
+    res.send(response);
+    res.end();
+});
+
+
+
+app.get('/dashboard', requireAuth, (req, res) => {
     const sortColumns = {
         "firstName": "firstName",
         "lastName": "lastName",
@@ -122,55 +139,16 @@ app.get('/dashboard', (req, res) => {
         }
 
         // Renderuj widok EJS, przekazując dane wiadomości
-        res.render('dashboard', { messages: rows });
+        res.render('dashboard', { messages: rows, user: req.session.user });
     });
 
 
 
 });
-app.get('/logout', (req, res) => {
-    req.logout((err) => {
-        if (err) {
-            return res.status(500).send("Error while logging out");
-        }
-        res.redirect('/');
-    });
-});
 
-app.use("/api/contact", limiter);
-app.post("/api/contact", async (req, res) => {
-    const { firstName, lastName, phoneNumber, email, city, street, homeNumber, message } = req.body;
-    const response = await validateContactForm(req.body, "PL", process.env.HCAPTCHA_PRIVATE_KEY);
-    const { isValid } = response;
-    const clientIP = req?.header('x-forwarded-for')?.split(",")[0] ||
-        req.socket.remoteAddress;
-    const clientPort = req.socket.remotePort;
-    if (!isValid) {
-        res.send(JSON.stringify(response));
-        res.end();
-        return;
-    }
-    const timestamp = Date.now();
-
-    db.run("INSERT INTO messages(firstName,lastName,phoneNumber,email,city,street,homeNumber,message,timestamp,ip_address,port_number) VALUES (?,?,?,?,?,?,?,?,?,?,?)", [firstName, lastName, phoneNumber, email, city, street, homeNumber, message, timestamp, clientIP, clientPort], function (err) {
-        if (err) {
-            console.log("Error occured while adding message to database: " + err);
-        } {
-            console.log("Successfuly added new message to database from: " + firstName);
-        }
-    })
-
-    res.send(response);
-    res.end();
-
-})
-app.delete('/delete-message/:id', (req, res) => {
+app.delete('/delete-message/:id', requireAuth, (req, res) => {
     const messageId = req.params.id;
-    if (!req.isAuthenticated()) {
-        res.redirect("/login");
-        res.end();
-        return;
-    }
+
 
     // Zapytanie SQL do usuwania rekordu o określonym ID
     const sql = 'DELETE FROM messages WHERE id = ?';
@@ -186,13 +164,9 @@ app.delete('/delete-message/:id', (req, res) => {
         return res.json({ success: true });
     });
 });
-app.get('/message-details/:id', (req, res) => {
+app.get('/message-details/:id', requireAuth, (req, res) => {
     const messageId = req.params.id;
-    if (!req.isAuthenticated()) {
-        res.redirect("/login");
-        res.end();
-        return;
-    }
+
     // Zapytanie SQL do pobrania szczegółów wiadomości o określonym ID
     const sql = 'SELECT * FROM messages WHERE id = ?';
 
@@ -211,6 +185,42 @@ app.get('/message-details/:id', (req, res) => {
         res.render('message-details', { message: row });
     });
 });
+app.get("/profile", requireAuth, (req, res) => {
+    res.render("profile", { user: req.session.user });
+})
+app.post("/change-profile", requireAuth, async (req, res) => {
+    const { newUsername, currentPassword, newPassword, newEmail } = req.body;
+    const emailExpresion = new RegExp(/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/);
+    if (!newEmail.match(emailExpresion) && newEmail != "") {
+        return res.status(401).send("Nieprawidłowy email.");
+    }
+    if (currentPassword != "" && newPassword != "") {
+        if (!bcrypt.compareSync(currentPassword, req.session.user.password)) {
+            return res.status(401).send("Nieprawidłowe hasło.");
+        }
+        const hashedPassword = bcrypt.hashSync(newPassword, 10);
+        const updateQuery = 'UPDATE users SET username = ?, password = ?, email = ? WHERE id = ?';
+        db.run(updateQuery, [newUsername, hashedPassword, newEmail, req.session.user.id], (updateErr) => {
+            if (updateErr) {
+                console.error(updateErr);
+                return res.status(500).send('Internal Server Error');
+            }
+        })
+    } else {
+        const updateQuery = 'UPDATE users SET username = ?, email = ? WHERE id = ?';
+        db.run(updateQuery, [newUsername, newEmail, req.session.user.id], (updateErr) => {
+            if (updateErr) {
+                console.error(updateErr);
+                return res.status(500).send('Internal Server Error');
+            }
+        })
+    }
+
+    const user = await getAsync("SELECT * FROM users WHERE id=?", [req.session.user?.id], db);
+    req.session.user = user;
+    res.redirect('/dashboard');
+
+})
 
 
 app.listen(port, () => {
