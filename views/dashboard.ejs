@@ -98,17 +98,20 @@
                 button.addEventListener('click', () => {
                     const messageId = button.getAttribute('data-id');
                     // Wyślij żądanie do serwera w celu usunięcia rekordu o określonym ID
-                    fetch(`/delete-message/${messageId}`, { method: 'DELETE' })
-                        .then(response => response.json())
-                        .then(data => {
-                            // Przeładuj stronę po pomyślnym usunięciu rekordu
-                            if (data.success) {
-                                window.location.reload();
-                            } else {
-                                console.error('Błąd podczas usuwania rekordu.');
-                            }
-                        })
-                        .catch(error => console.error('Błąd podczas wysyłania żądania:', error));
+                    if (confirm(`Czy na pewno chcesz usunąć wiadomość nr: ${messageId}`)) {
+                        fetch(`/delete-message/${messageId}`, { method: 'DELETE' })
+                            .then(response => response.json())
+                            .then(data => {
+                                // Przeładuj stronę po pomyślnym usunięciu rekordu
+                                if (data.success) {
+                                    window.location.reload();
+                                } else {
+                                    console.error('Błąd podczas usuwania rekordu.');
+                                }
+                            })
+                            .catch(error => console.error('Błąd podczas wysyłania żądania:', error));
+                    }
+
                 });
             });
         });

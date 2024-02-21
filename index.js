@@ -85,22 +85,37 @@ app.get('/dashboard', (req, res) => {
         res.end();
         return;
     }
-    const searchQuery = req.query.search || '';
-    const sortBy = req.query.sortBy || 'id';
-    const sortDirection = req.query.sortDirection || 'desc'; // Domyślnie malejąco
+    const sortColumns = {
+        "firstName": "firstName",
+        "lastName": "lastName",
+        "phoneNumber": "phoneNumber",
+        "email": "email",
+        "city": "city",
+        "street": "street",
+        "homeNumber": "homeNumber",
+        "message": "message",
+    }
+    const sortDirections = {
+        "asc": "asc",
+        "desc": "desc"
+    }
+
+    const searchQuery = (!req.query.search) ? "%%" : ("%" + req.query.search + "%");
+    const sortBy = sortColumns[req.query.sortBy] || 'id';
+    const sortDirection = sortDirections[req.query.sortDirection] || 'desc';// Domyślnie malejąco
     // Zapytanie SQL z uwzględnieniem warunków wyszukiwania i sortowania
     const sql = `SELECT * FROM messages
-               WHERE firstName LIKE '%${searchQuery}%' OR
-                     lastName LIKE '%${searchQuery}%' OR
-                     phoneNumber LIKE '%${searchQuery}%' OR
-                     email LIKE '%${searchQuery}%' OR
-                     city LIKE '%${searchQuery}%' OR
-                     street LIKE '%${searchQuery}%' OR
-                     homeNumber LIKE '%${searchQuery}%' OR
-                     message LIKE '%${searchQuery}%'
+               WHERE firstName LIKE ? OR
+                     lastName LIKE ? OR
+                     phoneNumber LIKE ? OR
+                     email LIKE ? OR
+                     city LIKE ? OR
+                     street LIKE ? OR
+                     homeNumber LIKE ? OR
+                     message LIKE ?
                ORDER BY ${sortBy} ${sortDirection}`;
     // Wykonaj zapytanie do bazy danych
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, [searchQuery, searchQuery, searchQuery, searchQuery, searchQuery, searchQuery, searchQuery, searchQuery,], (err, rows) => {
         if (err) {
             console.error(err.message);
             return res.status(500).send('Wystąpił błąd podczas pobierania wiadomości.');
