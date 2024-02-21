@@ -20,7 +20,7 @@ app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUniniti
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-
+app.set('trust proxy', 1)
 
 
 const limiter = rateLimit({
