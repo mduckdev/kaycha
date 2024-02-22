@@ -234,6 +234,8 @@ app.get('/send-message/:id', requireAuth, async (req, res) => {
     let destinationEmail = null;
     if (!req.session.user.email || req.session.user.email == "") {
         destinationEmail = process.env.EMAIL_DESTINATION;
+    } else {
+        destinationEmail = req.session.user.email;
     }
     if (!destinationEmail || destinationEmail == "") {
         return res.status(404).send('Nie można wysłać wiadomości email, brak adresata.');
