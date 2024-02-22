@@ -84,6 +84,43 @@ module.exports = {
             }
 
         });
+    },
+    getSelectedMessagesFromDatabase: async (selectedMessageIds, db) => {
+        return new Promise((resolve, reject) => {
+            const placeholders = selectedMessageIds.map(() => '?').join(', ');
+            const sql = `SELECT * FROM messages WHERE id IN (${placeholders})`;
+            db.all(sql, selectedMessageIds, (err, rows) => {
+                if (err) {
+                    console.error('Błąd podczas pobierania wiadomości z bazy danych:', err);
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+
+            });
+        });
+    },
+    deleteSelectedMessagesFromDatabase: async (selectedMessageIds, db) => {
+        return new Promise((resolve, reject) => {
+
+            const placeholders = selectedMessageIds.map(() => '?').join(', ');
+            const sql = `DELETE FROM messages WHERE id IN (${placeholders})`;
+
+            db.run(sql, selectedMessageIds, function (err) {
+                if (err) {
+                    console.error('Błąd podczas usuwania wiadomości z bazy danych:', err);
+                    reject(err);
+                } else {
+                    // Sprawdź, czy coś zostało usunięte
+                    if (this.changes > 0) {
+                        resolve();
+                    } else {
+                        reject(new Error('Brak wiadomości o podanych ID.'));
+                    }
+                }
+
+            });
+        });
     }
 
 }

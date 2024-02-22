@@ -18,7 +18,7 @@
     <div class="container-fluid">
         <!-- Navbar z ikoną i drop listą -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Dashboard</a>
+            <a class="navbar-brand" href="/dashboard">Dashboard</a>
 
             <!-- Ikona z drop listą -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -68,10 +68,24 @@
 
             <button type="submit">Zastosuj</button>
         </form>
+        <form id="actionForm">
+            <label for="action">Akcja:</label>
+            <select id="action" name="action">
+                <option value="export-csv">Eksportuj zaznaczone jako plik .csv</option>
+                <option value="export-eml">Eksportuj zaznaczone jako plik .eml</option>
+
+                <option value="delete">Usuń zaznaczone</option>
+            </select>
+            <button type="submit">Potwierdź</button>
+        </form>
         <div class="tableContainer">
             <table id="messagesTable">
                 <thead>
                     <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll" />
+                            <label for="selectAll">Zaznacz wszystkie</label>
+                        </th>
                         <th>Data</th>
                         <th>Imię</th>
                         <th>Nazwisko</th>
@@ -87,6 +101,9 @@
                 <tbody>
                     <% messages.forEach(message=> { %>
                         <tr>
+                            <td>
+                                <input type="checkbox" class="messageCheckbox" data-id="<%= message.id %>" />
+                            </td>
                             <td>
                                 <%= new Date(message.timestamp).toLocaleString() %>
                             </td>
@@ -117,6 +134,8 @@
                             <td>
                                 <a href="/message-details/<%= message.id %>">Szczegóły</a>
                                 <button class="delete-button" data-id="<%= message.id %>">Usuń</button>
+                                <button class="send-button" data-id="<%= message.id %>">Wyślij na e-mail</button>
+
                             </td>
                         </tr>
                         <% }); %>
@@ -126,6 +145,32 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Znajdź wszystkie przyciski usuwania
+            const sendButtons = document.querySelectorAll('.send-button');
+            // Dodaj obsługę kliknięcia dla każdego przycisku usuwania
+            sendButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const messageId = button.getAttribute('data-id');
+                    // Wyślij żądanie do serwera w celu usunięcia rekordu o określonym ID
+                    if (confirm(`Czy na pewno chcesz wysłać wiadomość nr: ${messageId}`)) {
+                        fetch(`/send-message/${messageId}`, { method: 'GET' })
+                            .then(response => response.json())
+                            .then(data => {
+                                // Przeładuj stronę po pomyślnym usunięciu rekordu
+                                if (data.success) {
+                                    alert("Pomyślnie wysłano wiadomość.")
+                                    window.location.reload();
+                                } else {
+                                    console.error('Błąd podczas usuwania rekordu.');
+                                }
+                            })
+                            .catch(error => console.error('Błąd podczas wysyłania żądania:', error));
+                    }
+
+                });
+            });
+        });
         document.addEventListener('DOMContentLoaded', () => {
             // Znajdź wszystkie przyciski usuwania
             const deleteButtons = document.querySelectorAll('.delete-button');
@@ -152,6 +197,108 @@
                 });
             });
         });
+    </script>
+    <script>
+        // Skrypt do obsługi zaznaczania wszystkich checkboxów
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const messageCheckboxes = document.querySelectorAll('.messageCheckbox');
+
+        selectAllCheckbox.addEventListener('change', function () {
+            messageCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const actionForm = document.getElementById('actionForm');
+            const messageCheckboxes = document.querySelectorAll('.messageCheckbox');
+
+            actionForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const selectedAction = document.getElementById('action').value;
+
+                switch (selectedAction) {
+                    case 'export-csv':
+                        exportSelectedMessages('/api/export-messages-csv', "exported_messages.csv");
+                        break;
+                    case 'export-eml':
+                        exportSelectedMessages('/api/export-messages-eml', "exported_messages.zip");
+                        break;
+                    case 'delete':
+                        deleteSelectedMessages();
+                        break;
+                    default:
+                        console.error('Nieznana opcja akcji.');
+                }
+            });
+
+            function exportSelectedMessages(url, filename) {
+                const selectedMessages = getSelectedMessages();
+
+                // Wysyłanie żądania fetch do endpointu eksportu
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ messages: selectedMessages }),
+                })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        if (blob.type.includes("application/json")) {
+                            return;
+                        }
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
+                    })
+                    .catch(error => console.error('Błąd podczas eksportowania:', error));
+            }
+
+            function deleteSelectedMessages() {
+                const selectedMessages = getSelectedMessages();
+                if (!confirm(`Czy na pewno chcesz usunąć ${selectedMessages.length} wiadomości?`)) {
+                    return;
+                }
+                // Wysyłanie żądania fetch do endpointu usuwania
+                fetch('/api/delete-messages', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ messages: selectedMessages }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error)
+                            console.error(data.error)
+                        else {
+                            console.log('Zaznaczone wiadomości zostały pomyślnie usunięte:', data);
+                            window.location.href = window.location.href;
+                        }
+                    })
+                    .catch(error => console.error('Błąd podczas usuwania:', error));
+            }
+
+
+            function getSelectedMessages() {
+                const selectedMessages = [];
+                messageCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedMessages.push(checkbox.dataset.id);
+                    }
+                });
+                return selectedMessages;
+            }
+        });
+
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>

@@ -60,7 +60,7 @@ button {
 }
 
 table {
-    height: 80vh;
+    max-height: 80vh;
     overflow-x: scroll;
     border-collapse: collapse;
     margin-top: 10px;
@@ -114,8 +114,24 @@ tr:hover {
     border: none;
     cursor: pointer;
     border-radius: 3px;
+    margin: 5px;
+
 }
 
 .delete-button:hover {
     background-color: #cc0000;
+}
+
+.send-button {
+    background-color: #5590ff;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    margin: 5px;
+}
+
+.send-button:hover {
+    background-color: #3a65b4;
 }
