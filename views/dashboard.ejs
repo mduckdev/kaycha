@@ -36,7 +36,7 @@
                             <%= user.username %> <!-- Dodaj ikonę użytkownika -->
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/profile">Zarządzaj profilem</a>
+                            <a class="dropdown-item" href="/dashboard/profile">Zarządzaj profilem</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/logout">Wyloguj się</a>
                         </div>
@@ -132,7 +132,7 @@
                                 <%= message.message.substring(0,100) %>...
                             </td>
                             <td>
-                                <a href="/message-details/<%= message.id %>">Szczegóły</a>
+                                <a href="/dashboard/message-details/<%= message.id %>">Szczegóły</a>
                                 <button class="delete-button" data-id="<%= message.id %>">Usuń</button>
                                 <button class="send-button" data-id="<%= message.id %>">Wyślij na e-mail</button>
 
@@ -154,7 +154,7 @@
                     const messageId = button.getAttribute('data-id');
                     // Wyślij żądanie do serwera w celu usunięcia rekordu o określonym ID
                     if (confirm(`Czy na pewno chcesz wysłać wiadomość nr: ${messageId}`)) {
-                        fetch(`/send-message/${messageId}`, { method: 'GET' })
+                        fetch(`/dashboard/send-message/${messageId}`, { method: 'GET' })
                             .then(response => response.json())
                             .then(data => {
                                 // Przeładuj stronę po pomyślnym usunięciu rekordu
@@ -181,7 +181,7 @@
                     const messageId = button.getAttribute('data-id');
                     // Wyślij żądanie do serwera w celu usunięcia rekordu o określonym ID
                     if (confirm(`Czy na pewno chcesz usunąć wiadomość nr: ${messageId}`)) {
-                        fetch(`/delete-message/${messageId}`, { method: 'DELETE' })
+                        fetch(`/dashboard/delete-message/${messageId}`, { method: 'DELETE' })
                             .then(response => response.json())
                             .then(data => {
                                 // Przeładuj stronę po pomyślnym usunięciu rekordu
@@ -221,10 +221,10 @@
 
                 switch (selectedAction) {
                     case 'export-csv':
-                        exportSelectedMessages('/api/export-messages-csv', "exported_messages.csv");
+                        exportSelectedMessages('/dashboard/api/export-messages-csv', "exported_messages.csv");
                         break;
                     case 'export-eml':
-                        exportSelectedMessages('/api/export-messages-eml', "exported_messages.zip");
+                        exportSelectedMessages('/dashboard/api/export-messages-eml', "exported_messages.zip");
                         break;
                     case 'delete':
                         deleteSelectedMessages();
@@ -268,7 +268,7 @@
                     return;
                 }
                 // Wysyłanie żądania fetch do endpointu usuwania
-                fetch('/api/delete-messages', {
+                fetch('/dashboard/api/delete-messages', {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
@@ -277,8 +277,10 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        if (data.error)
-                            console.error(data.error)
+                        if (data.error) {
+                            alert(data.error);
+                            console.error(data.error);
+                        }
                         else {
                             console.log('Zaznaczone wiadomości zostały pomyślnie usunięte:', data);
                             window.location.href = window.location.href;

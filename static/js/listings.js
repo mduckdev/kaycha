@@ -22,7 +22,7 @@ function updateGalleryTransform() {
 
 
 
-fetch("/get-listings", { method: "GET" }).then(x => x.json()).then(response => {
+fetch("/api/get-listings", { method: "GET" }).then(x => x.json()).then(response => {
     const offerGallery = document.querySelector(".offer-gallery");
     offerGallery.innerHTML = "";
     response.forEach(item => {
@@ -32,6 +32,8 @@ fetch("/get-listings", { method: "GET" }).then(x => x.json()).then(response => {
         auctionDiv.setAttribute("class", "auction");
         const offerLink = document.createElement("a");
         offerLink.setAttribute("href", item.href)
+        offerLink.setAttribute("target", "_blank")
+
         const image = document.createElement("img");
         image.setAttribute("src", item.imgSrc);
         offerLink.appendChild(image)

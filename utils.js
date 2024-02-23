@@ -121,6 +121,37 @@ module.exports = {
 
             });
         });
+    },
+    randomProperty: (obj) => {
+        let keys = Object.keys(obj);
+        return obj[keys[keys.length * Math.random() << 0]];
+    },
+    notifyAboutMessages: async (transporter, newMessages) => {
+        let text = "nowych wiadomości";
+        if (newMessages == 1) {
+            text = "nową wiadomość";
+        } else if (newMessages < 5) {
+            text = "nowe wiadomości"
+        }
+        const plainTextMessage =
+            `Masz ${newMessages} ${text}!
+            Odwiedź kaczormaszyny.pl/dashboard żeby je przejżeć.`;
+        const htmlMessage =
+            `
+            <h1>ℹ️ Masz ${newMessages} ${text}!</h1><br>
+            <h3>🔗Odwiedź <a href="https://kaczormaszyny.pl/dashboard">panel zarządzania</a> żeby je przejrzeć.</h3>
+        `
+        const emailObject = {
+            from: `"System powiadomień" <${process.env.EMAIL_USER_ADDRESS}>`, // sender address
+            to: process.env.EMAIL_DESTINATION, // list of receivers
+            subject: `Masz ${newMessages} ${text}`, // Subject line
+            text: plainTextMessage, // plain text body
+            html: htmlMessage, // html body
+        }
+
+        await transporter.sendMail(emailObject).then(x => {
+            console.log("Pomyślnie wysłano powiadomienie o nowych wiadomościach");
+        }).catch(err => { console.error(err); })
     }
 
 }
