@@ -381,80 +381,37 @@ section#services .services-description p {
     text-align: center;
 }
 
-div.gallery-container button {
-    min-width: 5%;
+div.gallery-container img.gallery-btn {
+    width: 5%;
     outline: none;
     border: none;
     padding: 20px 15px;
     font-size: 2em;
-    height: 50%;
+    margin: 0 10px;
+    aspect-ratio: 1/1;
     background-color: var(--yellow);
     border-radius: 10px;
+    filter: opacity(85%);
     transition: var(--transition-time);
     z-index: 9999;
+    position: absolute;
+
 }
 
-div.gallery-container button:hover {
-    background-color: var(--yellow-dim);
+div.gallery-container .gallery-btn:hover {
+    filter: opacity(50%);
     cursor: pointer;
 }
 
-button.prev-btn {
+.prev-btn {
     left: 0;
+
 }
 
-button.next-btn {
+.next-btn {
     right: 0;
 }
 
-/* .gallery-container {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    text-align: center;
-}
-
-.offer-gallery {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-    gap: 10px;
-    overflow: hidden;
-
-}
-
-.auction {
-    width: 55%;
-    padding: 20px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-}
-
-div.offer-gallery img {
-    width: 100%;
-    object-fit: cover;
-    aspect-ratio: 1/1;
-}
-
-div.gallery-container button {
-    min-width: 5%;
-    outline: none;
-    border: none;
-    padding: 20px 15px;
-    font-size: 2em;
-    height: 50%;
-    background-color: var(--yellow);
-    border-radius: 10px;
-    transition: var(--transition-time);
-    z-index: 9999;
-}
-
-div.gallery-container button:hover {
-    background-color: var(--yellow-dim);
-    cursor: pointer;
-} */
 
 
 section#services .services-gallery p {
