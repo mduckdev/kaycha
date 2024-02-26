@@ -192,9 +192,8 @@ app.get("/api/get-listings", async (req, res) => {
             password: process.env.OTOMOTO_PASSWORD
         }).toString();
 
-
-        const response = await axios.post(url, body)
-        if (response.data.access_token && response.data.expires_in) {
+        const response = await axios.post(url, body).catch(err => { console.error(err.data) });
+        if (response?.data?.access_token && response?.data?.expires_in) {
             otomotoData.access_token = response.data.access_token;
             otomotoData.expires_in = Date.now() + (response.data.expires_in * 1000);
         } else {
