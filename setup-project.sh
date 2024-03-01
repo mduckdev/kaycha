@@ -11,6 +11,15 @@ git init
 git remote add kaycha https://github.com/mduckdev/kaycha.git
 git pull kaycha master
 npm install
-cp ~/.env ~/kaycha/
+
+if [ -f "~/.env" ]
+then
+    cp "~/.env" "./"
+else
+    cp -r "./env.example" "./.env"
+    nano ".env"
+fi
+
+
 pm2 start index.js
 pm2 save
