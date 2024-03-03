@@ -170,7 +170,7 @@ section.welcome {
     background: url("../img/welcome-background-min.jpg");
     background-size: cover;
     background-position: center;
-    height: 70vh;
+    
 }
 
 div.image-overlay {
@@ -204,6 +204,7 @@ section.welcome p {
     color: var(--black);
     border-radius: 10px;
     transition: var(--transition-time);
+    margin-bottom: 15px;
 }
 
 .welcome-wrapper a:hover {
@@ -611,4 +612,10 @@ footer a {
         font-size: 1.75cqw;
         margin: 0.4em 0;
     }
+}
+@media (min-width:1400px) {
+
+   .gallery-item p{
+    font-size: 1.4vw;
+   }
 }
