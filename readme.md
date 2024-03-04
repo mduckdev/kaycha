@@ -6,7 +6,7 @@ Website administators have ability to export messages in .eml and .csv format or
 ## 1. Installing system dependencies (linux alpine)
 Run this in console and replace ```username``` with name of the user that will run the application:
 ```sh
-wget https://raw.githubusercontent.com/mduckdev/kaycha/master/setup-alpine.sh && chmod +x ./setup-alpine && ./setup-alpine username
+wget -O setup-alpine.sh https://raw.githubusercontent.com/mduckdev/kaycha/master/setup-alpine.sh && chmod +x ./setup-alpine.sh && ./setup-alpine.sh username
 ```
 After script is done working, additional setup is needed to configure pm2 to allow automatic startup. Make sure to paste the command visible in the output of the script.
 ![obraz](https://github.com/mduckdev/kaycha/assets/101923131/861ec848-9895-496e-9e5b-7253d575af78)
