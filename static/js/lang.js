@@ -118,6 +118,7 @@ dict=languages["pl"];
 Object.keys(languages).forEach(language=>{
     if(userLanguage.startsWith(language)){
         dict=languages[language];
+        document.documentElement.lang=language;
     }
 })
 
