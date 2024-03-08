@@ -221,10 +221,10 @@
 
                 switch (selectedAction) {
                     case 'export-csv':
-                        exportSelectedMessages('/dashboard/api/export-messages-csv', "exported_messages.csv");
+                        exportSelectedMessages('/dashboard/export-messages-csv', "exported_messages.csv");
                         break;
                     case 'export-eml':
-                        exportSelectedMessages('/dashboard/api/export-messages-eml', "exported_messages.zip");
+                        exportSelectedMessages('/dashboard/export-messages-eml', "exported_messages.zip");
                         break;
                     case 'delete':
                         deleteSelectedMessages();
@@ -268,7 +268,7 @@
                     return;
                 }
                 // Wysyłanie żądania fetch do endpointu usuwania
-                fetch('/dashboard/api/delete-messages', {
+                fetch('/dashboard/delete-messages', {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
