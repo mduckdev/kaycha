@@ -1,44 +1,58 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const bcrypt = require("bcrypt");
-const { validateContactForm, setupDB, getAsync, randomProperty, notifyAboutMessages } = require("./utils.js")
-require('dotenv').config()
-const session = require('express-session');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-const { rateLimit } = require('express-rate-limit')
-const axios = require("axios");
-const nodemailer = require("nodemailer");
+import express, { Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import bcrypt from "bcrypt";
+import { validateContactForm, setupDB, randomProperty, notifyAboutMessages } from "./utils"
+import dotenv from 'dotenv';
+import session from 'express-session';
+import sqlite3 from 'sqlite3';
+import path from 'path';
+import { rateLimit } from 'express-rate-limit'
+import axios from "axios";
+import nodemailer from "nodemailer";
+import SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
+import { AppDataSource } from './data-source';
+import { Message } from './entity/Message';
+import { User } from './entity/User';
+import { ListingsResponseI } from "./interfaces/responses"
+import { otomotoDataI } from './interfaces/data';
+import { dashboardRoutes } from "./routes/dashboardRoutes"
 
+import "reflect-metadata";
 
+declare module "express-session" {
+    interface SessionData {
+        user: User;
+    }
+}
+
+dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port: number = Number(process.env.PORT) || 3000;
 const db = new sqlite3.Database(process.env.DB_FILE || "database.db");
-const dashboardRoutes = require("./routes/dashboardRoutes.js")(db)
+//const dashboardRoutes = require("./routes/dashboardRoutes")(db)
 
-
-
-setupDB(db, process.env.DEFAULT_USER, process.env.DEFAULT_PASSWORD);
+setupDB(process.env.DEFAULT_USER || "", process.env.DEFAULT_PASSWORD || "");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false, cookie: { maxAge: 24 * 60 * 60 * 1000 } }));
+app.use(session({ secret: process.env.SESSION_SECRET || "cvsn4qrqjN6AbSwmIptfTXwbBkmrTq9SuvJkgqFKvTHUFQNcGLypOIrivgY0ns4N", resave: false, saveUninitialized: false, cookie: { maxAge: 24 * 60 * 60 * 1000 } }));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.set('trust proxy', 1)
 
-const transporter = nodemailer.createTransport({
+const transporterOptions: SMTPTransport.Options = {
     host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    port: Number(process.env.EMAIL_PORT) || 465,
     secure: (process.env.EMAIL_SECURE == "TRUE" ? true : false),
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
     },
-});
+}
+const transporter = nodemailer.createTransport(transporterOptions);
 
 const limiter = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
@@ -49,18 +63,20 @@ const limiter = rateLimit({
 });
 
 
-const otomotoData = {
+
+
+const otomotoData: otomotoDataI = {
     url: "https://www.otomoto.pl/api/open",
-    otomoto_access_token: null,
-    otomoto_token_expires: 0
+    access_token: null,
+    expires: 0
 }
 
-let newMessages = 0;
-async function delay(ms) {
+let newMessages: number = 0;
+async function delay(ms: number): Promise<void> {
     // return await for better async stack trace support in case of errors.
     return await new Promise(resolve => setTimeout(resolve, ms));
 }
-const checkForMessages = (async () => {
+const checkForMessages = (async (): Promise<void> => {
     while (true) {
         await delay(1 * 1 * 1000);
         if (newMessages == 0) {
@@ -78,37 +94,47 @@ checkForMessages();
 
 app.use("/", express.static("static"));
 
-app.use("/dashboard", dashboardRoutes);
+app.use("/dashboard", dashboardRoutes());
 
 
 
-app.get('/login', (req, res) => {
+app.get('/login', (req: Request, res: Response): void => {
     res.render("login");
 });
-app.post('/login', async (req, res) => {
+app.post('/login', async (req: Request, res: Response): Promise<void> => {
     const { username, password } = req.body;
-    const user = await getAsync("SELECT * FROM users WHERE username=?", [username], db);
-    const hashedPassword = user?.password || "";
-    if (user && bcrypt.compareSync(password, hashedPassword)) {
-        req.session.user = user;
-        return res.redirect("/dashboard")
-    } else {
-        return res.redirect("/login");
+
+    try {
+        // Get repository for User entity
+        const userRepository = AppDataSource.getRepository(User);
+
+        // Retrieve user from the database by username
+        const user = await userRepository.findOne({ where: { username: username } });
+
+        // Check if the user exists and the password is correct
+        if (user && bcrypt.compareSync(password, user.password)) {
+            req.session.user = user;
+            return res.redirect('/dashboard');
+        } else {
+            return res.redirect('/login');
+        }
+    } catch (error) {
+        console.error('Error occurred during login:', error);
+        res.status(500).send('Internal Server Error').end();
     }
 });
 
 
-app.get('/logout', (req, res) => {
-    req.session.user = null;
+app.get('/logout', (req: Request, res: Response): void => {
     req.session.destroy((err) => {
         if (err) console.error(err)
         res.redirect("/");
 
     })
 });
-app.post("/api/contact", limiter, async (req, res) => {
+app.post("/api/contact", limiter, async (req: Request, res: Response): Promise<Response> => {
     const { firstName, lastName, phoneNumber, email, city, street, homeNumber, message } = req.body;
-    const response = await validateContactForm(req.body, "PL", process.env.HCAPTCHA_PRIVATE_KEY);
+    const response = await validateContactForm(req.body, "PL", process.env.HCAPTCHA_PRIVATE_KEY || "");
     const { isValid } = response;
     const clientIP = req?.header('x-forwarded-for')?.split(",")[0] ||
         req.socket.remoteAddress;
@@ -118,19 +144,44 @@ app.post("/api/contact", limiter, async (req, res) => {
     }
     const timestamp = Date.now();
 
-    db.run("INSERT INTO messages(firstName,lastName,phoneNumber,email,city,street,homeNumber,message,timestamp,ip_address,port_number) VALUES (?,?,?,?,?,?,?,?,?,?,?)", [firstName, lastName, phoneNumber, email, city, street, homeNumber, message, timestamp, clientIP, clientPort], function (err) {
-        if (err) {
-            console.log("Error occured while adding message to database: " + err);
-        } {
-            console.log("Successfuly added new message to database from: " + firstName);
-        }
-    })
+    try {
+
+        // Get repository for Message entity
+        const messageRepository = AppDataSource.getRepository(Message);
+
+        // Create a new Message entity
+        const newMessage = messageRepository.create({
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+            email: email,
+            city: city,
+            street: street,
+            homeNumber: homeNumber,
+            message: message,
+            ipAddress: clientIP,
+            timestamp: timestamp,
+            portNumber: clientPort
+        });
+
+        // Save the new Message to the database
+        await messageRepository.save(newMessage);
+
+        // Log success message
+        console.log(`Successfully added new message to the database from: ${firstName}`);
+
+    } catch (error) {
+        console.error('Error occurred while adding message to the database:', error);
+        throw error;
+    }
+
+
+
     newMessages++;
-    res.send(response);
-    res.end();
+    return res.send(response);
 });
 
-app.get("/api/get-listings", async (req, res) => {
+app.get("/api/get-listings", async (req: Request, res: Response): Promise<Response> => {
     const placeholder = [
         {
             title: "Koparka kramer",
@@ -186,17 +237,17 @@ app.get("/api/get-listings", async (req, res) => {
         const url = otomotoData.url + "/oauth/token";
 
         const body = new URLSearchParams({
-            client_id: process.env.OTOMOTO_CLIENT_ID,
-            client_secret: process.env.OTOMOTO_CLIENT_SECRET,
+            client_id: process.env.OTOMOTO_CLIENT_ID || "",
+            client_secret: process.env.OTOMOTO_CLIENT_SECRET || "",
             grant_type: "password",
-            username: process.env.OTOMOTO_USERNAME,
-            password: process.env.OTOMOTO_PASSWORD
+            username: process.env.OTOMOTO_USERNAME || "",
+            password: process.env.OTOMOTO_PASSWORD || ""
         }).toString();
 
         const response = await axios.post(url, body).catch(err => { console.error(err.data) });
         if (response?.data?.access_token && response?.data?.expires_in) {
             otomotoData.access_token = response.data.access_token;
-            otomotoData.expires_in = Date.now() + (response.data.expires_in * 1000);
+            otomotoData.expires = Date.now() + (response.data.expires_in * 1000);
         } else {
             return res.json(placeholder);
         }
@@ -213,8 +264,9 @@ app.get("/api/get-listings", async (req, res) => {
     if (advertsList.data.results.length == 0) {
         return res.json(placeholder);
     }
-    const response = [];
-    await advertsList.data.results.forEach(async (auction) => {
+
+    const response: ListingsResponseI[] = [];
+    await advertsList.data.results.forEach(async (auction: any) => {
         if (auction.status != "active") {
             return;
         }
@@ -231,7 +283,7 @@ app.get("/api/get-listings", async (req, res) => {
         response.push(temp);
     });
 
-    res.json(response);
+    return res.json(response);
 })
 
 
@@ -239,4 +291,3 @@ app.get("/api/get-listings", async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is listening at port: http://localhost:${port}`);
 });
-

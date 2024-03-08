@@ -1,13 +1,29 @@
-const express = require('express');
-const csv = require('csv-writer').createObjectCsvWriter;
-const archiver = require('archiver');
-const fs = require("fs").promises;
-const { getAsync, getSelectedMessagesFromDatabase, deleteSelectedMessagesFromDatabase } = require("../utils.js")
-const nodemailer = require("nodemailer");
-const path = require('path');
-const bcrypt = require("bcrypt");
+import express, { Request, Response, Router } from 'express';
+import { createObjectCsvWriter } from 'csv-writer';
+import archiver from 'archiver';
+import { promises as fs } from 'fs';
+import { getSelectedMessagesFromDatabase, deleteSelectedMessagesFromDatabase } from '../utils';
+import nodemailer from 'nodemailer';
+import path from 'path';
+import bcrypt from 'bcrypt';
+import { MessageI, UserI } from '../interfaces/models';
+import { Session, SessionData } from 'express-session';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import { AppDataSource } from '../data-source';
+import { Message } from '../entity/Message';
+import "reflect-metadata"
+import { User } from '../entity/User';
+import dotenv from 'dotenv';
 
-const requireAuth = (req, res, next) => {
+dotenv.config()
+declare module "express-session" {
+    interface SessionData {
+        user: User;
+    }
+}
+
+
+const requireAuth = (req: Request, res: Response, next: Function) => {
     if (!req.session.user?.id) {
         return res.redirect('/login');
     } else {
@@ -15,22 +31,24 @@ const requireAuth = (req, res, next) => {
     }
 };
 
-
-const transporter = nodemailer.createTransport({
+const transporterOptions: SMTPTransport.Options = {
     host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    port: Number(process.env.EMAIL_PORT) || 465,
     secure: (process.env.EMAIL_SECURE == "TRUE" ? true : false),
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
     },
-});
+}
+const transporter = nodemailer.createTransport(transporterOptions);
 
-module.exports = (db) => {
+
+
+export function dashboardRoutes(): Router {
     const router = express.Router();
     router.use(requireAuth);
-    router.get('/', (req, res) => {
-        const sortColumns = {
+    router.get('/', async (req: Request, res: Response) => {
+        const sortColumns: { [key: string]: string } = {
             "firstName": "firstName",
             "lastName": "lastName",
             "phoneNumber": "phoneNumber",
@@ -40,71 +58,63 @@ module.exports = (db) => {
             "homeNumber": "homeNumber",
             "message": "message",
         }
-        const sortDirections = {
-            "asc": "asc",
-            "desc": "desc"
-        }
+
 
         const searchQuery = (!req.query.search) ? "%%" : ("%" + req.query.search + "%");
-        const sortBy = sortColumns[req.query.sortBy] || 'id';
-        const sortDirection = sortDirections[req.query.sortDirection] || 'desc';// Domyślnie malejąco
-        // Zapytanie SQL z uwzględnieniem warunków wyszukiwania i sortowania
-        const sql = `SELECT * FROM messages
-                   WHERE firstName LIKE ? OR
-                         lastName LIKE ? OR
-                         phoneNumber LIKE ? OR
-                         email LIKE ? OR
-                         city LIKE ? OR
-                         street LIKE ? OR
-                         homeNumber LIKE ? OR
-                         message LIKE ?
-                   ORDER BY ${sortBy} ${sortDirection}`;
-        // Wykonaj zapytanie do bazy danych
-        db.all(sql, [searchQuery, searchQuery, searchQuery, searchQuery, searchQuery, searchQuery, searchQuery, searchQuery,], (err, rows) => {
-            if (err) {
-                console.error(err.message);
-                return res.status(500).send('Wystąpił błąd podczas pobierania wiadomości.');
-            }
+        const sortBy = sortColumns[String(req.query.sortBy)] || 'id';
+        const sortDirection = String(req.query.sortDirection) || 'desc';// Domyślnie malejąco
+        try {
 
-            // Renderuj widok EJS, przekazując dane wiadomości
-            res.render('dashboard', { messages: rows, user: req.session.user });
-        });
+            // Get repository for Message entity
+            const messageRepository = AppDataSource.getRepository(Message);
+
+            // Perform the database query
+            const messages = await messageRepository.createQueryBuilder('message')
+                .where('message.firstName LIKE :searchQuery OR message.lastName LIKE :searchQuery OR message.phoneNumber LIKE :searchQuery OR message.email LIKE :searchQuery OR message.city LIKE :searchQuery OR message.street LIKE :searchQuery OR message.homeNumber LIKE :searchQuery OR message.message LIKE :searchQuery', { searchQuery })
+                .orderBy(`message.${sortBy}`, sortDirection == "asc" ? "ASC" : "DESC")
+                .getMany();
 
 
-
+            res.render('dashboard', { messages, user: req.session.user });
+        } catch (error) {
+            console.error('Error occurred while fetching messages from the database:', error);
+            res.status(500).send('Internal Server Error');
+        }
     });
 
-    router.delete('/delete-message/:id', (req, res) => {
+    router.delete('/delete-message/:id', async (req: Request, res: Response) => {
         const messageId = req.params.id;
 
+        const messageRepository = AppDataSource.getRepository(Message);
 
-        // Zapytanie SQL do usuwania rekordu o określonym ID
-        const sql = 'DELETE FROM messages WHERE id = ?';
-
-        // Wykonaj zapytanie do bazy danych
-        db.run(sql, [messageId], (err) => {
-            if (err) {
-                console.error(err.message);
-                return res.json({ success: false, error: 'Błąd podczas usuwania rekordu.' });
-            }
-
-            // Pomyślnie usunięto rekord
+        const messageToRemove = await messageRepository.findOneByOrFail({ id: Number(messageId) }).catch(error => {
+            console.error(error);
+            res.status(401).send("No such message").end();
+            return;
+        });
+        if (messageToRemove) {
+            await messageRepository.remove(messageToRemove);
             return res.json({ success: true });
-        });
+        }
+
+
     });
-    router.get('/send-message/:id', async (req, res) => {
+
+    router.get('/send-message/:id', async (req: Request, res: Response) => {
         const messageId = req.params.id;
 
+        const messageRepository = AppDataSource.getRepository(Message);
 
-        // Zapytanie SQL do usuwania rekordu o określonym ID
-        const sql = 'SELECT * FROM messages WHERE id = ?';
-
-        const messageData = await getAsync(sql, [messageId], db);
-        if (!messageData?.id) {
+        const messageData: any = await messageRepository.findOneOrFail({ where: { id: Number(messageId) } }).catch(err => {
+            console.error('Error occurred while fetching message from the database:', err);
+            return res.status(500).send('Internal Server Error');
+        });
+        if (!messageData) {
             return res.status(404).send('Wiadomość o podanym ID nie została znaleziona.');
         }
+
         let destinationEmail = null;
-        if (!req.session.user.email || req.session.user.email == "") {
+        if (!req.session.user?.email || req.session.user.email == "") {
             destinationEmail = process.env.EMAIL_DESTINATION;
         } else {
             destinationEmail = req.session.user.email;
@@ -112,6 +122,8 @@ module.exports = (db) => {
         if (!destinationEmail || destinationEmail == "") {
             return res.status(404).send('Nie można wysłać wiadomości email, brak adresata.');
         }
+
+        const firstName = messageData.firstName;
 
         const plainTextMessage =
             `Dane klienta: ${messageData.firstName} ${messageData.lastName}
@@ -121,15 +133,49 @@ module.exports = (db) => {
             ${messageData.message}`;
         const htmlMessage =
             `
-        <h2>Dane klienta:</h2> <br>
-        <ul>
-        <li>🗄️ Dane klienta: ${messageData.firstName} ${messageData.lastName}</li>
-        <li>☎️ Nr telefonu: ${messageData.phoneNumber}</li>
-        <li>🏡 Adres: ${messageData.city}, ${messageData.street} ${messageData.homeNumber}</li>
-        <br>
-        <h2>ℹ️ Treść wiadomości:</h2>
-        <p>${messageData.message}</p>
-        </ul>
+            <!DOCTYPE html>
+            <html lang="pl">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        color: #333;
+                        margin: 0;
+                        padding: 20px;
+                    }
+            
+                    h2 {
+                        color: #007bff;
+                    }
+            
+                    ul {
+                        list-style-type: none;
+                        padding: 0;
+                    }
+            
+                    li {
+                        margin-bottom: 10px;
+                    }
+            
+                    p {
+                        margin-top: 0;
+                    }
+                </style>
+            </head>
+            <body>
+                <h2>Dane klienta:</h2>
+                <ul>
+                    <li>🗄️ Dane klienta: ${messageData.firstName} ${messageData.lastName}</li>
+                    <li>☎️ Nr telefonu: ${messageData.phoneNumber}</li>
+                    <li>🏡 Adres: ${messageData.city}, ${messageData.street} ${messageData.homeNumber}</li>
+                </ul>
+                <h2>ℹ️ Treść wiadomości:</h2>
+                <p>${messageData.message}</p>
+            </body>
+            </html>
         `
         const emailObject = {
             from: `"System powiadomień" <${process.env.EMAIL_USER_ADDRESS}>`, // sender address
@@ -145,70 +191,80 @@ module.exports = (db) => {
         }).catch(err => { console.error(err); return res.status(500).send('Wystąpił błąd podczas wysyłania wiadomości na maila.'); })
 
     });
-    router.get('/message-details/:id', (req, res) => {
+
+    router.get('/message-details/:id', async (req: Request, res: Response) => {
         const messageId = req.params.id;
-
-        // Zapytanie SQL do pobrania szczegółów wiadomości o określonym ID
-        const sql = 'SELECT * FROM messages WHERE id = ?';
-
-        // Wykonaj zapytanie do bazy danych
-        db.get(sql, [messageId], (err, row) => {
-            if (err) {
-                console.error(err.message);
+        const messageRepository = AppDataSource.getRepository(Message);
+        try {
+            const messageDetails = await messageRepository.findOneByOrFail({ id: Number(messageId) });
+            res.render('message-details', { message: messageDetails });
+        } catch (err: any) {
+            console.error('Błąd podczas pobierania szczegółów wiadomości:', err.message);
+            if (err.name === 'EntityNotFound') {
+                return res.status(404).send('Wiadomość o podanym ID nie została znaleziona.');
+            } else {
                 return res.status(500).send('Wystąpił błąd podczas pobierania szczegółów wiadomości.');
             }
-
-            if (!row) {
-                return res.status(404).send('Wiadomość o podanym ID nie została znaleziona.');
-            }
-
-            // Renderuj widok EJS szczegółów wiadomości
-            res.render('message-details', { message: row });
-        });
+        }
     });
-    router.get("/profile", (req, res) => {
+
+    router.get("/profile", (req: Request, res: Response) => {
         res.render("profile", { user: req.session.user });
-    })
-    router.post("/change-profile", async (req, res) => {
+    });
+
+    router.post("/change-profile", async (req: Request, res: Response) => {
         const { newUsername, currentPassword, newPassword, newEmail } = req.body;
         const emailExpresion = new RegExp(/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/);
         if (!newEmail.match(emailExpresion) && newEmail != "") {
             return res.status(401).send("Nieprawidłowy email.");
         }
-        if (currentPassword != "" && newPassword != "") {
-            if (!bcrypt.compareSync(currentPassword, req.session.user.password)) {
-                return res.status(401).send("Nieprawidłowe hasło.");
-            }
-            const hashedPassword = bcrypt.hashSync(newPassword, 10);
-            const updateQuery = 'UPDATE users SET username = ?, password = ?, email = ? WHERE id = ?';
-            db.run(updateQuery, [newUsername, hashedPassword, newEmail, req.session.user.id], (updateErr) => {
-                if (updateErr) {
-                    console.error(updateErr);
-                    return res.status(500).send('Internal Server Error');
-                }
-            })
-        } else {
-            const updateQuery = 'UPDATE users SET username = ?, email = ? WHERE id = ?';
-            db.run(updateQuery, [newUsername, newEmail, req.session.user.id], (updateErr) => {
-                if (updateErr) {
-                    console.error(updateErr);
-                    return res.status(500).send('Internal Server Error');
-                }
-            })
+
+        const userRepository = AppDataSource.getRepository(User);
+        const currentUser = await userRepository.findOneBy({ id: req.session.user?.id });
+
+        if (!currentUser) {
+            return res.status(500).send('Nie można znaleźć użytkownika.');
         }
 
-        const user = await getAsync("SELECT * FROM users WHERE id=?", [req.session.user?.id], db);
-        req.session.user = user;
-        res.redirect('/dashboard');
+        if (currentPassword !== "" && newPassword !== "") {
+            if (!bcrypt.compareSync(currentPassword, currentUser.password)) {
+                return res.status(401).send("Nieprawidłowe hasło.");
+            }
 
-    })
-    router.post('/api/export-messages-csv', async (req, res) => {
+            const hashedPassword = bcrypt.hashSync(newPassword, 10);
+            currentUser.username = newUsername;
+            currentUser.password = hashedPassword;
+            currentUser.email = newEmail;
+
+        } else {
+            currentUser.username = newUsername;
+            currentUser.email = newEmail;
+        }
+
+        try {
+            await userRepository.save(currentUser);
+        } catch (updateErr) {
+            console.error(updateErr);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        const updatedUser = await userRepository.findOneBy({ id: req.session.user?.id });
+
+        if (!updatedUser) {
+            return res.status(500).send('Nie można znaleźć zaktualizowanego użytkownika.');
+        }
+
+        req.session.user = updatedUser;
+        res.redirect('/dashboard');
+    });
+
+    router.post('/api/export-messages-csv', async (req: Request, res: Response) => {
         const selectedMessageIds = req.body.messages;
         if (!selectedMessageIds || selectedMessageIds.length === 0) {
             return res.status(400).json({ error: 'Brak wiadomości do eksportu.' });
         }
         // Pobierz wybrane wiadomości z bazy danych (przykładowa funkcja, dostosuj do swojej bazy)
-        const selectedMessages = await getSelectedMessagesFromDatabase(selectedMessageIds, db).catch(err => { console.error(err); return res.status(500).json({ error: 'Wystąpił błąd podczas pobierania wiadomości z bazy danych.' }); });
+        const selectedMessages = await getSelectedMessagesFromDatabase(selectedMessageIds).catch(err => { console.error(err); return res.status(500).json({ error: 'Wystąpił błąd podczas pobierania wiadomości z bazy danych.' }); });
 
         if (!selectedMessages || selectedMessages.length === 0) {
             return res.status(400).json({ error: 'Brak wiadomości do eksportu.' });
@@ -228,7 +284,7 @@ module.exports = (db) => {
         ];
 
         // Utwórz obiekt csvWriter z nagłówkami
-        const csvWriter = csv({
+        const csvWriter = createObjectCsvWriter({
             path: 'exported_messages.csv',
             header: csvHeaders,
         });
@@ -236,7 +292,7 @@ module.exports = (db) => {
         // Zapisz wiadomości do pliku CSV
         csvWriter.writeRecords(selectedMessages)
             .then(() => {
-                console.log(`Plik CSV został pomyślnie wyeksportowany przez użytkownika: ${req.session.user.username}`);
+                console.log(`Plik CSV został pomyślnie wyeksportowany przez użytkownika: ${req.session.user?.username}`);
                 // Odpowiedź klientowi z linkiem do pobrania pliku
                 res.download('exported_messages.csv', 'exported_messages.csv', (err) => {
                     if (err) {
@@ -251,7 +307,7 @@ module.exports = (db) => {
             });
     });
 
-    router.post('/api/export-messages-eml', async (req, res) => {
+    router.post('/api/export-messages-eml', async (req: Request, res: Response) => {
         const selectedMessageIds = req.body.messages;
 
         if (!selectedMessageIds || selectedMessageIds.length === 0) {
@@ -261,7 +317,7 @@ module.exports = (db) => {
 
         try {
             // Użyj funkcji getSelectedMessagesFromDatabase z użyciem async/await
-            const selectedMessages = await getSelectedMessagesFromDatabase(selectedMessageIds, db);
+            const selectedMessages = await getSelectedMessagesFromDatabase(selectedMessageIds);
 
             if (selectedMessages.length === 0) {
                 return res.status(404).json({ error: 'Brak wiadomości o podanych ID.' });
@@ -273,7 +329,7 @@ module.exports = (db) => {
             await fs.mkdir(tempDir, { recursive: true });
 
             // Twórz pliki .eml dla każdej wiadomości
-            const emlPromises = selectedMessages.map(async (message) => {
+            const emlPromises = selectedMessages.map(async (message: MessageI) => {
                 const emlContent = `Delivered-To: ${message.email}
     Return-Path: <${message.email}>
     From: =?UTF-8?Q?${message.firstName} ${message.lastName}?= <${message.email}>
@@ -324,7 +380,8 @@ module.exports = (db) => {
             res.status(500).json({ error: 'Wystąpił błąd podczas eksportowania plików .eml.' });
         }
     });
-    router.delete('/api/delete-messages', async (req, res) => {
+
+    router.delete('/api/delete-messages', async (req: Request, res: Response) => {
         const selectedMessageIds = req.body.messages;
 
         if (!selectedMessageIds || selectedMessageIds.length === 0) {
@@ -333,8 +390,7 @@ module.exports = (db) => {
 
         try {
             // Użyj funkcji do masowego usuwania wiadomości z bazy danych
-            await deleteSelectedMessagesFromDatabase(selectedMessageIds, db);
-
+            await deleteSelectedMessagesFromDatabase(selectedMessageIds);
             // Zwróć potwierdzenie sukcesu
             res.json({ success: true });
         } catch (error) {
@@ -343,10 +399,5 @@ module.exports = (db) => {
         }
     });
 
-
-
-    return router
+    return router;
 }
-
-
-
