@@ -35,17 +35,54 @@ From: =?UTF-8?Q?${message.firstName} ${message.lastName}?= <${message.email}>
 To: <test@test.com>
 Subject: Wiadomość od ${message.firstName} ${message.lastName} 
 Date: ${new Date(message.timestamp).toUTCString()}
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/html; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: pl-PL
 Reply-To: ${message.firstName} ${message.lastName} <${message.email}>
 
-Dane klienta: 
-Imię: ${message.firstName} Nazwisko: ${message.lastName}
-Nr telefonu: ${message.phoneNumber}
-Adres: ${message.city}, ${message.street} ${message.homeNumber}
-Treść wiadomości:
-${message.message}`;
+<!DOCTYPE html>
+        <html lang="pl">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    color: #333;
+                    margin: 0;
+                    padding: 20px;
+                }
+        
+                h2 {
+                    color: #007bff;
+                }
+        
+                ul {
+                    list-style-type: none;
+                    padding: 0;
+                }
+        
+                li {
+                    margin-bottom: 10px;
+                }
+        
+                p {
+                    margin-top: 0;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Dane klienta:</h2>
+            <ul>
+                <li>🗄️ Dane klienta: ${message.firstName} ${message.lastName}</li>
+                <li>☎️ Nr telefonu: ${message.phoneNumber}</li>
+                <li>🏡 Adres: ${message.city}, ${message.street} ${message.homeNumber}</li>
+            </ul>
+            <h2>ℹ️ Treść wiadomości:</h2>
+            <p>${message.message}</p>
+        </body>
+        </html>`;
 
             const fileName = `${tempDir}/message_${message.id}.eml`;
             await fs.writeFile(fileName, emlContent);

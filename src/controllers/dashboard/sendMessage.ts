@@ -3,8 +3,20 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '../../data-source';
 import { Message } from '../../entity/Message';
 import nodemailer from 'nodemailer';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-export const sendMessageController = async (req: Request, res: Response, transporter: nodemailer.Transporter) => {
+const transporterOptions: SMTPTransport.Options = {
+    host: process.env.EMAIL_HOST,
+    port: Number(process.env.EMAIL_PORT) || 465,
+    secure: (process.env.EMAIL_SECURE == "TRUE" ? true : false),
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+    },
+}
+const transporter = nodemailer.createTransport(transporterOptions);
+
+export const sendMessageController = async (req: Request, res: Response) => {
     const messageId = req.params.id;
 
     const messageRepository = AppDataSource.getRepository(Message);

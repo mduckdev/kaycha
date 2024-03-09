@@ -4,19 +4,11 @@ import { AppDataSource } from "./data-source";
 import { Message } from "./entity/Message";
 import { User } from "./entity/User";
 import { In } from "typeorm";
-interface Dictionary {
-    [key: string]: {
-        allFieldsRequired: string;
-        incorrectEmail: string;
-        incorrectPhoneNumber: string;
-        incorrectCaptcha: string;
-        errorCaptcha: string;
-    };
-}
+import { DictionaryI } from "./interfaces/data";
 
 
 
-export const dict: Dictionary = {
+export const dict: DictionaryI = {
     "PL": {
         allFieldsRequired: "Wszystkie pola są wymagane",
         incorrectEmail: "Nieprawidłowy adres email",
@@ -28,7 +20,7 @@ export const dict: Dictionary = {
 
 
 export const validateContactForm = async (body: any, language: string, captchaSecretKey: string): Promise<ContactResponseI> => {
-    let { firstName, lastName, phoneNumber, email, city, street, homeNumber, message, consent } = body;
+    let { firstName, phoneNumber, email, city, message, consent } = body;
     const hcaptchaResponse = body["g-recaptcha-response"];
 
     const response: ContactResponseI = {
@@ -36,7 +28,7 @@ export const validateContactForm = async (body: any, language: string, captchaSe
         errorMessages: []
     };
 
-    if (!firstName || !lastName || !phoneNumber || !email || !city || !street || !homeNumber || !message || consent != "on") {
+    if (!firstName || !phoneNumber || !email || !city || !message || consent != "on") {
         response.isValid = false;
         response.errorMessages.push(dict[language].allFieldsRequired);
         return response;
@@ -125,10 +117,8 @@ export const deleteSelectedMessagesFromDatabase = async (selectedMessageIds: num
     const messageRepository = AppDataSource.getRepository(Message);
 
     try {
-        // Delete messages based on their IDs
         const deleteResult = await messageRepository.delete({ id: In(selectedMessageIds) });
 
-        // Check if any messages were deleted
         if (deleteResult.affected && deleteResult.affected > 0) {
             console.log('Messages successfully deleted from the database.');
         } else {
@@ -145,27 +135,77 @@ export const randomProperty = (obj: any): any => {
     return obj[keys[keys.length * Math.random() << 0]];
 };
 
-export const notifyAboutMessages = async (transporter: any, newMessages: number): Promise<void> => {
+export const notifyAboutMessages = async (transporter: any, newMessages: Message[]): Promise<void> => {
     let text = "nowych wiadomości";
-    if (newMessages == 1) {
+    if (newMessages.length == 1) {
         text = "nową wiadomość";
-    } else if (newMessages < 5) {
+    } else if (newMessages.length < 5) {
         text = "nowe wiadomości";
     }
-    const plainTextMessage =
-        `Masz ${newMessages} ${text}!
-        Odwiedź kaczormaszyny.pl/dashboard żeby je przejżeć.`;
-    const htmlMessage =
-        `
-        <h1>ℹ️ Masz ${newMessages} ${text}!</h1><br>
-        <h3>🔗Odwiedź <a href="https://kaczormaszyny.pl/dashboard">panel zarządzania</a> żeby je przejrzeć.</h3>
+    const plainTextMessage = `Masz ${newMessages.length} ${text}!`;
+    const htmlMessage = `
+    <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    color: #333;
+                    margin: 0;
+                    padding: 20px;
+                }
+        
+                h2 {
+                    color: #007bff;
+                }
+        
+                ul {
+                    list-style-type: none;
+                    padding: 0;
+                }
+        
+                li {
+                    margin-bottom: 10px;
+                }
+        
+                p {
+                    margin-top: 0;
+                }
+            </style>
+    <h1>ℹ️ Masz ${newMessages.length} ${text}!</h1><br>
     `;
+    const plainTextMessages: string[] = []
+    const htmlMessages: string[] = []
+    for (let index = 0; index < newMessages.length; index++) {
+        const currentMessage = newMessages[index];
+        const plainTextMessage =
+            `
+            Wiadomość nr ${index + 1}
+            Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}
+        Nr telefonu: ${currentMessage.phoneNumber}
+        Adres: ${currentMessage.city}, ${currentMessage.street} ${currentMessage.homeNumber}
+        Treść wiadomości:
+        ${currentMessage.message}
+        `;
+        const htmlMessage =
+            `
+            <h1>Wiadomość nr ${index + 1}</h1>
+            <h2>Dane klienta:</h2>
+            <ul>
+                <li>🗄️ Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}</li>
+                <li>☎️ Nr telefonu: ${currentMessage.phoneNumber}</li>
+                <li>🏡 Adres: ${currentMessage.city}, ${currentMessage.street} ${currentMessage.homeNumber}</li>
+            </ul>
+            <h2>ℹ️ Treść wiadomości:</h2>
+            <p>${currentMessage.message}</p>
+    `
+        plainTextMessages.push(plainTextMessage);
+        htmlMessages.push(htmlMessage);
+    }
     const emailObject = {
         from: `"System powiadomień" <${process.env.EMAIL_USER_ADDRESS}>`, // sender address
         to: process.env.EMAIL_DESTINATION, // list of receivers
-        subject: `Masz ${newMessages} ${text}`, // Subject line
-        text: plainTextMessage, // plain text body
-        html: htmlMessage, // html body
+        subject: `Masz ${newMessages.length} ${text}`, // Subject line
+        text: (plainTextMessage + plainTextMessages.join("\n")), // plain text body
+        html: (htmlMessage + htmlMessages.join("<br>")), // html body
     };
 
     await transporter.sendMail(emailObject).then((x: any) => {
