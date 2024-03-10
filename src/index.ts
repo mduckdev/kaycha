@@ -28,7 +28,7 @@ setupDB(process.env.DEFAULT_USER || "", process.env.DEFAULT_PASSWORD || "", Numb
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(session({ secret: process.env.SESSION_SECRET || "cvsn4qrqjN6AbSwmIptfTXwbBkmrTq9SuvJkgqFKvTHUFQNcGLypOIrivgY0ns4N", resave: false, saveUninitialized: false, cookie: { maxAge: 24 * 60 * 60 * 1000 } }));
+app.use(session({ secret: process.env.SESSION_SECRET || "cvsn4qrqjN6AbSwmIptfTXwbBkmrTq9SuvJkgqFKvTHUFQNcGLypOIrivgY0ns4N", resave: false, saveUninitialized: false, cookie: { maxAge: 24 * 60 * 60 * 1000, sameSite: "strict", secure: true, httpOnly: true, } }));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

@@ -5,4 +5,3 @@ database*
 temp*
 *.csv
 coverage
-dist
