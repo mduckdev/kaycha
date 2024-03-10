@@ -19,9 +19,9 @@ const transporter = nodemailer.createTransport(transporterOptions);
 export const sendMessageController = async (req: Request, res: Response) => {
     const messageId = req.params.id;
 
-    const messageRepository = AppDataSource.getRepository(Message);
+    const messageRepository = (await AppDataSource).getRepository(Message);
 
-    const messageData: any = await messageRepository.findOneOrFail({ where: { id: Number(messageId) } }).catch(err => {
+    const messageData: any = await messageRepository.findOneByOrFail({ id: Number(messageId) }).catch(err => {
         console.error('Error occurred while fetching message from the database:', err);
         return res.status(500).send('Internal Server Error');
     });

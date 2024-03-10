@@ -1,6 +1,5 @@
 import express, { Router } from 'express';
 import "reflect-metadata"
-import { User } from '../entity/User';
 import dotenv from 'dotenv';
 import { rateLimit } from 'express-rate-limit'
 import { contactController } from '../controllers/api/contact';

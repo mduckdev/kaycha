@@ -1,7 +1,7 @@
 [PL]
 Polityka prywatności
 
-Data wejścia w życie: [Data]
+Data wejścia w życie: 10.03.2024
 
 Dziękujemy za odwiedzenie naszej strony internetowej. Niniejsza polityka prywatności opisuje, jak zbieramy, używamy i przechowujemy dane osobowe zebrane podczas korzystania z naszej witryny.
 1. Dane zbierane przez formularz kontaktowy
@@ -39,22 +39,24 @@ Masz prawo do dostępu do swoich danych osobowych, ich poprawiania, usuwania lub
 9. Zmiany w polityce prywatności
 
 Zastrzegamy sobie prawo do wprowadzania zmian w niniejszej polityce prywatności. Aktualizacje będą publikowane na tej stronie, a data wejścia w życie zostanie zaktualizowana.
-9. Kontakt
+10. Kontakt
 
-W przypadku pytań dotyczących niniejszej polityki prywatności prosimy o kontakt pod adresem [Twój adres e-mail].
+W przypadku pytań dotyczących niniejszej polityki prywatności prosimy o kontakt pod adresem kontakt@kaczormaszyny.pl
 
-[Twoja firma/strona]
-[Adres]
-[Telefon]
+KOLONIA KUŹNIA 21
+26-502 JASTRZĄB
+502538971
+
+11. Informacje zawarte na tej stronie są wyłącznie informacjami ogólnymi i nie stanowią oferty w rozumieniu Kodeksu Cywilnego. Dokładamy wszelkich starań, aby informacje te były aktualne i zgodne z prawdą, jednak nie ponosimy odpowiedzialności za ich wykorzystanie.
 
 [EN]
 
 Privacy Policy
 
-Effective Date: [Date].
+Effective Date: 10.03.2024.
 
 Thank you for visiting our website. This privacy policy describes how we collect, use and store personal information collected when you use our website.
-1. data collected through the contact form
+1. Data collected through the contact form
 
 When you use the contact form on our website, we ask you to provide the following data:
 
@@ -86,13 +88,15 @@ We do not share, sell or exchange your personal data with other companies or thi
 8 Your rights
 
 You have the right to access, correct, delete or limit the processing of your personal data. You also have the right to lodge a complaint with the data protection supervisory authority.
-9. changes to the privacy policy
+9. Changes to the privacy policy
 
 We reserve the right to make changes to this privacy policy. Updates will be posted on this page and the effective date will be updated.
 10 Contact.
 
 If you have any questions about this privacy policy, please contact us at [your email address].
 
-[Your company/website].
-[Address].
-[Phone].
+KOLONIA KUŹNIA 21
+26-502 JASTRZĄB
+502538971
+
+11. The information contained on this site is general information only and does not constitute an offer within the meaning of the Civil Code. We make every effort to ensure that the information is up-to-date and truthful, but we are not responsible for its use.

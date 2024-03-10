@@ -24,7 +24,7 @@ async function delay(ms: number): Promise<void> {
 }
 const checkForMessages = (async (): Promise<void> => {
     while (true) {
-        await delay(1 * 60 * 1000); // x minutes * 60 seconds * 1000 miliseconds
+        await delay(15 * 60 * 1000); // x minutes * 60 seconds * 1000 miliseconds
         if (newMessages.length == 0) {
             continue;
         } else {
@@ -36,27 +36,27 @@ const checkForMessages = (async (): Promise<void> => {
 });
 checkForMessages();
 export const contactController = async (req: Request, res: Response): Promise<Response> => {
-    const { firstName, lastName, phoneNumber, email, city, street, homeNumber, message } = req.body;
+    const { firstName, lastName = "", phoneNumber, email, city, street = "", homeNumber = "", message } = req.body;
     const response = await validateContactForm(req.body, "PL", process.env.HCAPTCHA_PRIVATE_KEY || "");
     const { isValid } = response;
     const clientIP = req?.header('x-forwarded-for')?.split(",")[0] ||
         req.socket.remoteAddress;
     const clientPort = req.socket.remotePort;
     if (!isValid) {
-        return res.send(JSON.stringify(response));
+        return res.status(400).json(response);
     }
     const timestamp = Date.now();
 
     try {
-        const messageRepository = AppDataSource.getRepository(Message);
+        const messageRepository = (await AppDataSource).getRepository(Message);
         const newMessage = messageRepository.create({
             firstName: firstName,
-            lastName: lastName || null,
+            lastName: lastName,
             phoneNumber: phoneNumber,
             email: email,
             city: city,
-            street: street || null,
-            homeNumber: homeNumber || null,
+            street: street,
+            homeNumber: homeNumber,
             message: message,
             ipAddress: clientIP,
             timestamp: timestamp,
@@ -69,5 +69,5 @@ export const contactController = async (req: Request, res: Response): Promise<Re
         console.error('Error occurred while adding message to the database:', error);
         throw error;
     }
-    return res.send(response);
+    return res.json(response);
 }

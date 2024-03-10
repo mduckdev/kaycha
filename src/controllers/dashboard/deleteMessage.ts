@@ -6,7 +6,7 @@ import { Message } from '../../entity/Message';
 export const deleteMessageController = async (req: Request, res: Response) => {
     const messageId = req.params.id;
 
-    const messageRepository = AppDataSource.getRepository(Message);
+    const messageRepository = (await AppDataSource).getRepository(Message);
 
     const messageToRemove = await messageRepository.findOneByOrFail({ id: Number(messageId) }).catch(error => {
         console.error(error);

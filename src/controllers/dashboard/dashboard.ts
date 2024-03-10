@@ -17,7 +17,7 @@ export const dashboardController = async (req: Request, res: Response) => {
     const sortBy = sortColumns[String(req.query.sortBy)] || 'id';
     const sortDirection = String(req.query.sortDirection) || 'desc';// Domyślnie malejąco
     try {
-        const messageRepository = AppDataSource.getRepository(Message);
+        const messageRepository = (await AppDataSource).getRepository(Message);
         const messages = await messageRepository.createQueryBuilder('message')
             .where('message.firstName LIKE :searchQuery OR message.lastName LIKE :searchQuery OR message.phoneNumber LIKE :searchQuery OR message.email LIKE :searchQuery OR message.city LIKE :searchQuery OR message.street LIKE :searchQuery OR message.homeNumber LIKE :searchQuery OR message.message LIKE :searchQuery', { searchQuery })
             .orderBy(`message.${sortBy}`, sortDirection == "asc" ? "ASC" : "DESC")

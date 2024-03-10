@@ -5,13 +5,16 @@ import { User } from '../../entity/User';
 import bcrypt from 'bcrypt';
 
 export const changeProfileController = async (req: Request, res: Response) => {
-    const { newUsername, currentPassword, newPassword, newEmail } = req.body;
+    const { newUsername = "", currentPassword = "", newPassword = "", newEmail = "" } = req.body;
+    if (newUsername === "") {
+        return res.status(401).send("Brakuje niezbędnych pól.");
+    }
     const emailExpresion = new RegExp(/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/);
     if (!newEmail.match(emailExpresion) && newEmail != "") {
         return res.status(401).send("Nieprawidłowy email.");
     }
 
-    const userRepository = AppDataSource.getRepository(User);
+    const userRepository = (await AppDataSource).getRepository(User);
     const currentUser = await userRepository.findOneBy({ id: req.session.user?.id });
 
     if (!currentUser) {

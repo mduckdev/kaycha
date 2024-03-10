@@ -7,8 +7,9 @@ export const AppDataSource = new DataSource({
     type: "sqlite",
     database: "database.db",
     synchronize: true,
-    logging: true,
+    logging: (process.env.NODE_ENV == "production") ? true : false,
     entities: [User, Message],
     migrations: [],
     subscribers: [],
-})
+}).initialize().then(x => { return x });
+

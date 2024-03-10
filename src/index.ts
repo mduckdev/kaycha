@@ -24,7 +24,7 @@ dotenv.config();
 const app = express();
 const port: number = Number(process.env.PORT) || 3000;
 
-setupDB(process.env.DEFAULT_USER || "", process.env.DEFAULT_PASSWORD || "");
+setupDB(process.env.DEFAULT_USER || "", process.env.DEFAULT_PASSWORD || "", Number(process.env.PASSWORD_HASH_ROUND) || 10);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -54,16 +54,18 @@ app.get('/login', (req: Request, res: Response): void => {
     res.render("login");
 });
 app.post('/login', loginLimiter, async (req: Request, res: Response): Promise<void> => {
-    const { username, password } = req.body;
+    const { username = "", password = "" }: { username: string, password: string } = req.body;
+
     try {
         // Get repository for User entity
-        const userRepository = AppDataSource.getRepository(User);
+
+        const userRepository = (await AppDataSource).getRepository(User);
 
         // Retrieve user from the database by username
-        const user = await userRepository.findOne({ where: { username: username } });
-
+        const user = await userRepository.findOneBy({ "username": username });
         // Check if the user exists and the password is correct
         if (user && bcrypt.compareSync(password, user.password)) {
+            console.log(`Successfull login for user ${user.username} from ${req?.header('x-forwarded-for')?.split(",")[0] || req.socket.remoteAddress}:${req.socket.remotePort}`)
             req.session.user = user;
             return res.redirect('/dashboard');
         } else {
@@ -82,7 +84,11 @@ app.get('/logout', (req: Request, res: Response): void => {
         res.redirect("/");
     })
 });
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(port, () => {
+        console.log(`Server is running at: http://localhost:${port}`);
+    });
+}
 
-app.listen(port, () => {
-    console.log(`Server is running at: http://localhost:${port}`);
-});
+
+export default app;

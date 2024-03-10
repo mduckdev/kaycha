@@ -5,7 +5,9 @@ import { Message } from "./entity/Message";
 import { User } from "./entity/User";
 import { In } from "typeorm";
 import { DictionaryI } from "./interfaces/data";
-
+import bcrypt from "bcrypt";
+import dotenv from "dotenv"
+dotenv.config();
 
 
 export const dict: DictionaryI = {
@@ -47,44 +49,47 @@ export const validateContactForm = async (body: any, language: string, captchaSe
         response.errorMessages.push(dict[language].incorrectPhoneNumber);
     }
 
-    try {
-        const params = new URLSearchParams();
-        params.append("response", hcaptchaResponse);
-        params.append("secret", captchaSecretKey);
+    if (process.env.NODE_ENV === "production") {
+        try {
+            const params = new URLSearchParams();
+            params.append("response", hcaptchaResponse);
+            params.append("secret", captchaSecretKey);
 
-        const verificationResponse = await axios.post('https://hcaptcha.com/siteverify', params);
+            const verificationResponse = await axios.post('https://hcaptcha.com/siteverify', params);
 
-        if (!verificationResponse.data.success) {
+            if (!verificationResponse.data.success) {
+                response.isValid = false;
+                response.errorMessages.push(dict[language].incorrectCaptcha);
+            }
+        } catch (error) {
             response.isValid = false;
-            response.errorMessages.push(dict[language].incorrectCaptcha);
+            response.errorMessages.push(dict[language].errorCaptcha);
+            console.log(error);
         }
-    } catch (error) {
-        response.isValid = false;
-        response.errorMessages.push(dict[language].errorCaptcha);
-        console.log(error);
     }
+
 
     return response;
 };
 
-export const setupDB = async (username: string, password: string): Promise<void> => {
+export const setupDB = async (username: string, password: string, hashRounds: number): Promise<void> => {
     try {
-        const userRepository = await AppDataSource.initialize().then((x) => {
-            return x.getRepository(User)
-        });
+
+        const userRepository = (await AppDataSource).getRepository(User);
 
         // Create tables if they don't exist
-        await AppDataSource.synchronize()
+        await (await AppDataSource).synchronize()
 
 
         // Check if any user exists
         const isUser = await userRepository.find();
         // If no user exists, create a default user
+        const hashedPassword = await bcrypt.hash(password, hashRounds);
         if (isUser.length === 0) {
             console.log(isUser);
             const newUser = userRepository.create({
                 username: username,
-                password: password,
+                password: hashedPassword,
             });
             await userRepository.save(newUser);
         }
@@ -96,7 +101,9 @@ export const setupDB = async (username: string, password: string): Promise<void>
 };
 
 export const getSelectedMessagesFromDatabase = async (selectedMessageIds: number[]): Promise<any> => {
-    const messageRepository = AppDataSource.getRepository(Message);
+
+
+    const messageRepository = (await AppDataSource).getRepository(Message);
 
     try {
         // Retrieve messages based on their IDs
@@ -114,7 +121,7 @@ export const getSelectedMessagesFromDatabase = async (selectedMessageIds: number
 };
 
 export const deleteSelectedMessagesFromDatabase = async (selectedMessageIds: number[]): Promise<void> => {
-    const messageRepository = AppDataSource.getRepository(Message);
+    const messageRepository = (await AppDataSource).getRepository(Message);
 
     try {
         const deleteResult = await messageRepository.delete({ id: In(selectedMessageIds) });

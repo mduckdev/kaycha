@@ -1,16 +1,12 @@
 rm -rf ~/kaycha/
 mkdir ~/kaycha
 cd ~/kaycha
-if ! grep -q "export NODE_ENV=production" ~/.bashrc
-then
-    echo 'export NODE_ENV=production' >> ~/.bashrc
-fi
-source ~/.bashrc
 
 git init
 git remote add kaycha https://github.com/mduckdev/kaycha.git
 git pull kaycha master
 npm install
+npm run build
 
 if [ -f ~/.env ]
 then
@@ -20,5 +16,5 @@ else
     nano .env
 fi
 pm2 delete all
-pm2 start index.js --name kaycha -f
+NODE_ENV=production pm2 start dist/index.js --name kaycha -f --update-env
 pm2 save
