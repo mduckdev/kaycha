@@ -5,7 +5,7 @@ cd ~/kaycha
 git init
 git remote add kaycha https://github.com/mduckdev/kaycha.git
 git pull kaycha master
-npm install
+npm install --omit=dev
 
 if [ -f ~/.env ]
 then
