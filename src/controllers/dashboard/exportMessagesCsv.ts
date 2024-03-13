@@ -1,6 +1,7 @@
 
 import { Request, Response } from 'express';
 import { getSelectedMessagesFromDatabase } from '../../utils';
+import { promises as fs } from 'fs';
 import { createObjectCsvWriter } from 'csv-writer';
 
 export const exportMessagesCsvController = async (req: Request, res: Response) => {
@@ -34,7 +35,7 @@ export const exportMessagesCsvController = async (req: Request, res: Response) =
     });
 
     // Zapisz wiadomości do pliku CSV
-    csvWriter.writeRecords(selectedMessages)
+    await csvWriter.writeRecords(selectedMessages)
         .then(() => {
             console.log(`Plik CSV został pomyślnie wyeksportowany przez użytkownika: ${req.session.user?.username}`);
             // Odpowiedź klientowi z linkiem do pobrania pliku
@@ -43,10 +44,11 @@ export const exportMessagesCsvController = async (req: Request, res: Response) =
                     console.error('Błąd podczas wysyłania pliku:', err);
                     res.status(500).json({ error: 'Wystąpił błąd podczas wysyłania pliku.' });
                 }
-            });
+            })
         })
         .catch(error => {
             console.error('Błąd podczas zapisywania do pliku CSV:', error);
             res.status(500).json({ error: 'Wystąpił błąd podczas eksportowania.' });
         });
+        fs.rm("exported_messages.csv")
 }

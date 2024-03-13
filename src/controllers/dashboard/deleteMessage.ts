@@ -4,7 +4,7 @@ import { AppDataSource } from '../../data-source';
 import { Message } from '../../entity/Message';
 
 export const deleteMessageController = async (req: Request, res: Response) => {
-    const messageId = req.params.id;
+    const messageId = req.body.messageId;
 
     const messageRepository = (await AppDataSource).getRepository(Message);
 

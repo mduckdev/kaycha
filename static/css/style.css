@@ -558,6 +558,7 @@ section#company-info p {
 section#company-info iframe {
     width: 100%;
     height: 50vh;
+    border:0px;
 }
 
 .socials {

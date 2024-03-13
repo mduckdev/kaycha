@@ -9,7 +9,7 @@ export const messageDetailsController = async (req: Request, res: Response) => {
     const messageRepository = (await AppDataSource).getRepository(Message);
     try {
         const messageDetails = await messageRepository.findOneByOrFail({ id: Number(messageId) });
-        res.render('message-details', { message: messageDetails });
+        res.render('message-details', { message: messageDetails  });
     } catch (err: any) {
         console.error('Błąd podczas pobierania szczegółów wiadomości:', err.message);
         if (err.name === 'EntityNotFound') {

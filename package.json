@@ -7,7 +7,7 @@
     "test": "npx jest --setupFiles dotenv/config --coverage",
     "dev": "npx nodemon --ignore './temp-eml/' ./src/index.ts",
     "prod": "export NODE_ENV=\"production\" && node dist/index.js",
-    "build": "npx tsc"
+    "build": "npx tsc mkdir -p dist/views/ && cp src/views/*.ejs dist/views/"
   },
   "keywords": [
     "excavators",
@@ -20,7 +20,7 @@
   "author": "mduckdev,kaycha",
   "license": "ISC",
   "dependencies": {
-    "archiver": "^6.0.1",
+    "archiver": "^7.0.1",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
@@ -30,6 +30,7 @@
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
     "express-session": "^1.18.0",
+    "helmet": "^7.1.0",
     "nodemailer": "^6.9.9",
     "reflect-metadata": "^0.2.1",
     "sqlite3": "^5.1.7",

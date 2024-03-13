@@ -1,14 +1,3 @@
-// let mybutton = document.getElementById("topButton");
-
-// window.onscroll = function () { scrollFunction() };
-
-// const scrollFunction = () => {
-//     if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
-//         mybutton.style.display = "block";
-//     } else {
-//         mybutton.style.display = "none";
-//     }
-// }
 
 const topFunction = () => {
     document.body.scrollTop = 0;
@@ -24,3 +13,18 @@ const scrollToSection = (sectionID) => {
         window.scrollTo(0, targetScrollPosition);
     }
 }
+function handleMenuButtonClick() {
+    const menuToggle = document.querySelector("input#menu-toggle");
+    if (menuToggle.checked) {
+        menuToggle.checked = false;
+    }
+}
+const menuButtons = document.querySelectorAll("li.menu-button");
+menuButtons.forEach(item=>{
+    item.onclick=()=>{
+        scrollToSection(item.getAttribute("data"));
+        handleMenuButtonClick()
+    }
+})
+
+

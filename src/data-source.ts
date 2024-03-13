@@ -2,6 +2,7 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { User } from "./entity/User"
 import { Message } from "./entity/Message"
+import { error } from "console";
 
 export const AppDataSource = new DataSource({
     type: "sqlite",
@@ -11,5 +12,5 @@ export const AppDataSource = new DataSource({
     entities: [User, Message],
     migrations: [],
     subscribers: [],
-}).initialize().then(x => { return x });
+}).initialize().then(x => { return x }).catch(error=>{console.error(error);throw error});
 

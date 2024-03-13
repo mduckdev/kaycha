@@ -46,7 +46,6 @@ export const getListingsController = async (req: Request, res: Response): Promis
     }
     const advertsList = await axios.get(url, config);
     if (advertsList.data.results.length == 0) {
-        console.log(advertsList)
         console.log("No active listings, sending the placeholder");
         return res.json(placeholder);
     }

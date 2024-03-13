@@ -84,7 +84,7 @@ Reply-To: ${message.firstName} ${message.lastName} <${message.email}>
         </body>
         </html>`;
 
-            const fileName = `${tempDir}/message_${message.id}.eml`;
+            const fileName = `${tempDir}/message_${Number(message.id)}.eml`;
             await fs.writeFile(fileName, emlContent);
             return fileName;
         });

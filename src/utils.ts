@@ -7,6 +7,8 @@ import { In } from "typeorm";
 import { DictionaryI } from "./interfaces/data";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv"
+import { Request, Response } from 'express';
+import * as crypto from "crypto"
 dotenv.config();
 
 
@@ -76,10 +78,6 @@ export const setupDB = async (username: string, password: string, hashRounds: nu
     try {
 
         const userRepository = (await AppDataSource).getRepository(User);
-
-        // Create tables if they don't exist
-        await (await AppDataSource).synchronize()
-
 
         // Check if any user exists
         const isUser = await userRepository.find();
@@ -219,3 +217,31 @@ export const notifyAboutMessages = async (transporter: any, newMessages: Message
         console.log("Pomyślnie wysłano powiadomienie o nowych wiadomościach");
     }).catch((err: any) => { console.error(err); });
 };
+const generateCSRFToken =():Promise<string>=> {
+    return new Promise((resolve, reject) => {
+        crypto.randomBytes(32, (err, buffer) => {
+            if (err) {
+                reject(err);
+            } else {
+                const token = buffer.toString('hex');
+                resolve(token);
+            }
+        });
+    });
+}
+export const verifyCSRF = async (req:Request,res:Response,next:Function)=>{
+    const { csrfToken }:{csrfToken:string} = req.body;
+    const sessionCSRFToken = req.session?.csrfToken;
+    if(csrfToken === sessionCSRFToken){
+        next();
+    }else{
+        res.status(400).send("Failed to verify csrf token.")
+    }
+}
+export const assureCSRF = async (req:Request,res:Response,next:Function)=>{
+    const sessionCSRFToken= req.session?.csrfToken;
+    if(!sessionCSRFToken){
+        req.session.csrfToken = await generateCSRFToken();
+    }
+    next();
+}

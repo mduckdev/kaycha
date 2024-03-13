@@ -5,3 +5,4 @@ database*
 temp*
 *.csv
 coverage
+*cache*

@@ -17,7 +17,7 @@ const transporterOptions: SMTPTransport.Options = {
 const transporter = nodemailer.createTransport(transporterOptions);
 
 export const sendMessageController = async (req: Request, res: Response) => {
-    const messageId = req.params.id;
+    const messageId = req.body.messageId;
 
     const messageRepository = (await AppDataSource).getRepository(Message);
 

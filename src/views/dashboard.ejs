@@ -5,10 +5,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="./css/table.css">
-    <link rel="stylesheet" href="./css/dashboard.css"> -->
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="/js/dashboard/massActions.js" defer></script>
+    <script src="/js/dashboard/rowButtons.js" defer></script>
+    <script src="/js/dashboard/checkAll.js" defer></script>
+    <script src="/js/dashboard/csrf.js" defer></script>
+
     <title>KAYCHA | Dashboard</title>
 
 
@@ -78,6 +81,7 @@
             </select>
             <button type="submit">Potwierdź</button>
         </form>
+        <input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
         <div class="tableContainer">
             <table id="messagesTable">
                 <thead>
@@ -143,165 +147,6 @@
             </table>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Znajdź wszystkie przyciski usuwania
-            const sendButtons = document.querySelectorAll('.send-button');
-            // Dodaj obsługę kliknięcia dla każdego przycisku usuwania
-            sendButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const messageId = button.getAttribute('data-id');
-                    // Wyślij żądanie do serwera w celu usunięcia rekordu o określonym ID
-                    if (confirm(`Czy na pewno chcesz wysłać wiadomość nr: ${messageId}`)) {
-                        fetch(`/dashboard/send-message/${messageId}`, { method: 'GET' })
-                            .then(response => response.json())
-                            .then(data => {
-                                // Przeładuj stronę po pomyślnym usunięciu rekordu
-                                if (data.success) {
-                                    alert("Pomyślnie wysłano wiadomość.")
-                                    window.location.reload();
-                                } else {
-                                    console.error('Błąd podczas usuwania rekordu.');
-                                }
-                            })
-                            .catch(error => console.error('Błąd podczas wysyłania żądania:', error));
-                    }
-
-                });
-            });
-        });
-        document.addEventListener('DOMContentLoaded', () => {
-            // Znajdź wszystkie przyciski usuwania
-            const deleteButtons = document.querySelectorAll('.delete-button');
-
-            // Dodaj obsługę kliknięcia dla każdego przycisku usuwania
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const messageId = button.getAttribute('data-id');
-                    // Wyślij żądanie do serwera w celu usunięcia rekordu o określonym ID
-                    if (confirm(`Czy na pewno chcesz usunąć wiadomość nr: ${messageId}`)) {
-                        fetch(`/dashboard/delete-message/${messageId}`, { method: 'DELETE' })
-                            .then(response => response.json())
-                            .then(data => {
-                                // Przeładuj stronę po pomyślnym usunięciu rekordu
-                                if (data.success) {
-                                    window.location.reload();
-                                } else {
-                                    console.error('Błąd podczas usuwania rekordu.');
-                                }
-                            })
-                            .catch(error => console.error('Błąd podczas wysyłania żądania:', error));
-                    }
-
-                });
-            });
-        });
-    </script>
-    <script>
-        // Skrypt do obsługi zaznaczania wszystkich checkboxów
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const messageCheckboxes = document.querySelectorAll('.messageCheckbox');
-
-        selectAllCheckbox.addEventListener('change', function () {
-            messageCheckboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const actionForm = document.getElementById('actionForm');
-            const messageCheckboxes = document.querySelectorAll('.messageCheckbox');
-
-            actionForm.addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                const selectedAction = document.getElementById('action').value;
-
-                switch (selectedAction) {
-                    case 'export-csv':
-                        exportSelectedMessages('/dashboard/export-messages-csv', "exported_messages.csv");
-                        break;
-                    case 'export-eml':
-                        exportSelectedMessages('/dashboard/export-messages-eml', "exported_messages.zip");
-                        break;
-                    case 'delete':
-                        deleteSelectedMessages();
-                        break;
-                    default:
-                        console.error('Nieznana opcja akcji.');
-                }
-            });
-
-            function exportSelectedMessages(url, filename) {
-                const selectedMessages = getSelectedMessages();
-
-                // Wysyłanie żądania fetch do endpointu eksportu
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ messages: selectedMessages }),
-                })
-                    .then(response => response.blob())
-                    .then(blob => {
-                        if (blob.type.includes("application/json")) {
-                            return;
-                        }
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = filename;
-                        document.body.appendChild(a);
-                        a.click();
-                        window.URL.revokeObjectURL(url);
-                        document.body.removeChild(a);
-                    })
-                    .catch(error => console.error('Błąd podczas eksportowania:', error));
-            }
-
-            function deleteSelectedMessages() {
-                const selectedMessages = getSelectedMessages();
-                if (!confirm(`Czy na pewno chcesz usunąć ${selectedMessages.length} wiadomości?`)) {
-                    return;
-                }
-                // Wysyłanie żądania fetch do endpointu usuwania
-                fetch('/dashboard/delete-messages', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ messages: selectedMessages }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                            console.error(data.error);
-                        }
-                        else {
-                            console.log('Zaznaczone wiadomości zostały pomyślnie usunięte:', data);
-                            window.location.href = window.location.href;
-                        }
-                    })
-                    .catch(error => console.error('Błąd podczas usuwania:', error));
-            }
-
-
-            function getSelectedMessages() {
-                const selectedMessages = [];
-                messageCheckboxes.forEach(checkbox => {
-                    if (checkbox.checked) {
-                        selectedMessages.push(checkbox.dataset.id);
-                    }
-                });
-                return selectedMessages;
-            }
-        });
-
-    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

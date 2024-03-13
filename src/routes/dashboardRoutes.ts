@@ -10,6 +10,8 @@ import { exportMessagesCsvController } from '../controllers/dashboard/exportMess
 import { exportMessagesEmlController } from '../controllers/dashboard/exportMessagesEml';
 import { deleteMessagesController } from '../controllers/dashboard/deleteMessages';
 import { profileController } from '../controllers/dashboard/profile';
+import { rateLimit } from 'express-rate-limit'
+import { assureCSRF, verifyCSRF } from '../utils';
 
 dotenv.config()
 
@@ -20,28 +22,39 @@ const requireAuth = (req: Request, res: Response, next: Function) => {
         next();
     }
 };
+const dashboardLimiter = rateLimit({
+    windowMs: 1 * 1 * 60 * 1000, // 1 minute
+    max: 30, // Limit each IP to 100 requests per `window` (here, per 24 hours)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    message: { isValid: false, errorMessages: ["Przekroczono limit zapytań. Proszę spróbować ponownie później."] }
+});
 
 
 export function dashboardRoutes(): Router {
     const router = express.Router();
     router.use(requireAuth);
+    router.use(dashboardLimiter);
+    router.use(assureCSRF);
+
     router.get('/', dashboardController);
-
-    router.delete('/delete-message/:id', deleteMessageController);
-
-    router.get('/send-message/:id', sendMessageController);
 
     router.get('/message-details/:id', messageDetailsController);
 
     router.get("/profile", profileController);
+    
+    router.delete('/delete-message/',verifyCSRF, deleteMessageController);
 
-    router.post("/change-profile", changeProfileController);
+    router.post('/send-message/',verifyCSRF, sendMessageController);
 
-    router.post('/export-messages-csv', exportMessagesCsvController);
 
-    router.post('/export-messages-eml', exportMessagesEmlController);
+    router.post("/change-profile",verifyCSRF, changeProfileController);
 
-    router.delete('/delete-messages', deleteMessagesController);
+    router.post('/export-messages-csv',verifyCSRF, exportMessagesCsvController);
+
+    router.post('/export-messages-eml',verifyCSRF, exportMessagesEmlController);
+
+    router.delete('/delete-messages',verifyCSRF, deleteMessagesController);
 
     return router;
 }

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/mobile.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.19/build/css/intlTelInput.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.6/css/intlTelInput.css">
     <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png">
@@ -16,7 +16,6 @@
     <meta name="theme-color" content="#ffffff">
 
     <script src="./js/scroll.js" defer></script>
-    <script src="./js/menu.js" defer></script>
     <script src="./js/form.js" defer></script>
     <script src="./js/cookies.js" defer></script>
     <script src="./js/listings.js" defer></script>
@@ -39,11 +38,11 @@
                     </div>
                 </label>
                 <ul class="navigation-buttons">
-                    <li onclick="scrollToSection('buying')"><a dict="purchase">SKUP</a></li>
-                    <li onclick="scrollToSection('selling')"><a dict="sale">SPRZEDAŻ</a></li>
-                    <li onclick="scrollToSection('offer')"><a dict="offer">OFERTA</a></li>
-                    <li onclick="scrollToSection('services')"><a dict="services">USŁUGI</a></li>
-                    <li onclick="scrollToSection('contact')"><a dict="contact">KONTAKT</a></li>
+                    <li class="menu-button" data="buying"><a dict="purchase">SKUP</a></li>
+                    <li class="menu-button" data="selling"><a dict="sale">SPRZEDAŻ</a></li>
+                    <li class="menu-button" data="offer"><a dict="offer">OFERTA</a></li>
+                    <li class="menu-button" data="services"><a dict="services">USŁUGI</a></li>
+                    <li class="menu-button" data="contact"><a dict="contact">KONTAKT</a></li>
                 </ul>
             </nav>
         </div>
@@ -288,14 +287,9 @@
 
                 <button id="submitButton" type="submit" dict="send">WYŚLIJ</button>
             </form>
-            <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.19/build/js/intlTelInput.min.js"></script>
-            <script>
-                const input = document.querySelector("#phoneNumber");
-                window.intlTelInput(input, {
-                    autoInsertDialCode: true,
-                    nationalMoe: false,
-                    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.19/build/js/utils.js",
-                });
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.6/js/intlTelInput.min.js"></script>
+            <script src="./js/phone.js">
+                
             </script>
         </div>
     </section>
@@ -311,12 +305,9 @@
                     <p>TEL. 502538971</p>
                 </div>
             </div>
-            <script>
-
-            </script>
             <iframe id="google-maps-iframe"
                 src="https://maps.googleapis.com/maps/embed?pb=!1m18!1m12!1m3!1d2496.236826579097!2d20.945113499999994!3d51.2699596!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471845a3118c7471%3A0x8bc74d2267502429!2sKolonia%20Ku%C5%BAnia%2021%2C%2026-502%20Kolonia%20Ku%C5%BAnia!5e0!3m2!1spl!2spl!4v1708101274395!5m2!1spl!2spl"
-                style="border:0;" allowfullscreen="" loading="lazy"
+                 allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
 
         </div>
