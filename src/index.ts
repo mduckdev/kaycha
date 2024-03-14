@@ -25,7 +25,9 @@ dotenv.config();
 const app = express();
 const port: number = Number(process.env.PORT) || 3000;
 
-setupDB(process.env.DEFAULT_USER || "", process.env.DEFAULT_PASSWORD || "", Number(process.env.PASSWORD_HASH_ROUND) || 10);
+if (process.env.NODE_ENV !== 'test') {
+    setupDB(process.env.DEFAULT_USER || "", process.env.DEFAULT_PASSWORD || "", Number(process.env.PASSWORD_HASH_ROUND) || 10);
+}
 
 app.disable("x-powered-by");
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -34,7 +34,10 @@ const checkForMessages = (async (): Promise<void> => {
     }
 
 });
-checkForMessages();
+if (process.env.NODE_ENV !== 'test') {
+    checkForMessages();
+}
+
 export const contactController = async (req: Request, res: Response): Promise<Response> => {
     const { firstName, lastName = "", phoneNumber, email, city, street = "", homeNumber = "", message } = req.body;
     const response = await validateContactForm(req.body, "PL", process.env.HCAPTCHA_PRIVATE_KEY || "");

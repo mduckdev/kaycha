@@ -1,8 +1,11 @@
 import request from "supertest";
-
 import app from "../src/index";
 import dotenv from "dotenv"
-dotenv.config()
+import { setupTests } from "./helpers/testSetup";
+dotenv.config();
+beforeAll(async()=>{
+    await setupTests();
+})
 describe("Test index.ts login system", () => {
     it("Tests login attemp with invalid credentials", async () => {
         await request(app)
