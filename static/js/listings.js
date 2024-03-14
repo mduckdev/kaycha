@@ -10,6 +10,11 @@ function prevAuction() {
     currentIndex = (currentIndex - 1 + gallery.children.length) % gallery.children.length;
     updateGalleryTransform();
 }
+const nextButton = document.querySelector("img.next-btn");
+nextButton.onclick = nextAuction;
+const prevButton = document.querySelector("img.prev-btn");
+prevButton.onclick = prevAuction;
+
 
 function updateGalleryTransform() {
     const auctionWidth = document.querySelector('.auction').offsetWidth;

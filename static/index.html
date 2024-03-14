@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.6/css/intlTelInput.css">
     <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png">
@@ -21,15 +22,26 @@
     <script src="./js/listings.js" defer></script>
     <script src="./js/lang.js" defer></script>
     <script src="./js/singleLetterWords.js" defer></script>
+    <script src="/js/modal.js" defer></script>
+
 
     <title>KAYCHA HEAVY EQUIPMENT</title>
 </head>
 
 <body>
+            <!-- Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <h1 id="modal-title">Komunikat</h1>
+      <span class="close">&times;</span>
+      <p id="modal-message"></p>
+    </div>
+</div>
     <section id="navigation">
         <div class="container">
             <nav class="navigation-bar">
-                <img onclick="topFunction()" src="./img/logo/logo_kaycha_800x200.jpg" alt="Logo KAYCHA" srcset=""
+                <img id="logo" src="./img/logo/logo_kaycha_800x200.jpg" alt="Logo KAYCHA" srcset=""
                     width="350">
 
                 <input id="menu-toggle" type="checkbox" />
@@ -180,7 +192,7 @@
             <h2 dict="currentOffer">AKTUALNA OFERTA</h2>
             <p dict="currentOfferP1">Kliknij obraz, aby przejść do ogłoszenia na OTOMOTO.pl</p>
             <div class="gallery-container">
-                <img src="./img/icons/left-arrow.svg" class="prev-btn gallery-btn" onclick="prevAuction()"></button>
+                <img src="./img/icons/left-arrow.svg" class="prev-btn gallery-btn"></button>
                 <div class="offer-gallery">
                     <div class="auction">
                         <a target="_blank"
@@ -218,7 +230,7 @@
                         <p>Cena</p>
                     </div>
                 </div>
-                <img src="./img/icons/right-arrow.svg" class="next-btn gallery-btn" onclick="nextAuction()"></img>
+                <img src="./img/icons/right-arrow.svg" class="next-btn gallery-btn"></img>
             </div>
 
         </div>

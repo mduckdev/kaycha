@@ -6,25 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Profile</title>
     <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/css/modal.css">
+
+    <script src="/js/dashboard/csrf.js" defer></script>
+    <script src="/js/modal.js" defer></script>
+    <script src="/js/dashboard/profile.js" defer></script>
+
 </head>
 
 <body>
-    <div class="container">
-        <h1>Zarządzanie profilem</h1>
-        <form action="/dashboard/change-profile" method="POST">
-            <label for="newUsername">Nazwa użytkownika:</label>
-            <input type="text" id="newUsername" name="newUsername" value="<%= user.username %>" required>
-            <label for="currentPassword">Aktualne hasło:</label>
-            <input type="password" id="currentPassword" name="currentPassword">
-            <label for="newPassword">Nowe hasło:</label>
-            <input type="password" id="newPassword" name="newPassword">
-            <label for="newEmail">Adres email:</label>
-            <input type="email" id="newEmail" name="newEmail" value="<%= user.email %>">
-            <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
-            <button type="submit">Zapisz</button>
-        </form>
+    <!-- Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <h1 id="modal-title">Komunikat</h1>
+      <span class="close">&times;</span>
+      <p id="modal-message"></p>
     </div>
-
+</div>
+  
+    <div class="site-container">
+        <div class="container">
+            <h1>Zarządzanie profilem</h1>
+            <form action="/dashboard/change-profile" method="POST">
+                <label for="newUsername">Nazwa użytkownika:</label>
+                <input type="text" id="newUsername" name="newUsername" value="<%= user.username %>" required>
+                <label for="currentPassword">Aktualne hasło:</label>
+                <input type="password" id="currentPassword" name="currentPassword">
+                <label for="newPassword">Nowe hasło:</label>
+                <input type="password" id="newPassword" name="newPassword">
+                <label for="newEmail">Adres email:</label>
+                <input type="email" id="newEmail" name="newEmail" value="<%= user.email %>">
+                <input id="csrfToken" type="hidden" name="csrfToken" value="<%= csrfToken %>">
+                <button type="submit">Zapisz</button>
+            </form>
+        </div>
+        <div class="security-section container">
+            <h2>Bezpieczeństwo</h2>
+            <button id="logout-button" class="logout-button">Wyloguj się z wszystkich urządzeń</button>
+        </div>
+    </div>
+    
 </body>
 
 </html>

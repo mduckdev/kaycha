@@ -17,14 +17,17 @@ const contactFormHandler = (e) => {
         .then(response => response.json())
         .then(data => {
             if (data.isValid) {
-                alert("Pomyślnie wysłano wiadomość.");
-                hcaptcha.reset();
-                window.location.href = window.location.href;
+                showModal("Pomyślnie wysłano wiadomość.").then(()=>{
+                    hcaptcha.reset();
+                    window.location.href = window.location.href;
+                });
+                
             } else {
                 let s = "";
                 data.errorMessages.forEach(x => s += (x + "\n"));
-                alert(s);
-                hcaptcha.reset();
+                showModal(s,"Błąd").then(()=>{
+                    hcaptcha.reset();
+                })
             }
         })
         .catch(error => console.error('Błąd:', error));

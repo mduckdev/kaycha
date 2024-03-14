@@ -3,6 +3,8 @@ const topFunction = () => {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 }
+const logo = document.getElementById("logo")
+logo.onclick = topFunction;
 
 const scrollToSection = (sectionID) => {
     const section = document.getElementById(sectionID);

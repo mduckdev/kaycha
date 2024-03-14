@@ -7,10 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/modal.css">
+
+    <script src="/js/dashboard/csrf.js" defer></script>
     <script src="/js/dashboard/massActions.js" defer></script>
     <script src="/js/dashboard/rowButtons.js" defer></script>
     <script src="/js/dashboard/checkAll.js" defer></script>
-    <script src="/js/dashboard/csrf.js" defer></script>
+    <script src="/js/modal.js" defer></script>
 
     <title>KAYCHA | Dashboard</title>
 
@@ -18,6 +21,15 @@
 </head>
 
 <body>
+        <!-- Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <h1 id="modal-title">Komunikat</h1>
+      <span class="close">&times;</span>
+      <p id="modal-message"></p>
+    </div>
+</div>
     <div class="container-fluid">
         <!-- Navbar z ikoną i drop listą -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">

@@ -5,11 +5,20 @@ body {
     background-color: #f4f4f4;
     margin: 0;
 }
+.site-container{
+    width: 80vw;
+    margin:50px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
 
 .container {
+    min-width: 200px;
     max-width: 400px;
     margin: 50px auto;
-    padding: 20px;
+    padding: 50px;
     background-color: #f8f8f8;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -51,4 +60,24 @@ button {
 
 button:hover {
     background-color: #555;
+}
+.security-section {
+    float: right;
+    width: 30%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+
+.security-section h2 {
+    margin-top: 0;
+    color: #333;
+}
+.logout-button{
+    background-color: #ff5555;
+}
+.logout-button:hover{
+    background-color: #cc0000;
 }

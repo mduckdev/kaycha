@@ -232,7 +232,7 @@ const generateCSRFToken =():Promise<string>=> {
 export const verifyCSRF = async (req:Request,res:Response,next:Function)=>{
     const { csrfToken }:{csrfToken:string} = req.body;
     const sessionCSRFToken = req.session?.csrfToken;
-    if(csrfToken === sessionCSRFToken){
+    if(csrfToken === sessionCSRFToken && csrfToken != "" && sessionCSRFToken != ""){
         next();
     }else{
         res.status(400).send("Failed to verify csrf token.")

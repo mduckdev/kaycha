@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '../../data-source';
 import { User } from '../../entity/User';
 import bcrypt from 'bcrypt';
+import { Session } from '../../entity/Session';
 
 export const changeProfileController = async (req: Request, res: Response) => {
     const { newUsername = "", currentPassword = "", newPassword = "", newEmail = "" } = req.body;
@@ -30,7 +31,19 @@ export const changeProfileController = async (req: Request, res: Response) => {
         currentUser.username = newUsername;
         currentUser.password = hashedPassword;
         currentUser.email = newEmail;
-
+        try{
+            const sessionRepository = (await AppDataSource).getRepository(Session);
+            const sessions = await sessionRepository.createQueryBuilder("sessions")
+            .where("sessions.id != :id",{id:req.sessionID})
+            .andWhere("sessions.json LIKE :userString",{userString:`%"username":"${req.session.user?.username}"%`})
+            .andWhere("sessions.destroyedAt IS NULL")
+            .update()
+            .set({destroyedAt:new Date()})
+            .execute()
+            console.log(sessions)
+        }catch(error){
+            res.json({error:"Failed to logout from all devices after password change"})
+        }
     } else {
         currentUser.username = newUsername;
         currentUser.email = newEmail;

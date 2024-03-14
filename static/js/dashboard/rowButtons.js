@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(data => {
                         // Przeładuj stronę po pomyślnym usunięciu rekordu
                         if (data.success) {
-                            alert("Pomyślnie wysłano wiadomość.")
+                            showModal("Pomyślnie wysłano wiadomość.")
                             window.location.reload();
                         } else {
                             console.error('Błąd podczas usuwania rekordu.');
@@ -49,12 +49,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(data => {
                         // Przeładuj stronę po pomyślnym usunięciu rekordu
                         if (data.success) {
-                            window.location.reload();
+                            showModal("Pomyślnie usunięto wiadomość").then(()=>{
+                                window.location.reload();
+                            })
                         } else {
-                            console.error('Błąd podczas usuwania rekordu.');
+                            showModal('Błąd podczas usuwania rekordu.',"Uwaga").then(()=>{
+                                console.error(data);
+                            });
                         }
                     })
-                    .catch(error => console.error('Błąd podczas wysyłania żądania:', error));
+                    .catch(error => {
+                        showModal("Błąd podczas wysyłania żądania:","Uwaga").then(()=>{
+                            console.error('Błąd podczas wysyłania żądania:', error)
+                        })
+                    });
             }
 
         });

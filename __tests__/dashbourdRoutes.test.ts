@@ -1,7 +1,9 @@
 import request from "supertest";
 
-import app from "../src/index";
+import  { bootstrap } from "../src/index";
 import { setupTests } from "./helpers/testSetup";
+let app:any= null;
+
 let cookie:string|null=null;
 
 const authenticateUser = async () => {
@@ -18,12 +20,13 @@ const getCSRFToken = async ()=>{
     let cookie = await authenticateUser();
     let res = await request(app).get("/dashboard/profile").set("Cookie", [cookie]);
     let html = res.text;
-    const csrfTokenRegex = /<input type="hidden" name="csrfToken" value="(.+?)">/;
+    const csrfTokenRegex = /<input id="csrfToken" type="hidden" name="csrfToken" value="(.+?)">/;
     const match = html.match(csrfTokenRegex);
     let csrfToken = match ? match[1] : null;
     return csrfToken;
 }
 beforeAll(async()=>{
+    app = await bootstrap();
     await setupTests();
 })
 

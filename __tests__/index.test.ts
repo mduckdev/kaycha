@@ -1,9 +1,12 @@
 import request from "supertest";
-import app from "../src/index";
+import {bootstrap} from "../src/index";
 import dotenv from "dotenv"
 import { setupTests } from "./helpers/testSetup";
 dotenv.config();
+let app:any= null;
+
 beforeAll(async()=>{
+    app = await bootstrap();
     await setupTests();
 })
 describe("Test index.ts login system", () => {

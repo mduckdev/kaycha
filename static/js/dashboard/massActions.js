@@ -66,12 +66,13 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
-                    alert(data.error);
+                    showModal("Uwaga"+data.error);
                     console.error(data.error);
                 }
                 else {
-                    console.log('Zaznaczone wiadomości zostały pomyślnie usunięte:', data);
-                    window.location.href = window.location.href;
+                    showModal('Zaznaczone wiadomości zostały pomyślnie usunięte:'+ data).then(()=>{
+                        window.location.href = window.location.href;
+                    })
                 }
             })
             .catch(error => console.error('Błąd podczas usuwania:', error));

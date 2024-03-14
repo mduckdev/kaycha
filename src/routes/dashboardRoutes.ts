@@ -12,11 +12,13 @@ import { deleteMessagesController } from '../controllers/dashboard/deleteMessage
 import { profileController } from '../controllers/dashboard/profile';
 import { rateLimit } from 'express-rate-limit'
 import { assureCSRF, verifyCSRF } from '../utils';
+import { logoutDevicesController } from '../controllers/dashboard/logoutDevices';
+
 
 dotenv.config()
 
 const requireAuth = (req: Request, res: Response, next: Function) => {
-    if (!req.session.user?.id) {
+    if (!req.session?.user?.id) {
         return res.redirect('/login');
     } else {
         next();
@@ -43,6 +45,8 @@ export function dashboardRoutes(): Router {
 
     router.get("/profile", profileController);
     
+    router.delete("/logout-devices/",verifyCSRF,logoutDevicesController)
+    
     router.delete('/delete-message/',verifyCSRF, deleteMessageController);
 
     router.post('/send-message/',verifyCSRF, sendMessageController);
@@ -55,6 +59,8 @@ export function dashboardRoutes(): Router {
     router.post('/export-messages-eml',verifyCSRF, exportMessagesEmlController);
 
     router.delete('/delete-messages',verifyCSRF, deleteMessagesController);
+
+
 
     return router;
 }
