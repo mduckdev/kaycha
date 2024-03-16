@@ -1,7 +1,6 @@
 const form = document.getElementById("contact-form");
 const iti = intlTelInput(input);
 const contactFormHandler = (e) => {
-    //alert("Wysłano formularz");
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = {};
@@ -17,7 +16,7 @@ const contactFormHandler = (e) => {
         .then(response => response.json())
         .then(data => {
             if (data.isValid) {
-                showModal("Pomyślnie wysłano wiadomość.").then(()=>{
+                showModal("Pomyślnie wysłano wiadomość").then(()=>{
                     hcaptcha.reset();
                     window.location.href = window.location.href;
                 });

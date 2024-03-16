@@ -50,9 +50,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Błąd podczas eksportowania:', error));
     }
 
-    function deleteSelectedMessages() {
+    async function deleteSelectedMessages() {
         const selectedMessages = getSelectedMessages();
-        if (!confirm(`Czy na pewno chcesz usunąć ${selectedMessages.length} wiadomości?`)) {
+        const confirmation = await showConfirmModal(`Usunąć ${selectedMessages.length} wiadomości?`).catch(err=>console.log("Modal rejected."))
+        if (!confirmation) {
             return;
         }
         // Wysyłanie żądania fetch do endpointu usuwania
@@ -66,11 +67,11 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
-                    showModal("Uwaga"+data.error);
+                    showModal("Uwaga! "+data.error);
                     console.error(data.error);
                 }
                 else {
-                    showModal('Zaznaczone wiadomości zostały pomyślnie usunięte:'+ data).then(()=>{
+                    showModal('Zaznaczone wiadomości zostały pomyślnie usunięte: ').then(()=>{
                         window.location.href = window.location.href;
                     })
                 }
