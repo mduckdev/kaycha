@@ -9,7 +9,7 @@ let cookie:string|null=null;
 const authenticateUser = async () => {
     if(!cookie){
         let auth = await request(app)
-        .post("/login")
+        .post("/auth/login")
         .send({ username: process.env.DEFAULT_USER, password: process.env.DEFAULT_PASSWORD });
         cookie = auth.header["set-cookie"];
     }
@@ -33,7 +33,7 @@ beforeAll(async()=>{
 
 describe("Test dashboardRoutes.ts changeProfileController", () => {
     it("Tests 302 redirections to login", async () => {
-        await request(app).get("/dashboard/profile").expect("Location", "/login");
+        await request(app).get("/dashboard/profile").expect("Location", "/auth/login");
     });
     it("Tests csrf protection",async ()=>{
         let cookie = await authenticateUser();

@@ -1,0 +1,32 @@
+import express, { Router } from 'express';
+import "reflect-metadata"
+import dotenv from 'dotenv';
+import { assureCSRF, verifyCSRF } from '../utils';
+import rateLimit from 'express-rate-limit';
+import { loginController, loginPostController } from '../controllers/auth/login';
+import { logoutController } from '../controllers/auth/logout';
+
+
+dotenv.config()
+const loginLimiter = rateLimit({
+    windowMs: 1 * 60 * 60 * 1000, // 1 hour
+    max: 10, // Limit each IP to 100 requests per `window` (here, per 24 hours)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    message: { isValid: false, errorMessages: ["Przekroczono limit zapytań. Proszę spróbować ponownie później."] }
+});
+
+export function authRoutes(): Router {
+    const router = express.Router();
+    //router.use(requireAuth);
+    //router.use(dashboardLimiter);
+    router.use(assureCSRF);
+
+    router.get('/login', loginController);
+
+    router.post('/login', loginLimiter, loginPostController);
+    
+    router.get('/logout', logoutController);
+
+    return router;
+}

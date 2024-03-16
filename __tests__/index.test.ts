@@ -12,38 +12,38 @@ beforeAll(async()=>{
 describe("Test index.ts login system", () => {
     it("Tests login attemp with invalid credentials", async () => {
         await request(app)
-            .post("/login")
+            .post("/auth/login")
             .send({ username: "test", password: "test" })
-            .expect("Location", "/login")
+            .expect("Location", "/auth/login")
     });
     it("Tests login attemp with valid username but wrong password", async () => {
         await request(app)
-            .post("/login")
+            .post("/auth/login")
             .send({ username: process.env.DEFAULT_USER, password: "test" })
-            .expect("Location", "/login")
+            .expect("Location", "/auth/login")
     });
     it("Tests login attemp with invalid username but correct password", async () => {
 
         await request(app)
-            .post("/login")
+            .post("/auth/login")
             .send({ username: "test", password: process.env.DEFAULT_PASSWORD })
-            .expect("Location", "/login")
+            .expect("Location", "/auth/login")
     });
     it("Tests login attemp with invalid parameters", async () => {
         await request(app)
-            .post("/login")
+            .post("/auth/login")
             .send({ usernameae: process.env.DEFAULT_USER, password: process.env.DEFAULT_PASSWORD })
-            .expect("Location", "/login")
+            .expect("Location", "/auth/login")
     });
     it("Tests login attemp with invalid parameters", async () => {
         await request(app)
-            .post("/login")
+            .post("/auth/login")
             .send({ usernameae: process.env.DEFAULT_USER, passwordee: process.env.DEFAULT_PASSWORD })
-            .expect("Location", "/login")
+            .expect("Location", "/auth/login")
     });
     it("Tests login attemp with valid credentials", async () => {
         await request(app)
-            .post("/login")
+            .post("/auth/login")
             .send({ username: process.env.DEFAULT_USER, password: process.env.DEFAULT_PASSWORD })
             .expect("Location", "/dashboard")
     });

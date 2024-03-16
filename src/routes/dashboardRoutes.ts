@@ -19,7 +19,7 @@ dotenv.config()
 
 const requireAuth = (req: Request, res: Response, next: Function) => {
     if (!req.session?.user?.id) {
-        return res.redirect('/login');
+        return res.redirect("/auth/login");
     } else {
         next();
     }
