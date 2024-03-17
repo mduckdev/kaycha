@@ -30,7 +30,7 @@ export class Message {
     @Column({ length: 2000, type: "varchar" })
     message: string
 
-    @Column({ type: "integer" })
+    @Column({ type: "bigint" })
     timestamp: number
 
     @Column({ length: 100, type: "varchar" })

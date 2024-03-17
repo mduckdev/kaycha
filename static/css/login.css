@@ -10,8 +10,14 @@ body {
 }
 
 form {
+    display: flex;
+    align-items:flex-start;
+    justify-content: center;
+    flex-direction: column;
+    width: 20vmax;
     background-color: #fff;
     padding: 20px;
+    gap:5px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -42,4 +48,7 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+a{
+    color:black;
 }
