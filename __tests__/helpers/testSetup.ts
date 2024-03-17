@@ -1,6 +1,6 @@
 import { setupDB } from "../../src/utils";
 let setupCompleted = false;
-export const setupTests = async ()=>{
+export default async ()=>{
     if(setupCompleted){
         return;
     }

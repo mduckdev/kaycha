@@ -8,4 +8,5 @@ module.exports = {
   testPathIgnorePatterns: [
     "/helpers/*" 
   ],
+    globalSetup:"./__tests__/helpers/testSetup.ts"
 };

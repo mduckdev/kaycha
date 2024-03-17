@@ -1,7 +1,6 @@
 import request from "supertest";
 
 import  { bootstrap } from "../src/index";
-import { setupTests } from "./helpers/testSetup";
 let app:any= null;
 
 let cookie:string|null=null;
@@ -27,7 +26,6 @@ const getCSRFToken = async ()=>{
 }
 beforeAll(async()=>{
     app = await bootstrap();
-    await setupTests();
 })
 
 
