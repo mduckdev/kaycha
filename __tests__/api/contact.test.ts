@@ -1,12 +1,12 @@
 import request from "supertest";
-import {bootstrap} from "../src/index";
-let app:any= null;
+import { bootstrap } from "../../src/index";
+let app: any = null;
 
-beforeAll(async()=>{
+beforeAll(async () => {
     app = await bootstrap();
 })
 
-describe("Test apiRoutes.ts contact form", () => {
+describe("Test api/contact route", () => {
     it("Tests sending message with required values but incorrect phone number and incorrect email", async () => {
         let res = await request(app).post("/api/contact").send({
             firstName: "Sample name",

@@ -8,12 +8,12 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import nodemailer from 'nodemailer';
 import bcrypt from "bcrypt"
 
-const generateToken = ():Promise<string|null>=>{
+const generateToken = (): Promise<string | null> => {
     return new Promise((resolve, reject) => {
         crypto.randomBytes(32, (err, buffer) => {
             if (err) {
                 reject(null);
-                console.error("Failed to generate recovery token, error: ",err)
+                console.error("Failed to generate recovery token, error: ", err)
             } else {
                 const token = buffer.toString('hex');
                 resolve(token);
@@ -32,52 +32,43 @@ const transporterOptions: SMTPTransport.Options = {
 }
 const transporter = nodemailer.createTransport(transporterOptions);
 
-const getValidResetEmails = async(email:string)=>{
-    const dayInMs = 24*60*60*1000;
-    const validDates = (Date.now())-dayInMs;
-    const resetEmailsRepository = (await AppDataSource).getRepository(ResetEmail);
-    const validResetEmails = await resetEmailsRepository.find({where:{email:email,generatedAt:MoreThan(validDates)}})
-    return validResetEmails;
-}
-
-
-export class passwordReset{
+export class passwordReset {
     async get(req: Request, res: Response): Promise<void> {
         res.render("password-reset")
     }
     async post(req: Request, res: Response): Promise<void> {
-        res.json({success:true,message:"Sprawdź swoją skrzynkę mailową. Dostarczenie wiadomości może potrwać do kilku minut"});
+        res.json({ success: true, message: "Sprawdź swoją skrzynkę mailową. Dostarczenie wiadomości może potrwać do kilku minut" });
 
-        const {email}:{email:string} = req.body;
-        console.log(`Password reset request for: ${email}`)
-        if(!email || email === ""){
+        const { email }: { email: string } = req.body;
+        console.log(`Password reset request for: ${email} from ${req?.header('x-forwarded-for')?.split(",")[0] || req.socket.remoteAddress}:${req.socket.remotePort}`)
+        if (!email || email === "") {
             return;
         }
         const userRepository = (await AppDataSource).getRepository(User);
 
-        const user = userRepository.findBy({email:email});
+        const user = userRepository.findBy({ email: email });
 
-        if(!user){
+        if (!user) {
             return;
         }
         let failed = false;
-        const token = await generateToken().catch(err=>{failed=true});
-        
-        if(!token || failed){
+        const token = await generateToken().catch(err => { failed = true });
+
+        if (!token || failed) {
             return
         }
-        const dayInMs = 24*60*60*1000;
-        const validDates = (Date.now())-dayInMs;
+        const dayInMs = 24 * 60 * 60 * 1000;
+        const validDates = (Date.now()) - dayInMs;
         const resetEmailsRepository = (await AppDataSource).getRepository(ResetEmail);
-        const validResetEmails = await resetEmailsRepository.find({where:{email:email,generatedAt:MoreThan(validDates)}})
+        const validResetEmails = await resetEmailsRepository.find({ where: { email: email, generatedAt: MoreThan(validDates) } })
 
-        if(validResetEmails.length>=3){
+        if (validResetEmails.length >= 3) {
             return;
         }
 
-        const newResetEmail:ResetEmail = resetEmailsRepository.create({
-            email:email,
-            token:token
+        const newResetEmail: ResetEmail = resetEmailsRepository.create({
+            email: email,
+            token: token
         });
         await resetEmailsRepository.save(newResetEmail);
 
@@ -123,54 +114,54 @@ export class passwordReset{
             to: email, // list of receivers
             subject: `Link do zresetowania hasła`, // Subject line
             text: (plainTextMessage), // plain text body
-            html: (htmlMessage ), // html body
+            html: (htmlMessage), // html body
         };
 
         transporter.sendMail(emailObject);
     }
     async confirm(req: Request, res: Response): Promise<void> {
         const token = req.params.token;
-        if(!token || token===""){
+        if (!token || token === "") {
             return res.redirect("/auth/password-reset")
         }
-        const dayInMs = 24*60*60*1000;
-        const validDates = (Date.now())-dayInMs;
+        const dayInMs = 24 * 60 * 60 * 1000;
+        const validDates = (Date.now()) - dayInMs;
         const resetEmailsRepository = (await AppDataSource).getRepository(ResetEmail);
-        const resetEmails = await resetEmailsRepository.find({where:{token:token,generatedAt:MoreThan(validDates),valid:true}});
-        
-        if(resetEmails.length!==1){
+        const resetEmails = await resetEmailsRepository.find({ where: { token: token, generatedAt: MoreThan(validDates), valid: true } });
+
+        if (resetEmails.length !== 1) {
             return res.redirect("/auth/password-reset")
         }
-        res.render("password-reset-confirm",{token:token})
+        res.render("password-reset-confirm", { token: token })
     }
     async patch(req: Request, res: Response): Promise<void> {
         const token = req.body.token;
         const newPassword = req.body.password;
-        if(!token || token==="" || !newPassword || newPassword===""){
+        if (!token || token === "" || !newPassword || newPassword === "") {
             return res.redirect("/auth/password-reset")
         }
-        const dayInMs = 24*60*60*1000;
-        const validDates = (Date.now())-dayInMs;
+        const dayInMs = 24 * 60 * 60 * 1000;
+        const validDates = (Date.now()) - dayInMs;
         const resetEmailsRepository = (await AppDataSource).getRepository(ResetEmail);
-        const resetEmail = await resetEmailsRepository.findOne({where:{token:token,generatedAt:MoreThan(validDates),valid:true}});
-        
-        if(!resetEmail){
+        const resetEmail = await resetEmailsRepository.findOne({ where: { token: token, generatedAt: MoreThan(validDates), valid: true } });
+
+        if (!resetEmail) {
             return res.redirect("/auth/password-reset")
         }
 
         const userRepository = (await AppDataSource).getRepository(User);
-        const updatedUser = await userRepository.findOne({where:{email:resetEmail.email}});
-        if(!updatedUser){
+        const updatedUser = await userRepository.findOne({ where: { email: resetEmail.email } });
+        if (!updatedUser) {
             return res.redirect("/auth/password-reset")
         }
-        updatedUser.password = await bcrypt.hash(newPassword,(Number(process.env.PASSWORD_HASH_ROUND) || 10))
+        updatedUser.password = await bcrypt.hash(newPassword, (Number(process.env.PASSWORD_HASH_ROUND) || 10))
         await userRepository.save(updatedUser);
-        
 
-        resetEmail.valid=false;
+
+        resetEmail.valid = false;
         await resetEmailsRepository.save(resetEmail);
-        
-        res.json({success:true,message:"Pomyślnie zresetowano hasło"});
+
+        res.json({ success: true, message: "Pomyślnie zresetowano hasło" });
     }
 
 }
