@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '../../data-source';
 import { User } from '../../entity/User';
 import bcrypt from "bcrypt";
-import { TOTP } from "totp-generator"
+import * as OTPAuth from "otpauth";
 export const loginController = (req: Request, res: Response): void => {
     res.render("login");
 }
@@ -29,9 +29,16 @@ export const loginPostController = async (req: Request, res: Response): Promise<
                     res.json({ success: false, message: "MFA required" });
                     return;
                 }
-                const { otp } = TOTP.generate(user.mfaSecret);
-                console.log(otp);
-                if (otp == mfa) {
+                let totp = new OTPAuth.TOTP({
+                    issuer: "Kaycha",
+                    label: "Kaycha heavy equipment",
+                    algorithm: "SHA1",
+                    digits: 6,
+                    period: 30,
+                    secret: user.mfaSecret, // or 'OTPAuth.Secret.fromBase32("NB2W45DFOIZA")'
+                });
+                let token = totp.generate();
+                if (token == mfa) {
                     req.session.user = user;
                     res.json({ success: true, message: "Successfull login" });
                     return;

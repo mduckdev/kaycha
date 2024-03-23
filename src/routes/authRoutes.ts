@@ -6,8 +6,6 @@ import rateLimit from 'express-rate-limit';
 import { loginController, loginPostController } from '../controllers/auth/login';
 import { logoutController } from '../controllers/auth/logout';
 import { passwordReset } from '../controllers/auth/passwordReset';
-import { mfaController } from '../controllers/auth/mfa';
-
 
 dotenv.config()
 const loginLimiter = rateLimit({
@@ -46,7 +44,6 @@ export function authRoutes(): Router {
 
     router.patch("/password-reset", passwordResetLimiter, new passwordReset().patch);
 
-    router.get("/add-mfa", passwordResetLimiter, mfaController);
 
 
 

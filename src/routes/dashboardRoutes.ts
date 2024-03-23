@@ -13,6 +13,7 @@ import { profileController } from '../controllers/dashboard/profile';
 import { rateLimit } from 'express-rate-limit'
 import { assureCSRF, verifyCSRF } from '../utils';
 import { logoutDevicesController } from '../controllers/dashboard/logoutDevices';
+import { mfa } from '../controllers/dashboard/mfa';
 
 
 dotenv.config()
@@ -44,21 +45,25 @@ export function dashboardRoutes(): Router {
     router.get('/message-details/:id', messageDetailsController);
 
     router.get("/profile", profileController);
-    
-    router.delete("/logout-devices/",verifyCSRF,logoutDevicesController)
-    
-    router.delete('/delete-message/',verifyCSRF, deleteMessageController);
 
-    router.post('/send-message/',verifyCSRF, sendMessageController);
+    router.get("/add-mfa", new mfa().get);
+
+    //router.post("/add-mfa", verifyCSRF, mfaController);
+
+    router.delete("/logout-devices/", verifyCSRF, logoutDevicesController)
+
+    router.delete('/delete-message/', verifyCSRF, deleteMessageController);
+
+    router.post('/send-message/', verifyCSRF, sendMessageController);
 
 
-    router.post("/change-profile",verifyCSRF, changeProfileController);
+    router.post("/change-profile", verifyCSRF, changeProfileController);
 
-    router.post('/export-messages-csv',verifyCSRF, exportMessagesCsvController);
+    router.post('/export-messages-csv', verifyCSRF, exportMessagesCsvController);
 
-    router.post('/export-messages-eml',verifyCSRF, exportMessagesEmlController);
+    router.post('/export-messages-eml', verifyCSRF, exportMessagesEmlController);
 
-    router.delete('/delete-messages',verifyCSRF, deleteMessagesController);
+    router.delete('/delete-messages', verifyCSRF, deleteMessagesController);
 
 
 
