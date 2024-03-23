@@ -27,7 +27,7 @@ export const getListingsController = async (req: Request, res: Response): Promis
             password: process.env.OTOMOTO_PASSWORD || ""
         }).toString();
 
-        const response = await axios.post(url, body).catch(err => { console.error(err.response.data) });
+        const response = await axios.post(url, body).catch(err => { console.error(err.response?.data) });
         if (response?.data?.access_token && response?.data?.expires_in) {
             console.log("Successfully authenticated to otomoto API")
             otomotoData.access_token = response.data.access_token;

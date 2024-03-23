@@ -6,6 +6,7 @@ import rateLimit from 'express-rate-limit';
 import { loginController, loginPostController } from '../controllers/auth/login';
 import { logoutController } from '../controllers/auth/logout';
 import { passwordReset } from '../controllers/auth/passwordReset';
+import { mfaController } from '../controllers/auth/mfa';
 
 
 dotenv.config()
@@ -24,6 +25,7 @@ const passwordResetLimiter = rateLimit({
     message: { success: false, message: "Przekroczono limit zapytań. Proszę spróbować ponownie później." }
 });
 
+
 export function authRoutes(): Router {
     const router = express.Router();
     //router.use(requireAuth);
@@ -33,16 +35,19 @@ export function authRoutes(): Router {
     router.get('/login', loginController);
 
     router.post('/login', loginLimiter, loginPostController);
-    
+
     router.get('/logout', logoutController);
 
     router.get("/password-reset", new passwordReset().get);
 
-    router.post("/password-reset",passwordResetLimiter, new passwordReset().post);
+    router.post("/password-reset", passwordResetLimiter, new passwordReset().post);
 
-    router.get("/password-reset/confirm/:token",passwordResetLimiter, new passwordReset().confirm);
+    router.get("/password-reset/confirm/:token", passwordResetLimiter, new passwordReset().confirm);
 
-    router.patch("/password-reset",passwordResetLimiter, new passwordReset().patch);
+    router.patch("/password-reset", passwordResetLimiter, new passwordReset().patch);
+
+    router.get("/add-mfa", passwordResetLimiter, mfaController);
+
 
 
     return router;
