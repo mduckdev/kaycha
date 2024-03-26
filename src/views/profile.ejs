@@ -34,11 +34,18 @@
             <div class="security-section container">
                 <h2>Bezpieczeństwo</h2>
                 <button id="logout-button" class="logout-button">Wyloguj się z wszystkich urządzeń</button>
-                <h3>Zeskanuj kod QR w <a
-                        href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&pli=1">aplikacji</a>
-                    do uwierzytelniania dwuetapowego</h3>
-                <div id="qrcode"></div>
-                <input type="text" name="mfaToken" id="mfaToken" placeholder="Kod z aplikacji">
+                <% if(!user.mfaEnabled){ %>
+                    <h2>Aktywuj uwierzytelnianie wieloetapowe</h2>
+                    <h3>Zeskanuj kod QR w <a
+                            href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&pli=1">aplikacji</a>
+                        do uwierzytelniania wieloetapowego</h3>
+                    <div id="qrcode"></div>
+                    <input type="text" name="mfaToken" id="mfaToken" placeholder="Kod z aplikacji">
+                    <button id="mfaSubmit">Prześlij</button>
+                    <% } else{ %>
+                        <button id="mfaReset" class="logout-button">Usuń uwierzytelnianie wieloetapowe</button>
+                        <% } %>
+
             </div>
         </div>
 

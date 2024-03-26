@@ -6,6 +6,14 @@ body {
     margin: 0;
 }
 
+h1,
+h2,
+h3,
+h4 {
+    margin: 0;
+    padding: 0;
+}
+
 .site-container {
     width: 80vw;
     margin: 50px auto;
@@ -67,7 +75,7 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 5px;
+    gap: 15px;
     float: right;
     width: 30%;
     padding: 20px;

@@ -48,14 +48,18 @@ export function dashboardRoutes(): Router {
 
     router.get("/add-mfa", new mfa().get);
 
-    //router.post("/add-mfa", verifyCSRF, mfaController);
+
+    router.delete("/add-mfa", verifyCSRF, new mfa().delete);
 
     router.delete("/logout-devices/", verifyCSRF, logoutDevicesController)
 
     router.delete('/delete-message/', verifyCSRF, deleteMessageController);
 
+    router.delete('/delete-messages/', verifyCSRF, deleteMessagesController);
+
     router.post('/send-message/', verifyCSRF, sendMessageController);
 
+    router.post("/add-mfa", verifyCSRF, new mfa().post);
 
     router.post("/change-profile", verifyCSRF, changeProfileController);
 
@@ -63,7 +67,6 @@ export function dashboardRoutes(): Router {
 
     router.post('/export-messages-eml', verifyCSRF, exportMessagesEmlController);
 
-    router.delete('/delete-messages', verifyCSRF, deleteMessagesController);
 
 
 

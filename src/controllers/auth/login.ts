@@ -20,7 +20,7 @@ export const loginPostController = async (req: Request, res: Response): Promise<
         // Check if the user exists and the password is correct
         if (user && bcrypt.compareSync(password, user.password)) {
             console.log(`Successfull login for user ${user.username} from ${req?.header('x-forwarded-for')?.split(",")[0] || req.socket.remoteAddress}:${req.socket.remotePort}`)
-            if (!user.mfaEnabled) {
+            if (!user.mfaEnabled || !user.mfaSecret) {
                 req.session.user = user;
                 res.json({ success: true, message: "Successfull login" });
                 return;

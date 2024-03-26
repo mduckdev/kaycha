@@ -19,5 +19,5 @@ export class User {
     mfaEnabled: boolean
 
     @Column({ length: 100, type: "varchar", nullable: true })
-    mfaSecret: string
+    mfaSecret: string | null
 }

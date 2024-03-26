@@ -27,7 +27,7 @@ export class mfa {
     }
     async post(req: Request, res: Response): Promise<void> {
         const { mfaToken = "" }: { mfaToken: string } = req.body;
-        if (!req.session.lastGeneratedMfaSecret || !req.session.user) {
+        if (!req.session.lastGeneratedMfaSecret || !req.session.user || mfaToken == "") {
             res.json({ success: false });
             return;
         }
@@ -42,11 +42,39 @@ export class mfa {
         let token = totp.generate();
         if (mfaToken == token) {
             const userRepository = (await AppDataSource).getRepository(User);
-            const currentUser = await userRepository.findOneOrFail({ where: { id: req.session.user.id } });
+            const currentUser = await userRepository.findOneOrFail({ where: { id: req.session.user.id } }).catch(e => console.error(e));
+            if (!currentUser) {
+                res.json({ success: false });
+                return;
+            }
             currentUser.mfaEnabled = true;
             currentUser.mfaSecret = req.session.lastGeneratedMfaSecret;
             await userRepository.save(currentUser);
             req.session.lastGeneratedMfaSecret = null;
+            req.session.user = currentUser;
+            res.json({ success: true });
+            return;
+        } else {
+            res.json({ success: false, message: "Invalid mfa code" });
+            return;
         }
+    }
+    async delete(req: Request, res: Response): Promise<void> {
+        if (!req.session.user) {
+            res.json({ success: false });
+            return;
+        }
+        const userRepository = (await AppDataSource).getRepository(User);
+        const currentUser = await userRepository.findOneOrFail({ where: { id: req.session.user.id, mfaEnabled: true } }).catch(e => console.error(e));
+        if (!currentUser) {
+            res.json({ success: false });
+            return;
+        }
+        currentUser.mfaEnabled = false;
+        currentUser.mfaSecret = null;
+        await userRepository.save(currentUser);
+        req.session.user = currentUser;
+
+        res.json({ success: true })
     }
 }
