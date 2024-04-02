@@ -10,10 +10,11 @@ beforeAll(async () => {
 describe("Test auth/logout route", () => {
     //-----logout tests-----
     it("Tests logout mechanism", async () => {
-        await request(app)
+        const res = await request(app)
             .post("/auth/login")
-            .send({ username: process.env.DEFAULT_USER, password: process.env.DEFAULT_PASSWORD })
-            .expect("Location", "/dashboard");
+            .send({ username: process.env.DEFAULT_USER, password: process.env.DEFAULT_PASSWORD });
+        expect(res.body).toEqual(expect.objectContaining({ success: true, message: "Successfull login" }))
+
         await request(app)
             .get("/auth/logout")
             .expect("Location", "/");
