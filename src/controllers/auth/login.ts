@@ -35,7 +35,7 @@ export const loginPostController = async (req: Request, res: Response): Promise<
                     algorithm: "SHA1",
                     digits: 6,
                     period: 30,
-                    secret: user.mfaSecret, // or 'OTPAuth.Secret.fromBase32("NB2W45DFOIZA")'
+                    secret: user.mfaSecret,
                 });
                 let token = totp.generate();
                 if (token == mfa) {

@@ -28,6 +28,7 @@ const sendForm = async (event) => {
             }
             else {
                 showModal(data.message);
+                mfaCode.value = ""
             }
 
         })

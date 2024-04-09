@@ -40,7 +40,10 @@ async function addMfa(e) {
     }).then(res => res.json())
         .then(response => {
             if (response.success) {
-                showModal("Pomyślnie dodano uwierzytelnianie dwuetapowe")
+                showModal("Pomyślnie dodano uwierzytelnianie dwuetapowe").then(() => {
+                    window.location.href = window.location.href;
+                })
+
             } else {
                 showModal('Błąd podczas dodawania uwierzytelniania dwuetapowego, sprawdź ponownie wpisany kod', "Uwaga");
             }
@@ -71,7 +74,9 @@ async function removeMfa(e) {
     }).then(res => res.json())
         .then(response => {
             if (response.success) {
-                showModal("Pomyślnie usunięto uwierzytelnianie wieloetapowe")
+                showModal("Pomyślnie usunięto uwierzytelnianie wieloetapowe").then(() => {
+                    window.location.href = window.location.href;
+                })
             } else {
                 showModal('Błąd podczas usuwania uwierzytelniania wieloetapowego', "Uwaga");
             }
