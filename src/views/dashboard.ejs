@@ -21,138 +21,109 @@
 <body>
     <%- include('modal.ejs') %>
 
-    <div class="container-fluid">
-        <!-- Navbar z ikoną i drop listą -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/dashboard">Dashboard</a>
+        <%- include('navbar.ejs') %>
 
-            <!-- Ikona z drop listą -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
 
-            <!-- Drop lista -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-user"></i>
-                            <%= user.username %> <!-- Dodaj ikonę użytkownika -->
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/dashboard/profile">Zarządzaj profilem</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/auth/logout">Wyloguj się</a>
-                        </div>
-                    </li>
-                </ul>
+
+            <div class="my-container">
+                <form action="/dashboard" method="GET">
+                    <label for="search">Wyszukaj:</label>
+                    <input type="text" id="search" name="search" placeholder="Szukaj...">
+
+                    <label for="sortBy">Sortuj według:</label>
+                    <select id="sortBy" name="sortBy">
+                        <option value="timestamp">Data</option>
+                        <option value="firstName">Imię</option>
+                        <option value="lastName">Nazwisko</option>
+                        <!-- Dodaj inne opcje sortowania -->
+                    </select>
+
+                    <label for="sortDirection">Kierunek sortowania:</label>
+                    <input type="radio" id="ascending" name="sortDirection" value="asc">
+                    <label for="ascending">Rosnąco</label>
+                    <input type="radio" id="descending" name="sortDirection" value="desc" checked>
+                    <label for="descending">Malejąco</label>
+
+                    <button type="submit">Zastosuj</button>
+                </form>
+                <form id="actionForm">
+                    <label for="action">Akcja:</label>
+                    <select id="action" name="action">
+                        <option value="export-csv">Eksportuj zaznaczone jako plik .csv</option>
+                        <option value="export-eml">Eksportuj zaznaczone jako plik .eml</option>
+
+                        <option value="delete">Usuń zaznaczone</option>
+                    </select>
+                    <button type="submit">Potwierdź</button>
+                </form>
+                <input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
+                <div class="tableContainer">
+                    <table id="messagesTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="selectAll" />
+                                    <label for="selectAll">Zaznacz wszystkie</label>
+                                </th>
+                                <th>Data</th>
+                                <th>Imię</th>
+                                <th>Nazwisko</th>
+                                <th>Numer telefonu</th>
+                                <th>Email</th>
+                                <th>Miejscowość</th>
+                                <th>Ulica</th>
+                                <th>Numer domu/mieszkania</th>
+                                <th>Treść wiadomości</th>
+                                <th>Akcje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% messages.forEach(message=> { %>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="messageCheckbox" data-id="<%= message.id %>" />
+                                    </td>
+                                    <td>
+                                        <%= new Date(message.timestamp).toLocaleString() %>
+                                    </td>
+                                    <td>
+                                        <%= message.firstName %>
+                                    </td>
+                                    <td>
+                                        <%= message.lastName %>
+                                    </td>
+                                    <td>
+                                        <%= message.phoneNumber %>
+                                    </td>
+                                    <td>
+                                        <%= message.email %>
+                                    </td>
+                                    <td>
+                                        <%= message.city %>
+                                    </td>
+                                    <td>
+                                        <%= message.street %>
+                                    </td>
+                                    <td>
+                                        <%= message.homeNumber %>
+                                    </td>
+                                    <td>
+                                        <%= message.message.substring(0,100) %>...
+                                    </td>
+                                    <td>
+                                        <a href="/dashboard/message-details/<%= message.id %>">Szczegóły</a>
+                                        <button class="delete-button" data-id="<%= message.id %>">Usuń</button>
+                                        <button class="send-button" data-id="<%= message.id %>">Wyślij na
+                                            e-mail</button>
+
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </nav>
-    </div>
 
-
-    <div class="my-container">
-        <form action="/dashboard" method="GET">
-            <label for="search">Wyszukaj:</label>
-            <input type="text" id="search" name="search" placeholder="Szukaj...">
-
-            <label for="sortBy">Sortuj według:</label>
-            <select id="sortBy" name="sortBy">
-                <option value="timestamp">Data</option>
-                <option value="firstName">Imię</option>
-                <option value="lastName">Nazwisko</option>
-                <!-- Dodaj inne opcje sortowania -->
-            </select>
-
-            <label for="sortDirection">Kierunek sortowania:</label>
-            <input type="radio" id="ascending" name="sortDirection" value="asc">
-            <label for="ascending">Rosnąco</label>
-            <input type="radio" id="descending" name="sortDirection" value="desc" checked>
-            <label for="descending">Malejąco</label>
-
-            <button type="submit">Zastosuj</button>
-        </form>
-        <form id="actionForm">
-            <label for="action">Akcja:</label>
-            <select id="action" name="action">
-                <option value="export-csv">Eksportuj zaznaczone jako plik .csv</option>
-                <option value="export-eml">Eksportuj zaznaczone jako plik .eml</option>
-
-                <option value="delete">Usuń zaznaczone</option>
-            </select>
-            <button type="submit">Potwierdź</button>
-        </form>
-        <input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
-        <div class="tableContainer">
-            <table id="messagesTable">
-                <thead>
-                    <tr>
-                        <th>
-                            <input type="checkbox" id="selectAll" />
-                            <label for="selectAll">Zaznacz wszystkie</label>
-                        </th>
-                        <th>Data</th>
-                        <th>Imię</th>
-                        <th>Nazwisko</th>
-                        <th>Numer telefonu</th>
-                        <th>Email</th>
-                        <th>Miejscowość</th>
-                        <th>Ulica</th>
-                        <th>Numer domu/mieszkania</th>
-                        <th>Treść wiadomości</th>
-                        <th>Akcje</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% messages.forEach(message=> { %>
-                        <tr>
-                            <td>
-                                <input type="checkbox" class="messageCheckbox" data-id="<%= message.id %>" />
-                            </td>
-                            <td>
-                                <%= new Date(message.timestamp).toLocaleString() %>
-                            </td>
-                            <td>
-                                <%= message.firstName %>
-                            </td>
-                            <td>
-                                <%= message.lastName %>
-                            </td>
-                            <td>
-                                <%= message.phoneNumber %>
-                            </td>
-                            <td>
-                                <%= message.email %>
-                            </td>
-                            <td>
-                                <%= message.city %>
-                            </td>
-                            <td>
-                                <%= message.street %>
-                            </td>
-                            <td>
-                                <%= message.homeNumber %>
-                            </td>
-                            <td>
-                                <%= message.message.substring(0,100) %>...
-                            </td>
-                            <td>
-                                <a href="/dashboard/message-details/<%= message.id %>">Szczegóły</a>
-                                <button class="delete-button" data-id="<%= message.id %>">Usuń</button>
-                                <button class="send-button" data-id="<%= message.id %>">Wyślij na e-mail</button>
-
-                            </td>
-                        </tr>
-                        <% }); %>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

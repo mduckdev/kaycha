@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Ogłoszeń</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <%- include('../navbar.ejs') %>
+
+        <div class="container-fluid mt-5">
+            <h1>Lista Ogłoszeń</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tytuł</th>
+                        <th>Obrazek</th>
+                        <th>Rok</th>
+                        <th>Cena</th>
+                        <th>Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% listings.forEach(function(listing) { %>
+                        <tr>
+                            <td>
+                                <%= listing.id %>
+                            </td>
+                            <td><a href="<%= listing.href %>">
+                                    <%= listing.title %>
+                                </a></td>
+                            <td><img src="<%= listing.imgSrc %>" alt="<%= listing.title %>" width="100"></td>
+                            <td>
+                                <%= listing.year %>
+                            </td>
+                            <td>
+                                <%= listing.price %> PLN
+                            </td>
+                            <td>
+                                <a href="/edit/<%= listing.id %>" class="btn btn-warning btn-sm">Edytuj</a>
+                                <a href="/view/<%= listing.id %>" class="btn btn-info btn-sm">Podgląd</a>
+                                <form action="/delete/<%= listing.id %>" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+        </div>
+</body>
+
+</html>

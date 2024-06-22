@@ -13,6 +13,7 @@ import ExpressSession from 'express-session';
 import { TypeormStore } from "connect-typeorm";
 import { Session } from './entity/Session';
 import { authRoutes } from './routes/authRoutes';
+import { listingRoutes } from './routes/listingRoutes';
 
 
 declare module "express-session" {
@@ -80,6 +81,8 @@ export const bootstrap = async () => {
     app.use("/dashboard", dashboardRoutes());
     app.use("/api", apiRoutes());
     app.use("/auth", authRoutes());
+    app.use("/listings", listingRoutes());
+
 
 
 

@@ -26,7 +26,6 @@ OTOMOTO_PASSWORD= #required, otomoto password of user to check their listings
 OTOMOTO_ACCESS_TOKEN= #optional, access token to authenticate to otomoto api
 OTOMOTO_REFRESH_TOKEN= #optional, refres token to authenticate to otomoto api
 EMAIL_DESTINATION= #optional but recommended, default email address used to send notifications to
-
 ```
 
 # Deployment
