@@ -39,6 +39,7 @@ export function dashboardRoutes(): Router {
     router.use(requireAuth);
     router.use(dashboardLimiter);
     router.use(assureCSRF);
+    router.use(verifyCSRF);
 
     router.get('/', dashboardController);
 
@@ -49,23 +50,23 @@ export function dashboardRoutes(): Router {
     router.get("/add-mfa", new mfa().get);
 
 
-    router.delete("/add-mfa", verifyCSRF, new mfa().delete);
+    router.delete("/add-mfa", new mfa().delete);
 
-    router.delete("/logout-devices/", verifyCSRF, logoutDevicesController)
+    router.delete("/logout-devices/", logoutDevicesController)
 
-    router.delete('/delete-message/', verifyCSRF, deleteMessageController);
+    router.delete('/delete-message/', deleteMessageController);
 
-    router.delete('/delete-messages/', verifyCSRF, deleteMessagesController);
+    router.delete('/delete-messages/', deleteMessagesController);
 
-    router.post('/send-message/', verifyCSRF, sendMessageController);
+    router.post('/send-message/', sendMessageController);
 
-    router.post("/add-mfa", verifyCSRF, new mfa().post);
+    router.post("/add-mfa", new mfa().post);
 
-    router.post("/change-profile", verifyCSRF, changeProfileController);
+    router.post("/change-profile", changeProfileController);
 
-    router.post('/export-messages-csv', verifyCSRF, exportMessagesCsvController);
+    router.post('/export-messages-csv', exportMessagesCsvController);
 
-    router.post('/export-messages-eml', verifyCSRF, exportMessagesEmlController);
+    router.post('/export-messages-eml', exportMessagesEmlController);
 
 
 

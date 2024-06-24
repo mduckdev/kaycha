@@ -217,7 +217,7 @@ export const notifyAboutMessages = async (transporter: any, newMessages: Message
         console.log("Pomyślnie wysłano powiadomienie o nowych wiadomościach");
     }).catch((err: any) => { console.error(err); });
 };
-const generateCSRFToken =():Promise<string>=> {
+const generateCSRFToken = (): Promise<string> => {
     return new Promise((resolve, reject) => {
         crypto.randomBytes(32, (err, buffer) => {
             if (err) {
@@ -229,18 +229,20 @@ const generateCSRFToken =():Promise<string>=> {
         });
     });
 }
-export const verifyCSRF = async (req:Request,res:Response,next:Function)=>{
-    const { csrfToken }:{csrfToken:string} = req.body;
+export const verifyCSRF = async (req: Request, res: Response, next: Function) => {
+    const { csrfToken }: { csrfToken: string } = req.body;
     const sessionCSRFToken = req.session?.csrfToken;
-    if(csrfToken === sessionCSRFToken && csrfToken != "" && sessionCSRFToken != ""){
+    if (req.method === "GET") {
         next();
-    }else{
+    } else if (csrfToken === sessionCSRFToken && csrfToken != "" && sessionCSRFToken != "") {
+        next();
+    } else {
         res.status(400).send("Failed to verify csrf token.")
     }
 }
-export const assureCSRF = async (req:Request,res:Response,next:Function)=>{
-    const sessionCSRFToken= req.session?.csrfToken;
-    if(!sessionCSRFToken){
+export const assureCSRF = async (req: Request, res: Response, next: Function) => {
+    const sessionCSRFToken = req.session?.csrfToken;
+    if (!sessionCSRFToken) {
         req.session.csrfToken = await generateCSRFToken();
     }
     next();

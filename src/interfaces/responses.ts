@@ -8,5 +8,5 @@ export interface ListingsResponseI {
     href: string,
     price: number,
     year: number,
-    src: string
+    imgSrc: string
 }

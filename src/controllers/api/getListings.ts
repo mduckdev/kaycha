@@ -4,6 +4,8 @@ import axios from "axios";
 import { promises as fs } from 'fs';
 import { ListingsResponseI } from "../../interfaces/responses";
 import { randomProperty } from "../../utils";
+import { AppDataSource } from "../../data-source";
+import { Listing } from "../../entity/Listing";
 const otomotoData: otomotoDataI = {
     url: "https://www.otomoto.pl/api/open",
     access_token: null,
@@ -12,8 +14,9 @@ const otomotoData: otomotoDataI = {
 
 
 export const getListingsController = async (req: Request, res: Response): Promise<Response> => {
-    const placeholderFile = (await fs.readFile("./placeholder.json")).toString("utf-8");
-    const placeholder: ListingsResponseI = JSON.parse(placeholderFile);
+    const listingRepository = (await AppDataSource).getRepository(Listing);
+    const listings = await listingRepository.find();
+    const placeholder: ListingsResponseI[] = listings.map(listing => listing.toResponseObject());
 
     if (!otomotoData.access_token || otomotoData.expires < Date.now()) {
         console.log("Authenticating to otomoto API...")
@@ -62,7 +65,7 @@ export const getListingsController = async (req: Request, res: Response): Promis
             href: auctionData.data.url,
             price: auctionData.data.params.price["1"],
             year: 0,
-            src: auctionData.data.photos["1"][randomProperty(auctionData.data.photos["1"])]
+            imgSrc: auctionData.data.photos["1"][randomProperty(auctionData.data.photos["1"])]
         }
 
         response.push(temp);

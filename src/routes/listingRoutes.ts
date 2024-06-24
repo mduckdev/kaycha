@@ -1,15 +1,6 @@
 import express, { Request, Response, Router } from 'express';
 import "reflect-metadata"
 import dotenv from 'dotenv';
-import { dashboardController } from '../controllers/dashboard/dashboard';
-import { deleteMessageController } from '../controllers/dashboard/deleteMessage';
-import { sendMessageController } from '../controllers/dashboard/sendMessage';
-import { messageDetailsController } from '../controllers/dashboard/messageDetails';
-import { changeProfileController } from '../controllers/dashboard/changeProfile';
-import { exportMessagesCsvController } from '../controllers/dashboard/exportMessagesCsv';
-import { exportMessagesEmlController } from '../controllers/dashboard/exportMessagesEml';
-import { deleteMessagesController } from '../controllers/dashboard/deleteMessages';
-import { profileController } from '../controllers/dashboard/profile';
 import { rateLimit } from 'express-rate-limit'
 import { assureCSRF, verifyCSRF } from '../utils';
 import { logoutDevicesController } from '../controllers/dashboard/logoutDevices';
@@ -40,9 +31,17 @@ export function listingRoutes(): Router {
     router.use(requireAuth);
     router.use(dashboardLimiter);
     router.use(assureCSRF);
+    router.use(verifyCSRF);
 
-    router.get("/", new listing().get)
+    router.get("/", new listing().getIndex)
+    router.get("/edit/:id", new listing().getEdit)
+    router.get("/add", new listing().getAdd)
 
+    router.put('/add', new listing().put);
+
+    router.patch('/edit/:id', new listing().patch);
+
+    router.delete("/delete/:id", new listing().delete)
 
     return router;
 }

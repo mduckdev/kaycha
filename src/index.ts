@@ -57,8 +57,8 @@ export const bootstrap = async () => {
     app.use(helmet({
         contentSecurityPolicy: {
             directives: {
-                "script-src": ["'self'", "https://code.jquery.com", "https://cdn.jsdelivr.net", "https://stackpath.bootstrapcdn.com", "https://cdnjs.cloudflare.com", "https://*.hcaptcha.com", "https://hcaptcha.com"],
-                "style-src": ["'self'", "https://stackpath.bootstrapcdn.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://*.hcaptcha.com", "https://hcaptcha.com", "https://fonts.googleapis.com"],
+                "script-src": ["'self'", "https://code.jquery.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://*.hcaptcha.com", "https://hcaptcha.com"],
+                "style-src": ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://*.hcaptcha.com", "https://hcaptcha.com", "https://fonts.googleapis.com"],
                 "font-src": ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
                 "img-src": ["'self'", "https://*.olxcdn.com", "https://cdnjs.cloudflare.com", "data:"],
                 "frame-src": ["https://*.hcaptcha.com", "https://hcaptcha.com", "https://maps.googleapis.com"],
