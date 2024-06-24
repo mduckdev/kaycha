@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista Ogłoszeń</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
 </head>
 
 <body>
@@ -42,8 +44,7 @@
                             </td>
                             <td>
                                 <a href="/edit/<%= listing.id %>" class="btn btn-warning btn-sm">Edytuj</a>
-                                <a href="/view/<%= listing.id %>" class="btn btn-info btn-sm">Podgląd</a>
-                                <form action="/delete/<%= listing.id %>" method="POST" style="display:inline;">
+                                <form action="/delete/<%= listing.id %>" method="DELETE" class="mt-1">
                                     <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
                                 </form>
                             </td>
