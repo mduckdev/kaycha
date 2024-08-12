@@ -46,9 +46,9 @@ export class passwordReset {
         }
         const userRepository = (await AppDataSource).getRepository(User);
 
-        const user = userRepository.findBy({ email: email });
+        const user = await userRepository.findBy({ email: email });
 
-        if (!user) {
+        if (user.length===0) {
             return;
         }
         let failed = false;

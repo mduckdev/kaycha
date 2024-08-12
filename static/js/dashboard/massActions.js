@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function exportSelectedMessages(url, filename) {
         const selectedMessages = getSelectedMessages();
 
-        // Wysyłanie żądania fetch do endpointu eksportu
         fetch(url, {
             method: 'POST',
             headers: {
