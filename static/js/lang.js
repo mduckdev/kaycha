@@ -1,5 +1,5 @@
 var userLanguage = navigator.language || navigator.userLanguage;
-
+document.documentElement.lang = userLanguage;
 let dict = {};
 
 const languages = {

@@ -30,7 +30,8 @@
 
 p {
     text-align: justify;
-    text-justify: inter-word;
+    text-justify: auto;
+    hyphens: auto;
 }
 
 h2 {
@@ -456,7 +457,7 @@ div.services-description p {
     gap: 25px;
     width: 50%;
 }
-#contact-form input:focus{
+#contact-form input{
     font-size: 16px;
 }
 
