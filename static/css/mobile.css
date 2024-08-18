@@ -12,6 +12,7 @@
     section.welcome p {
         font-size: 3cqw;
     }
+   
 }
 
 @media (max-width:1045px) {
@@ -182,6 +183,7 @@
     #contact-form {
         width: 70%;
     }
+   
 
 
 
