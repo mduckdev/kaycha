@@ -51,7 +51,7 @@ __decorate([
     __metadata("design:type", String)
 ], Message.prototype, "message", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "integer" }),
+    (0, typeorm_1.Column)({ type: "bigint" }),
     __metadata("design:type", Number)
 ], Message.prototype, "timestamp", void 0);
 __decorate([

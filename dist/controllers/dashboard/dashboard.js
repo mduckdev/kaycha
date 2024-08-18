@@ -32,7 +32,7 @@ const dashboardController = (req, res) => __awaiter(void 0, void 0, void 0, func
             .where('message.firstName LIKE :searchQuery OR message.lastName LIKE :searchQuery OR message.phoneNumber LIKE :searchQuery OR message.email LIKE :searchQuery OR message.city LIKE :searchQuery OR message.street LIKE :searchQuery OR message.homeNumber LIKE :searchQuery OR message.message LIKE :searchQuery', { searchQuery })
             .orderBy(`message.${sortBy}`, sortDirection == "asc" ? "ASC" : "DESC")
             .getMany();
-        res.render('dashboard', { messages, user: req.session.user });
+        res.render('dashboard', { messages, user: req.session.user, csrfToken: req.session.csrfToken });
     }
     catch (error) {
         console.error('Error occurred while fetching messages from the database:', error);

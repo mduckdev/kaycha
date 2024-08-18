@@ -46,7 +46,9 @@ const checkForMessages = (() => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
 }));
-checkForMessages();
+if (process.env.NODE_ENV !== 'test') {
+    checkForMessages();
+}
 const contactController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const { firstName, lastName = "", phoneNumber, email, city, street = "", homeNumber = "", message } = req.body;

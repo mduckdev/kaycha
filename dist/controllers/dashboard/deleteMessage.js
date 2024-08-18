@@ -13,7 +13,7 @@ exports.deleteMessageController = void 0;
 const data_source_1 = require("../../data-source");
 const Message_1 = require("../../entity/Message");
 const deleteMessageController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const messageId = req.params.id;
+    const messageId = req.body.messageId;
     const messageRepository = (yield data_source_1.AppDataSource).getRepository(Message_1.Message);
     const messageToRemove = yield messageRepository.findOneByOrFail({ id: Number(messageId) }).catch(error => {
         console.error(error);

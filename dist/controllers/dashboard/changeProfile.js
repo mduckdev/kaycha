@@ -16,8 +16,9 @@ exports.changeProfileController = void 0;
 const data_source_1 = require("../../data-source");
 const User_1 = require("../../entity/User");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const Session_1 = require("../../entity/Session");
 const changeProfileController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c;
     const { newUsername = "", currentPassword = "", newPassword = "", newEmail = "" } = req.body;
     if (newUsername === "") {
         return res.status(401).send("Brakuje niezbędnych pól.");
@@ -39,6 +40,20 @@ const changeProfileController = (req, res) => __awaiter(void 0, void 0, void 0, 
         currentUser.username = newUsername;
         currentUser.password = hashedPassword;
         currentUser.email = newEmail;
+        try {
+            const sessionRepository = (yield data_source_1.AppDataSource).getRepository(Session_1.Session);
+            const sessions = yield sessionRepository.createQueryBuilder("sessions")
+                .where("sessions.id != :id", { id: req.sessionID })
+                .andWhere("sessions.json LIKE :userString", { userString: `%"username":"${(_b = req.session.user) === null || _b === void 0 ? void 0 : _b.username}"%` })
+                .andWhere("sessions.destroyedAt IS NULL")
+                .update()
+                .set({ destroyedAt: new Date() })
+                .execute();
+            console.log(sessions);
+        }
+        catch (error) {
+            res.json({ error: "Failed to logout from all devices after password change" });
+        }
     }
     else {
         currentUser.username = newUsername;
@@ -51,7 +66,7 @@ const changeProfileController = (req, res) => __awaiter(void 0, void 0, void 0, 
         console.error(updateErr);
         return res.status(500).send('Internal Server Error');
     }
-    const updatedUser = yield userRepository.findOneBy({ id: (_b = req.session.user) === null || _b === void 0 ? void 0 : _b.id });
+    const updatedUser = yield userRepository.findOneBy({ id: (_c = req.session.user) === null || _c === void 0 ? void 0 : _c.id });
     if (!updatedUser) {
         return res.status(500).send('Nie można znaleźć zaktualizowanego użytkownika.');
     }

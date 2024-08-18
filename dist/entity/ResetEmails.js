@@ -9,35 +9,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.ResetEmail = void 0;
 const typeorm_1 = require("typeorm");
-let User = class User {
+let ResetEmail = class ResetEmail {
+    constructor() {
+        this.generatedAt = Date.now();
+        this.valid = true;
+    }
 };
-exports.User = User;
+exports.ResetEmail = ResetEmail;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
-], User.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ length: 30, type: "varchar", unique: true }),
+    (0, typeorm_1.PrimaryColumn)({ length: 32, type: "text" }),
     __metadata("design:type", String)
-], User.prototype, "username", void 0);
+], ResetEmail.prototype, "token", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 150, type: "varchar" }),
+    (0, typeorm_1.Column)({ length: 50, type: "varchar" }),
     __metadata("design:type", String)
-], User.prototype, "password", void 0);
+], ResetEmail.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 50, type: "varchar", nullable: true }),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "boolean", default: false }),
-    __metadata("design:type", Boolean)
-], User.prototype, "mfaEnabled", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ length: 100, type: "varchar", nullable: true }),
+    (0, typeorm_1.Column)("bigint"),
     __metadata("design:type", Object)
-], User.prototype, "mfaSecret", void 0);
-exports.User = User = __decorate([
-    (0, typeorm_1.Entity)("Users")
-], User);
+], ResetEmail.prototype, "generatedAt", void 0);
+__decorate([
+    (0, typeorm_1.Column)("boolean"),
+    __metadata("design:type", Boolean)
+], ResetEmail.prototype, "valid", void 0);
+exports.ResetEmail = ResetEmail = __decorate([
+    (0, typeorm_1.Entity)("ResetEmails")
+], ResetEmail);

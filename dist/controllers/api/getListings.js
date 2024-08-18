@@ -14,8 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getListingsController = void 0;
 const axios_1 = __importDefault(require("axios"));
-const fs_1 = require("fs");
 const utils_1 = require("../../utils");
+const data_source_1 = require("../../data-source");
+const Listing_1 = require("../../entity/Listing");
 const otomotoData = {
     url: "https://www.otomoto.pl/api/open",
     access_token: null,
@@ -23,8 +24,9 @@ const otomotoData = {
 };
 const getListingsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    const placeholderFile = (yield fs_1.promises.readFile("./placeholder.json")).toString("utf-8");
-    const placeholder = JSON.parse(placeholderFile);
+    const listingRepository = (yield data_source_1.AppDataSource).getRepository(Listing_1.Listing);
+    const listings = yield listingRepository.find();
+    const placeholder = listings.map(listing => listing.toResponseObject());
     if (!otomotoData.access_token || otomotoData.expires < Date.now()) {
         console.log("Authenticating to otomoto API...");
         const url = otomotoData.url + "/oauth/token";
@@ -35,7 +37,7 @@ const getListingsController = (req, res) => __awaiter(void 0, void 0, void 0, fu
             username: process.env.OTOMOTO_USERNAME || "",
             password: process.env.OTOMOTO_PASSWORD || ""
         }).toString();
-        const response = yield axios_1.default.post(url, body).catch(err => { console.error(err.response.data); });
+        const response = yield axios_1.default.post(url, body).catch(err => { var _a; console.error((_a = err.response) === null || _a === void 0 ? void 0 : _a.data); });
         if (((_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.access_token) && ((_b = response === null || response === void 0 ? void 0 : response.data) === null || _b === void 0 ? void 0 : _b.expires_in)) {
             console.log("Successfully authenticated to otomoto API");
             otomotoData.access_token = response.data.access_token;
@@ -55,7 +57,6 @@ const getListingsController = (req, res) => __awaiter(void 0, void 0, void 0, fu
     };
     const advertsList = yield axios_1.default.get(url, config);
     if (advertsList.data.results.length == 0) {
-        console.log(advertsList);
         console.log("No active listings, sending the placeholder");
         return res.json(placeholder);
     }
@@ -71,7 +72,7 @@ const getListingsController = (req, res) => __awaiter(void 0, void 0, void 0, fu
             href: auctionData.data.url,
             price: auctionData.data.params.price["1"],
             year: 0,
-            src: auctionData.data.photos["1"][(0, utils_1.randomProperty)(auctionData.data.photos["1"])]
+            imgSrc: auctionData.data.photos["1"][(0, utils_1.randomProperty)(auctionData.data.photos["1"])]
         };
         response.push(temp);
     }));

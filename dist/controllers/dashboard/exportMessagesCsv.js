@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.exportMessagesCsvController = void 0;
 const utils_1 = require("../../utils");
+const fs_1 = require("fs");
 const csv_writer_1 = require("csv-writer");
 const exportMessagesCsvController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const selectedMessageIds = req.body.messages;
@@ -39,7 +40,7 @@ const exportMessagesCsvController = (req, res) => __awaiter(void 0, void 0, void
         header: csvHeaders,
     });
     // Zapisz wiadomości do pliku CSV
-    csvWriter.writeRecords(selectedMessages)
+    yield csvWriter.writeRecords(selectedMessages)
         .then(() => {
         var _a;
         console.log(`Plik CSV został pomyślnie wyeksportowany przez użytkownika: ${(_a = req.session.user) === null || _a === void 0 ? void 0 : _a.username}`);
@@ -55,5 +56,6 @@ const exportMessagesCsvController = (req, res) => __awaiter(void 0, void 0, void
         console.error('Błąd podczas zapisywania do pliku CSV:', error);
         res.status(500).json({ error: 'Wystąpił błąd podczas eksportowania.' });
     });
+    fs_1.promises.rm("exported_messages.csv");
 });
 exports.exportMessagesCsvController = exportMessagesCsvController;

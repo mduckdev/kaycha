@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.notifyAboutMessages = exports.randomProperty = exports.deleteSelectedMessagesFromDatabase = exports.getSelectedMessagesFromDatabase = exports.setupDB = exports.validateContactForm = exports.dict = void 0;
+exports.assureCSRF = exports.verifyCSRF = exports.notifyAboutMessages = exports.randomProperty = exports.deleteSelectedMessagesFromDatabase = exports.getSelectedMessagesFromDatabase = exports.setupDB = exports.validateContactForm = exports.dict = void 0;
 const axios_1 = __importDefault(require("axios"));
 const data_source_1 = require("./data-source");
 const Message_1 = require("./entity/Message");
@@ -20,6 +43,7 @@ const User_1 = require("./entity/User");
 const typeorm_1 = require("typeorm");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const crypto = __importStar(require("crypto"));
 dotenv_1.default.config();
 exports.dict = {
     "PL": {
@@ -76,8 +100,6 @@ exports.validateContactForm = validateContactForm;
 const setupDB = (username, password, hashRounds) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userRepository = (yield data_source_1.AppDataSource).getRepository(User_1.User);
-        // Create tables if they don't exist
-        yield (yield data_source_1.AppDataSource).synchronize();
         // Check if any user exists
         const isUser = yield userRepository.find();
         // If no user exists, create a default user
@@ -213,3 +235,40 @@ const notifyAboutMessages = (transporter, newMessages) => __awaiter(void 0, void
     }).catch((err) => { console.error(err); });
 });
 exports.notifyAboutMessages = notifyAboutMessages;
+const generateCSRFToken = () => {
+    return new Promise((resolve, reject) => {
+        crypto.randomBytes(32, (err, buffer) => {
+            if (err) {
+                reject(err);
+            }
+            else {
+                const token = buffer.toString('hex');
+                resolve(token);
+            }
+        });
+    });
+};
+const verifyCSRF = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const { csrfToken } = req.body;
+    const sessionCSRFToken = (_a = req.session) === null || _a === void 0 ? void 0 : _a.csrfToken;
+    if (req.method === "GET") {
+        next();
+    }
+    else if (csrfToken === sessionCSRFToken && csrfToken != "" && sessionCSRFToken != "") {
+        next();
+    }
+    else {
+        res.status(400).send("Failed to verify csrf token.");
+    }
+});
+exports.verifyCSRF = verifyCSRF;
+const assureCSRF = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    const sessionCSRFToken = (_b = req.session) === null || _b === void 0 ? void 0 : _b.csrfToken;
+    if (!sessionCSRFToken) {
+        req.session.csrfToken = yield generateCSRFToken();
+    }
+    next();
+});
+exports.assureCSRF = assureCSRF;

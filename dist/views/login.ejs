@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login page</title>
+    <link rel="stylesheet" href="/css/login.css">
+    <script src="/js/dashboard/login.js" defer></script>
+</head>
+
+<body>
+    <%- include('modal.ejs') %>
+
+        <h1>Logowanie</h1>
+        <form id="login-form" class="login-form" action="/auth/login" method="post">
+            <input id="username" type="text" name="username" placeholder="Nazwa użytkownika" required>
+            <input id="password" type="password" name="password" placeholder="Hasło" required>
+            <button type="submit">Login</button>
+            <a href="/auth/password-reset">Resetowanie hasła</a>
+        </form>
+</body>
+
+</html>

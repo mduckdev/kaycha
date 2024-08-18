@@ -18,10 +18,17 @@ const contactLimiter = (0, express_rate_limit_1.rateLimit)({
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     message: { isValid: false, errorMessages: ["Przekroczono limit zapytań. Proszę spróbować ponownie później."] }
 });
+const listingsLimiter = (0, express_rate_limit_1.rateLimit)({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 10, // Limit each IP to 100 requests per `window` (here, per 24 hours)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    message: { isValid: false, errorMessages: ["Przekroczono limit zapytań. Proszę spróbować ponownie później."] }
+});
 function apiRoutes() {
     const router = express_1.default.Router();
     router.post("/contact", contactLimiter, contact_1.contactController);
-    router.get("/get-listings", getListings_1.getListingsController);
+    router.get("/get-listings", listingsLimiter, getListings_1.getListingsController);
     return router;
 }
 exports.apiRoutes = apiRoutes;

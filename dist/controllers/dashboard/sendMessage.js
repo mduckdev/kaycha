@@ -28,7 +28,7 @@ const transporterOptions = {
 const transporter = nodemailer_1.default.createTransport(transporterOptions);
 const sendMessageController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const messageId = req.params.id;
+    const messageId = req.body.messageId;
     const messageRepository = (yield data_source_1.AppDataSource).getRepository(Message_1.Message);
     const messageData = yield messageRepository.findOneByOrFail({ id: Number(messageId) }).catch(err => {
         console.error('Error occurred while fetching message from the database:', err);
