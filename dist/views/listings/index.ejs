@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Ogłoszeń</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="/js/listings/overrideMethod.js"></script>
+
+</head>
+
+<body>
+    <%- include('../modal.ejs') %>
+
+        <%- include('../navbar.ejs') %>
+
+            <div class="container-fluid mt-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1>Lista Ogłoszeń</h1>
+                    <a href="/listings/add" class="btn btn-primary">Dodaj nowe ogłoszenie</a>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tytuł</th>
+                            <th>Grafika</th>
+                            <th>Rok</th>
+                            <th>Cena</th>
+                            <th>Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% listings.forEach(function(listing) { %>
+                            <tr>
+                                <td>
+                                    <%= listing.id %>
+                                </td>
+                                <td><a href="<%= listing.href %>">
+                                        <%= listing.title %>
+                                    </a></td>
+                                <td><img src="<%= listing.imgSrc %>" alt="<%= listing.title %>" width="100"></td>
+                                <td>
+                                    <%= listing.year %>
+                                </td>
+                                <td>
+                                    <%= listing.price %> PLN
+                                </td>
+                                <td>
+                                    <a href="/listings/edit/<%= listing.id %>" class="btn btn-warning btn-sm">Edytuj</a>
+                                    <form action="/listings/delete/<%= listing.id %>" method="POST" httpMethod="DELETE"
+                                        class="mt-1">
+                                        <input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
+                                        <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </div>
+</body>
+
+</html>

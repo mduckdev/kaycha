@@ -7,7 +7,7 @@
     "test": "npx jest --setupFiles dotenv/config --coverage",
     "dev": "npx nodemon --ignore './temp-eml/' ./src/index.ts",
     "prod": "export NODE_ENV=\"production\" && node dist/index.js",
-    "build": "npx tsc && mkdir -p dist/views/ && cp src/views/*.ejs dist/views/"
+    "build": "npx tsc && mkdir -p dist/views/ && cp -r src/views/* dist/views/"
   },
   "keywords": [
     "excavators",

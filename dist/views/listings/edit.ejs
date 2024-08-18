@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="/js/listings/overrideMethod.js"></script>
+
+    <title>Edytuj Ogłoszenie</title>
+</head>
+
+<body>
+    <%- include('../modal.ejs') %>
+        <%- include('../navbar.ejs') %>
+
+            <div class="container mt-5">
+                <h1>Edytuj Ogłoszenie</h1>
+
+                <form action="/listings/edit/<%= listing.id %>" method="POST" httpMethod="PATCH">
+                    <input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
+
+                    <div class="form-group">
+                        <label for="title">Tytuł</label>
+                        <input type="text" class="form-control" id="title" name="title" value="<%= listing.title %>"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="imgSrc">Obrazek URL</label>
+                        <input type="text" class="form-control" id="imgSrc" name="imgSrc" value="<%= listing.imgSrc %>"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="href">Link do aukcji URL</label>
+                        <input type="text" class="form-control" id="href" name="href" value="<%= listing.href %>"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Rok</label>
+                        <input type="number" class="form-control" id="year" name="year" value="<%= listing.year %>"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Cena</label>
+                        <input type="number" class="form-control" id="price" name="price" value="<%= listing.price %>"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-1">Zapisz</button>
+                </form>
+            </div>
+</body>
+
+</html>
