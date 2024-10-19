@@ -79,7 +79,7 @@ const languages = {
         freeValuation:"DARMOWA WYCENA",
         cashInhand:"GOTÓWKA DO RĘKI",
         transportToAnyPlace:"DOJAZD W KAŻDE MIEJSCE W POLSCE",
-        ourOwnTransport:"DOJAZD W KAŻDE MIEJSCE W POLSCE",
+        ourOwnTransport:"WŁASNY TRANSPORT ORAZ ZAŁADUNEK",
         purchaseP1:"Odkupimy wszelkiego rodzaju maszyny budowlane mniejsze oraz większe, starsze i młodsze, sprzęt sprawny i uszkodzony jak również osprzęt do koparek, ładowarek, minikoparek i koparko ładowarek, łyżki, młoty wyburzeniowe, wiertnice, zagęszczarki, kruszarki, łyżki mieszające do betonu, czerpaki, chwytaki i inne rodzaje nietypowego osprzętu. ",
         purchaseP2:"Płacimy gotówką lub przelewem, decyduje klient, odbiór sprzętu po naszej stronie, dojeżdżamy w każde miejsce w Polsce. ",
         interestedIn:"INTERESUJĄ NAS:",
