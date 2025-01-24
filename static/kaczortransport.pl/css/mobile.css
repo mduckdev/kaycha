@@ -30,7 +30,9 @@
     }
 
     .socials {
+        padding: 0.7em;
         flex-direction: column;
+        gap:0.7em;
     }
 
     .socials>img {
