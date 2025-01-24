@@ -10,3 +10,18 @@ export interface ListingsResponseI {
     year: number,
     imgSrc: string
 }
+export interface VehicleResponseI {
+    id: number;
+    model: string;
+    loadCapacity: number;
+    gvm: number;
+    platformLength: number;
+    flatPartLength: number;
+    slopeLength: number;
+    platformWidth: number;
+    platformHeight: number;
+    loadingSlopeHeight: number;
+    rampLength: number;
+    maxLoadHeight: number;
+    passengerSeats: number;
+  }

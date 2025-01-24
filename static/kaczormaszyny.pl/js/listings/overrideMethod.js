@@ -28,7 +28,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     if (data.success) {
                         showModal(data.message).then(() => {
-                            window.location.href = '/listings/'; // Przekierowanie na stronę główną
+                            if(window.location.href.includes("listings")){
+                                window.location.href = '/listings/'; // Przekierowanie na stronę główną
+                            }else if(window.location.href.includes("fleet")){
+                                window.location.href = '/fleet/'; // Przekierowanie na stronę główną
+                            }
                         })
                     }
                 })
