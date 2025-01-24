@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.6/css/intlTelInput.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png">
+    <link rel="manifest" href="./favicons/site.webmanifest">
+    <link rel="mask-icon" href="./favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+    <script src="./js/scroll.js" defer></script>
+    <script src="./js/form.js" defer></script>
+    <script src="./js/cookies.js" defer></script>
+    <script src="./js/listings.js" defer></script>
+    <script src="./js/lang.js" defer></script>
+    <script src="./js/singleLetterWords.js" defer></script>
+    <script src="/js/modal.js" defer></script>
+
+
+    <title>KAYCHA TRANSPORT</title>
+</head>
+
+<body>
+            <!-- Modal -->
+<div id="myModal" class="modal" hidden="true">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <h1 id="modal-title">Komunikat</h1>
+      <span class="close">&times;</span>
+      <p id="modal-message"></p>
+    </div>
+</div>
+    <section id="navigation">
+        <div class="container">
+            <nav class="navigation-bar">
+                <img id="logo" src="./img/logo/logo_kaycha_transport.png" alt="Logo KAYCHA" srcset=""
+                    width="350">
+
+                <input id="menu-toggle" type="checkbox" />
+                <label class='menu-button-container' for="menu-toggle">
+                    <div class="burger-button">
+                    </div>
+                </label>
+                <ul class="navigation-buttons">
+                    <li class="menu-button" data="services"><a dict="services"></a></li>
+                    <li class="menu-button" data="roadsideAssistance"><a dict="roadsideAssistance"></a></li>
+                    <li class="menu-button" data="fleet"><a dict="fleet"></a></li>
+                    <li class="menu-button" data="contact"><a dict="contact"></a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="yellowbar"></div>
+    </section>
+
+    <section class="welcome container">
+        <div class="welcome-wrapper">
+            <p dict="contactWithUs" ></p>
+            <a href="tel:502538971">
+                <div>502 538 971</div>
+            </a>
+        </div>
+    </section>
+    <section class="about-us">
+        <div class="container">
+            <div class="pictograms-container">
+                <div class="pictogram-container">
+                    <img src="./img/icons/clock-line-icon.svg" alt="szybki czas realizacji" srcset="">
+                    <p dict="fastDelivery"></p>
+                </div>
+                <div class="pictogram-container">
+                    <img src="./img/icons/round-hours-icon.svg" alt="24h" srcset="">
+                    <p dict="weOperate247"></p>
+                </div>
+                <div class="pictogram-container">
+                    <img src="./img/icons/writing-pad-clipboard-icon.svg" alt="darmowa wycena" srcset="">
+                    <p dict="freeValuation"></p>
+                </div>
+                <div class="pictogram-container">
+                    <img src="./img/icons/money-bag-icon.svg" alt="gotówka" srcset="">
+                    <p dict="atrractivePrices"></p>
+                </div>
+                <div class="pictogram-container">
+                    <img src="./img/icons/map-icon.svg" alt="dojazd w każde miejsce w Polsce" srcset="">
+                    <p dict="weCoverWholeCountry"></p>
+                </div>
+                <div class="pictogram-container" id="truck-icon">
+                    <img src="./img/icons/flatbed-truck-icon.svg" alt="transport" srcset="">
+                    <p dict="specialisedFleet"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div class="container">
+            <h2 dict="weOfferTransport"></h2>
+            <div class="sectionBox">
+                <div class="sectionBox-left">
+                    <span dict="agriculturalMachinery"></span>
+                    <span dict="constructionMachinery"></span>
+                    <span dict="industrialMachineryAndEquipment"></span>
+                    <span dict="forklifts"></span>
+                    <span dict="trailers"></span>
+                    <span dict="vehicles"></span>
+                    <span dict="allKindsOfGoods"></span>
+                    <span dict="palletsAndNonStandardLoads"></span>
+                </div>
+                <div class="sectionBox-right">
+                    <div>
+                        <span dict="ocpLicense"></span>
+                        <span dict="vatInvoice"></span>
+                    </div>
+                    <img src="./img/logo/logo_kaycha_transport.png" alt="">
+                    
+                </div>
+            </div>
+            <div class="loaded-trucks">
+                <img src="./img/gallery/truck-loaded.png" alt="transport" srcset="">
+                <img src="./img/gallery/truck-loaded.png" alt="transport" srcset="">
+            </div>
+        </div>
+    </section>
+   
+    <section id="roadsideAssistance">
+        <div class="container">
+            <h2 dict="roadsideAssistance"></h2>
+            <div class="sectionBox">
+                <div class="sectionBox-left">
+                    <h3 dict="weOfferRoadsideAssistanceService"></h3>
+                    <span dict="weProvide"></span>
+                    <ul>
+                        <li>
+                            <span dict="arrivalAtScene"></span>
+
+                        </li>
+                        <li>
+                            <span dict="loadingDamagedVehicle"></span>
+
+                        </li>
+                        <li>
+                            <span dict="transportToDesignatedPlace"></span>
+
+                        </li>
+                        <li>
+                            <span dict="vehicleStorageAtParking"></span>
+
+                        </li>
+                    </ul>
+                </div>
+                <div class="sectionBox-right">
+                    <img src="./img/gallery/truck-back.png" alt="">
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="fleet">
+        <div class="container">
+            <h2 dict="fleet"></h2>
+            <div class="sectionBox">
+                <div class="sectionBox-left">
+                    <h3>MAN TGL 12.210 Euro 4</h3>
+                    <div>
+                        <span dict="payload"></span>:6400KG
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact">
+        <div class="container">
+            <h2 dict="contact">KONTAKT</h2>
+            <form id="contact-form">
+                <input dict="firstName" required type="text" name="firstName" id="firstName" placeholder="Imię:">
+                <input dict="lastName" type="text" name="lastName" id="lastName" placeholder="Nazwisko:">
+                <input required type="tel" name="phoneNumber" id="phoneNumber">
+                <input dict="email" required type="email" name="email" id="email" placeholder="Adres email:">
+                <input dict="loadingAddress" required type="text" name="city" id="city" placeholder="Miejscowość:">
+                <input dict="unloadingAddress" type="text" name="street" id="street" placeholder="Ulica:">
+                
+                <textarea required dict="message" name="message" id="message" cols="30" rows="10"
+                    placeholder="Treść wiadomości:"></textarea>
+                <div id="consent-checkbox">
+                    <input required type="checkbox" id="consent" name="consent">
+                    <label for="consent">
+                        <span dict="policyConsent">Wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie
+                            z</span>
+                        <a href="./privacy-policy.txt" target="_blank" dict="policyConsentLink">Polityką
+                            Prywatności</a>.
+                    </label>
+                </div>
+                <div id="h-captcha" class="h-captcha" data-sitekey="34c171cb-4ed8-4c0c-87e9-5623e4dde13b"></div>
+                <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+
+                <button id="submitButton" type="submit" dict="send">WYŚLIJ</button>
+            </form>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.6/js/intlTelInput.min.js"></script>
+            <script src="./js/phone.js">
+                
+            </script>
+        </div>
+    </section>
+    <section id="company-info">
+        <div class="container">
+            <div class="info-wrapper sectionBox">
+                <img src="./img/logo/logo_kaycha_transport.png" alt="Logo KAYCHA">
+                <div>
+                    <p dict="companyHeadquarters">SIEDZIBA FIRMY:</p>
+                    <p>KOLONIA KUŹNIA 21</p>
+                    <p>26-502 JASTRZĄB</p>
+                    <p>KONTAKT@KACZORMASZYNY.PL</p>
+                    <p>TEL. 502538971</p>
+                </div>
+            </div>
+            <iframe id="google-maps-iframe"
+                src="https://maps.googleapis.com/maps/embed?pb=!1m18!1m12!1m3!1d2496.236826579097!2d20.945113499999994!3d51.2699596!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4718459895e121b5%3A0x92d6c77801812fcd!2sKaczor%20Maszyny%20-%20Maszyny%20Budowlane%20(KAYCHA%20Heavy%20Equipment)%20Skup%20i%20Sprzeda%C5%BC%20Maszyn!5e0!3m2!1spl!2spl!4v1723985847444!5m2!1spl!2spl"
+                 allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        </div>
+        <div class="yellowbar"></div>
+    </section>
+    <footer>
+        <div class="socials">
+            <img src="./img/logo/logo_kaycha_transport.png" alt="Logo KAYCHA">
+            <div class="socialswrapper">
+                <a target="_blank" href="https://www.instagram.com/kaczormaszyny/"><img src="./img/icons/instagram.svg"
+                        alt="instagram logo"></a>
+                <a target="_blank" href="https://www.facebook.com/kaczormaszyny"><img src="./img/icons/facebook.svg"
+                        alt="facebook logo"></a>
+                <a target="_blank" href="https://www.tiktok.com/@kaczormaszyny"><img
+                        src="./img/icons/tiktok-square-icon.svg" alt="tiktok logo"></a>
+                <a target="_blank" href="https://youtube.com/@kaczormaszyny"><img src="./img/icons/youtube.svg"
+                        alt="tiktok logo"></a>
+                <!--items use flex-direction:row-reverse so they show in reverse on website-->
+            </div>
+        </div>
+        <p><a href="./privacy-policy.txt" dict="privacyPolicy">Polityka prywatności</a></p>
+        <p>Copyright KAYCHA & mduckdev 2025</p>
+    </footer>
+
+</body>
+
+</html>

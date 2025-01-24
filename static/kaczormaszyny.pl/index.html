@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.6/css/intlTelInput.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicons/favicon-16x16.png">
+    <link rel="manifest" href="./favicons/site.webmanifest">
+    <link rel="mask-icon" href="./favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+    <script src="./js/scroll.js" defer></script>
+    <script src="./js/form.js" defer></script>
+    <script src="./js/cookies.js" defer></script>
+    <script src="./js/listings.js" defer></script>
+    <script src="./js/lang.js" defer></script>
+    <script src="./js/singleLetterWords.js" defer></script>
+    <script src="/js/modal.js" defer></script>
+
+
+    <title>KAYCHA HEAVY EQUIPMENT</title>
+</head>
+
+<body>
+            <!-- Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <h1 id="modal-title">Komunikat</h1>
+      <span class="close">&times;</span>
+      <p id="modal-message"></p>
+    </div>
+</div>
+    <section id="navigation">
+        <div class="container">
+            <nav class="navigation-bar">
+                <img id="logo" src="./img/logo/logo_kaycha_800x200.jpg" alt="Logo KAYCHA" srcset=""
+                    width="350">
+
+                <input id="menu-toggle" type="checkbox" />
+                <label class='menu-button-container' for="menu-toggle">
+                    <div class="burger-button">
+                    </div>
+                </label>
+                <ul class="navigation-buttons">
+                    <li class="menu-button" data="buying"><a dict="purchase">SKUP</a></li>
+                    <li class="menu-button" data="selling"><a dict="sale">SPRZEDAŻ</a></li>
+                    <li class="menu-button" data="offer"><a dict="offer">OFERTA</a></li>
+                    <li class="menu-button" data="services"><a dict="services">USŁUGI</a></li>
+                    <li class="menu-button" data="contact"><a dict="contact">KONTAKT</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="yellowbar"></div>
+    </section>
+
+    <section class="welcome">
+        <div class="image-overlay">
+            <div class="welcome-wrapper">
+                <div class="welcome-text">
+                    <p><span dict="purchaseOfMachinery" class="bigger-text">SKUP MASZYN BUDOWLANYCH</span></p>
+                    <p dict="dumpTrucks">WYWROTEK</p>
+                    <p dict="agriculturalTractors">CIĄGNIKÓW ROLNICZYCH</p>
+                    <p dict="trailers">PRZYCZEP</p>
+                    <p dict="andMachineAccessories">ORAZ OSPRZĘTU DO MASZYN</p>
+                    <p><span dict="allAcross">NA TERENIE</span> <span dict="poland" class="bigger-text">CAŁEJ
+                            POLSKI</span></p>
+                </div>
+                <a href="tel:502538971">
+                    <div dict="contactWithUs">Skontaktuj się z nami 502538971</div>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="about-us">
+        <div class="container">
+            <h2 dict="ensure">ZAPEWNIAMY</h2>
+            <div class="pictograms-container">
+                <div class="pictogram-container">
+                    <img src="./img/icons/clock-line-icon.svg" alt="szybki czas realizacji" srcset="">
+                    <p dict="quickCompletionTime">SZYBKI CZAS REALIZACJI</p>
+                </div>
+                <div class="pictogram-container">
+                    <img src="./img/icons/round-hours-icon.svg" alt="24h" srcset="">
+                    <p dict="weOperate247">DZIAŁAMY 24/7</p>
+                </div>
+                <div class="pictogram-container">
+                    <img src="./img/icons/writing-pad-clipboard-icon.svg" alt="darmowa wycena" srcset="">
+                    <p dict="freeValuation">DARMOWA WYCENA</p>
+                </div>
+                <div class="pictogram-container">
+                    <img src="./img/icons/money-bag-icon.svg" alt="gotówka" srcset="">
+                    <p dict="cashInhand">GOTÓWKA DO RĘKI</p>
+                </div>
+                <div class="pictogram-container">
+                    <img src="./img/icons/map-icon.svg" alt="dojazd w każde miejsce w Polsce" srcset="">
+                    <p dict="transportToAnyPlace">DOJAZD W KAŻDE MIEJSCE W POLSCE</p>
+                </div>
+                <div class="pictogram-container" id="truck-icon">
+                    <img src="./img/icons/flatbed-truck-icon.svg" alt="transport" srcset="">
+                    <p dict="ourOwnTransport">WŁASNY TRANSPORT ORAZ ZAŁADUNEK</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="buying">
+        <div class="container">
+            <h2 dict="purchase">
+                SKUP
+            </h2>
+            <p dict="purchaseP1">
+                Odkupimy wszelkiego rodzaju maszyny budowlane mniejsze oraz większe, starsze i młodsze, sprzęt sprawny
+                i uszkodzony jak również osprzęt do koparek, ładowarek, minikoparek i koparko ładowarek, łyżki, młoty
+                wyburzeniowe, wiertnice, zagęszczarki, kruszarki, łyżki mieszające do betonu, czerpaki, chwytaki i inne
+                rodzaje nietypowego osprzętu.
+            </p>
+            <p dict="purchaseP2">
+                Płacimy gotówką lub przelewem, decyduje klient, odbiór sprzętu po naszej stronie, dojeżdżamy w każde
+                miejsce w Polsce.
+            </p>
+            <div class="img-wrapper">
+                <img src="./img/buying.jpg" alt="buying">
+            </div>
+        </div>
+    </section>
+
+    <section class="interested-in">
+        <div class="container">
+            <h3 dict="interestedIn">INTERESUJĄ NAS:</h3>
+            <div class="gallery">
+                <div class="gallery-item">
+                    <img src="./img/gallery/gallery-1-min.jpg" alt="koparki kołowe">
+                    <p dict="wheeledAndCrawler">KOPARKI KOŁOWE I GĄSIENICOWE</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./img/gallery/gallery-2-min.jpg" alt="minikoparka">
+                    <p dict="miniExcavators">MINIKOPARKI</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./img/gallery/gallery-3-min.jpg" alt="koparko-ładowarki">
+                    <p dict="backHoeLoaders">KOPARKO-ŁADOWARKI</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./img/gallery/gallery-4-min.jpg" alt="ŁADOWARKI">
+                    <p dict="loaders">ŁADOWARKI</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./img/gallery/gallery-5-min.jpg" alt="SPYCHARKI">
+                    <p dict="bulldozers">SPYCHARKI</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./img/gallery/gallery-6-min.jpg" alt="WÓZKI WIDŁOWE">
+                    <p dict="forklifts">WÓZKI WIDŁOWE</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./img/gallery/gallery-7-min.jpg" alt="WYWROTKI">
+                    <p dict="dumpTrucksSecond">WYWROTKI</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="./img/gallery/gallery-8-min.jpg" alt="PODNOŚNIKI KOSZOWE">
+                    <p dict="basketCranes">PODNOŚNIKI KOSZOWE</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="selling">
+        <div class="container">
+            <h2 dict="sale">SPRZEDAŻ</h2>
+            <p dict="saleP1">W stałej ofercie posiadamy wszelkiego rodzaju maszyny budowlane mniejsze oraz większe,
+                starsze i młodsze,
+                sprzęt sprawny i uszkodzony jak również osprzęt do koparek, ładowarek, minikoparek i koparko ładowarek,
+                łyżki, młoty wyburzeniowe, wiertnice, zagęszczarki, kruszarki, łyżki mieszające do betonu, czerpaki,
+                chwytaki i inne rodzaje nietypowego osprzętu.
+            </p>
+            <p dict="saleP2">Sprawdź poniżej aktuaną ofertę.</p>
+            <div class="img-wrapper">
+                <img src="./img/gallery/gallery-1-min.jpg" alt="koparka">
+            </div>
+        </div>
+    </section>
+    <section id="offer">
+        <div class="container">
+            <h2 dict="currentOffer">AKTUALNA OFERTA</h2>
+            <p dict="currentOfferP1">Kliknij obraz, aby przejść do ogłoszenia na OTOMOTO.pl</p>
+            <div class="gallery-container">
+                <img src="./img/icons/left-arrow.svg" class="prev-btn gallery-btn"></button>
+                <div class="offer-gallery">
+                    <div class="auction">
+                        <a target="_blank"
+                            href="https://www.otomoto.pl/maszyny-budowlane/oferta/kramer-potratz-kl1500-widlak-widlowy-wozek-terenowy-tur-rak-ladowacz-zettelmeyer-jcb-ursus-atlas-ok-weidemann-schaffer-zetor-volvo-film-z-pracy-kolowa-przegubowa-ladowarka-nowa-pompa-jazdy-ID6GcrQQ.html"><img
+                                src="./img/gallery/gallery-1.jpg" alt="koparka"></a>
+                        <p>Nazwa rocznik</p>
+                        <p>Cena</p>
+                    </div>
+                    <div class="auction">
+                        <a target="_blank"
+                            href="https://www.otomoto.pl/maszyny-budowlane/oferta/kramer-potratz-kl1500-widlak-widlowy-wozek-terenowy-tur-rak-ladowacz-zettelmeyer-jcb-ursus-atlas-ok-weidemann-schaffer-zetor-volvo-film-z-pracy-kolowa-przegubowa-ladowarka-nowa-pompa-jazdy-ID6GcrQQ.html"><img
+                                src="./img/gallery/gallery-2.jpg" alt="koparka"></a>
+                        <p>Nazwa rocznik</p>
+                        <p>Cena</p>
+                    </div>
+                    <div class="auction">
+                        <a target="_blank"
+                            href="https://www.otomoto.pl/maszyny-budowlane/oferta/kramer-potratz-kl1500-widlak-widlowy-wozek-terenowy-tur-rak-ladowacz-zettelmeyer-jcb-ursus-atlas-ok-weidemann-schaffer-zetor-volvo-film-z-pracy-kolowa-przegubowa-ladowarka-nowa-pompa-jazdy-ID6GcrQQ.html"><img
+                                src="./img/gallery/gallery-3.jpg" alt="koparka"></a>
+                        <p>Nazwa rocznik</p>
+                        <p>Cena</p>
+                    </div>
+                    <div class="auction">
+                        <a target="_blank"
+                            href="https://www.otomoto.pl/maszyny-budowlane/oferta/kramer-potratz-kl1500-widlak-widlowy-wozek-terenowy-tur-rak-ladowacz-zettelmeyer-jcb-ursus-atlas-ok-weidemann-schaffer-zetor-volvo-film-z-pracy-kolowa-przegubowa-ladowarka-nowa-pompa-jazdy-ID6GcrQQ.html"><img
+                                src="./img/gallery/gallery-4.jpg" alt="koparka"></a>
+                        <p>Nazwa rocznik</p>
+                        <p>Cena</p>
+                    </div>
+                    <div class="auction">
+                        <a target="_blank"
+                            href="https://www.otomoto.pl/maszyny-budowlane/oferta/kramer-potratz-kl1500-widlak-widlowy-wozek-terenowy-tur-rak-ladowacz-zettelmeyer-jcb-ursus-atlas-ok-weidemann-schaffer-zetor-volvo-film-z-pracy-kolowa-przegubowa-ladowarka-nowa-pompa-jazdy-ID6GcrQQ.html"><img
+                                src="./img/gallery/gallery-5.jpg" alt="koparka"></a>
+                        <p>Nazwa rocznik</p>
+                        <p>Cena</p>
+                    </div>
+                </div>
+                <img src="./img/icons/right-arrow.svg" class="next-btn gallery-btn"></img>
+            </div>
+
+        </div>
+
+    </section>
+    <section id="services">
+        <div class="container">
+            <h2 dict="services">USŁUGI</h2>
+            <div class="services-wrapper">
+                <div class="services-gallery">
+                    <div class="services-gallery-item">
+                        <p dict="scrappingOfMachinery">ZŁOMOWANIE MASZYN</p>
+                        <img src="./img/scrap.jpg" alt="złomowanie">
+                    </div>
+                    <!-- <div class="services-gallery-item">
+                        <p dict="appraisal">RZECZOZNASTWO</p>
+                        <img src="./img/construction-worker.jpg" alt="złomowanie">
+                    </div> -->
+                </div>
+                <div class="services-description">
+                    <p dict="servicesP1">Oferujemy również złomowanie i odbiór z własnym załadunkiem maszyn różnego
+                        rodzaju: budowlanych,
+                        rolniczych, przemysłowych.
+
+                    </p>
+                    <p dict="servicesP2">Skomplikowany załadunek dużych i ciężkich maszyn nie stanowi dla nas problemu.
+                        Jeśli posiadasz
+                        na placu uszkodzony sprzęt to możemy wysłać nasz transport i zorganizować załadunek w naszym
+                        zakresie bez marnowania Twojego czasu</p>
+                    <!-- <p dict="servicesP3">
+                        W naszej ofercie znajduje się także usługa rzeczoznawstwa. Możemy wykonać usługę oględzin
+                        maszyny na zlecenie klienta przed zakupem.
+                    </p> -->
+                    <!-- <p dict="servicesP4">
+                        Na życzenie możemy sporządzić raport stanu technicznego oraz wycenę maszyny.
+                    </p> -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact">
+        <div class="container">
+            <h2 dict="contact">KONTAKT</h2>
+            <form id="contact-form">
+                <input dict="firstName" required type="text" name="firstName" id="firstName" placeholder="Imię:">
+                <input dict="lastName" type="text" name="lastName" id="lastName" placeholder="Nazwisko:">
+                <input required type="tel" name="phoneNumber" id="phoneNumber">
+                <input dict="email" required type="email" name="email" id="email" placeholder="Adres email:">
+                <input dict="city" required type="text" name="city" id="city" placeholder="Miejscowość:">
+                <input dict="street" type="text" name="street" id="street" placeholder="Ulica:">
+                <input dict="houseApartmentNumber" type="text" name="homeNumber" id="homeNumber"
+                    placeholder="Nr domu/mieszkania:">
+                <textarea required dict="message" name="message" id="message" cols="30" rows="10"
+                    placeholder="Treść wiadomości:"></textarea>
+                <div id="consent-checkbox">
+                    <input required type="checkbox" id="consent" name="consent">
+                    <label for="consent">
+                        <span dict="policyConsent">Wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie
+                            z</span>
+                        <a href="./privacy-policy.txt" target="_blank" dict="policyConsentLink">Polityką
+                            Prywatności</a>.
+                    </label>
+                </div>
+                <div id="h-captcha" class="h-captcha" data-sitekey="34c171cb-4ed8-4c0c-87e9-5623e4dde13b"></div>
+                <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+
+                <button id="submitButton" type="submit" dict="send">WYŚLIJ</button>
+            </form>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.6/js/intlTelInput.min.js"></script>
+            <script src="./js/phone.js">
+                
+            </script>
+        </div>
+    </section>
+    <section id="company-info">
+        <div class="container">
+            <div class="info-wrapper">
+                <img src="./img/logo/logo_kaycha_800x300.jpg" alt="Logo KAYCHA">
+                <div>
+                    <p dict="companyHeadquarters">SIEDZIBA FIRMY:</p>
+                    <p>KOLONIA KUŹNIA 21</p>
+                    <p>26-502 JASTRZĄB</p>
+                    <p>KONTAKT@KACZORMASZYNY.PL</p>
+                    <p>TEL. 502538971</p>
+                </div>
+            </div>
+            <iframe id="google-maps-iframe"
+                src="https://maps.googleapis.com/maps/embed?pb=!1m18!1m12!1m3!1d2496.236826579097!2d20.945113499999994!3d51.2699596!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4718459895e121b5%3A0x92d6c77801812fcd!2sKaczor%20Maszyny%20-%20Maszyny%20Budowlane%20(KAYCHA%20Heavy%20Equipment)%20Skup%20i%20Sprzeda%C5%BC%20Maszyn!5e0!3m2!1spl!2spl!4v1723985847444!5m2!1spl!2spl"
+                 allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        </div>
+        <div class="yellowbar"></div>
+    </section>
+    <footer>
+        <div class="socials">
+            <img src="./img/logo/logo_kaycha_800x400.jpg" alt="Logo KAYCHA">
+            <div class="socialswrapper">
+                <a target="_blank" href="https://www.instagram.com/kaczormaszyny/"><img src="./img/icons/instagram.svg"
+                        alt="instagram logo"></a>
+                <a target="_blank" href="https://www.facebook.com/kaczormaszyny"><img src="./img/icons/facebook.svg"
+                        alt="facebook logo"></a>
+                <a target="_blank" href="https://www.tiktok.com/@kaczormaszyny"><img
+                        src="./img/icons/tiktok-square-icon.svg" alt="tiktok logo"></a>
+                <a target="_blank" href="https://youtube.com/@kaczormaszyny"><img src="./img/icons/youtube.svg"
+                        alt="tiktok logo"></a>
+                <!--items use flex-direction:row-reverse so they show in reverse on website-->
+            </div>
+        </div>
+        <p><a href="./privacy-policy.txt" dict="privacyPolicy">Polityka prywatności</a></p>
+        <p>Copyright KAYCHA & mduckdev 2024</p>
+    </footer>
+
+</body>
+
+</html>

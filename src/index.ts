@@ -77,7 +77,7 @@ export const bootstrap = async () => {
 
 
 
-    app.use("/", express.static("static"));
+    app.use("/", express.static("static/kaczormaszyny.pl"));
     app.use("/dashboard", dashboardRoutes());
     app.use("/api", apiRoutes());
     app.use("/auth", authRoutes());

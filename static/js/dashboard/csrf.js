@@ -1,1 +1,0 @@
-const csrfToken = document.getElementById("csrfToken").value

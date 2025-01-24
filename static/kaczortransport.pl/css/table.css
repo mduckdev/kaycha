@@ -1,0 +1,145 @@
+.tableContainer {
+    max-height: 80vh;
+    max-width: 80vw;
+    margin-right: auto;
+    margin-left: auto;
+
+    overflow-y: scroll;
+}
+
+#messagesTable {
+
+    position: sticky;
+    top: 0;
+    width: 100%;
+}
+
+#messagesTable thead {
+    position: sticky;
+    top: 0;
+    background-color: black;
+    color: white;
+}
+
+#messagesTable thead td {
+    cursor: pointer;
+    transition: 250ms;
+}
+
+#messagesTable thead td:hover {
+    color: yellow;
+}
+
+#messagesTable td {
+    padding: 10px;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: black;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.85);
+    color: black;
+}
+
+
+
+form {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-grow: 1;
+    gap: 10px;
+    padding: 10px;
+}
+
+form input[type=text] {
+    border: 0;
+    background: transparent;
+    border-bottom: 2px solid white;
+    color: white;
+    transition: 250ms;
+}
+
+form input[type=text]:focus {
+    outline: none;
+    border-bottom: 2px solid yellow;
+}
+
+form input::placeholder {
+    font-size: 115%;
+}
+
+
+form input[type=submit] {
+    padding: 3px;
+    cursor: pointer;
+}
+
+.redText {
+    color: red;
+}
+
+.greenText {
+    color: green;
+}
+
+#add_button,
+input[type=submit] {
+    outline: none;
+    border: none;
+    background: white;
+    color: black;
+    text-align: center;
+    padding: 5px;
+    cursor: pointer;
+    transition: 250ms;
+    border-radius: 3px;
+}
+
+#add_button {
+    margin-bottom: 10px;
+
+}
+
+#add_button:hover,
+input[type=submit]:hover {
+    color: yellow;
+    background-color: black;
+}
+
+.search_bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+form .delete-button {
+    background-color: red;
+    color: white;
+}
+
+form .edit-button {
+    background-color: rgb(71, 71, 255);
+    color: white;
+}
+
+form .edit-button:hover {
+    background-color: rgb(51, 51, 235);
+    color: white;
+}
+
+form .delete-button:hover {
+    background-color: rgb(180, 0, 0);
+    color: white;
+}
+
+form.edit-form,
+form.delete-form {
+    display: block;
+    padding: 2px 0px 2px 0px;
+    margin: 0;
+}
