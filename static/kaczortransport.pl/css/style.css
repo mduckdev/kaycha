@@ -17,6 +17,7 @@
     --transparent-grey:rgba(79,76,77,0.6);
     --black: rgba(0, 0, 0, 1);
     --transparent-black: rgba(0, 0, 0, 0.6);
+    --red:rgba(189,39,45,1);
     --transition-time: 150ms;
     --yellow-filter: invert(79%) sepia(78%) saturate(439%) hue-rotate(1deg) brightness(107%) contrast(91%);
     --yellow-filter-dim: invert(86%) sepia(62%) saturate(625%) hue-rotate(353deg) brightness(90%) contrast(93%);
@@ -37,8 +38,8 @@ p {
 }
 
 h2 {
-    color: var(--yellow);
-    font-size: 3em;
+    color: white;
+    font-size: 5em;
 }
 
 h3 {
@@ -279,6 +280,9 @@ section#fleet{
     max-width:100%;
     border-radius: 10px;
 }
+.sectionBox-right{
+    flex-basis: 45%;
+}
 
 .loaded-trucks{
     margin-top: 3vh;
@@ -294,7 +298,9 @@ section#fleet{
 section#roadsideAssistance .sectionBox-left ul{
     margin-left: 1em;
 }
-
+section#roadsideAssistance h2{
+    color:var(--red);
+}
 
 .img-wrapper {
     margin-top: 10px;
