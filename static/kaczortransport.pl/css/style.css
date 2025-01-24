@@ -11,13 +11,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 :root {
-    --yellow: rgba(255, 212, 1, 1);
-    --yellow-dim: rgba(255, 212, 1, 0.7);
+    --yellow: rgba(243, 232, 55, 1);
+    --yellow-dim: rgba(243, 232, 55, 0.7);
+    --grey:rgba(79,76,77,1);
+    --transparent-grey:rgba(79,76,77,0.6);
     --black: rgba(0, 0, 0, 1);
     --transparent-black: rgba(0, 0, 0, 0.6);
     --transition-time: 150ms;
-    --yellow-filter: invert(79%) sepia(62%) saturate(941%) hue-rotate(354deg) brightness(100%) contrast(108%);
-    --yellow-filter-dim: invert(78%) sepia(31%) saturate(6632%) hue-rotate(12deg) brightness(102%) contrast(99%);
+    --yellow-filter: invert(79%) sepia(78%) saturate(439%) hue-rotate(1deg) brightness(107%) contrast(91%);
+    --yellow-filter-dim: invert(86%) sepia(62%) saturate(625%) hue-rotate(353deg) brightness(90%) contrast(93%);
     ;
     /* check https://codepen.io/sosuke/pen/Pjoqqp how it was generated */
     --burger-button-line-height: 4px;
@@ -40,14 +42,14 @@ h2 {
 }
 
 h3 {
-    color: var(--black);
-    font-size: 2.5em;
+    color: white;
+    font-size: 2em;
 }
 
 body {
     font-family: "uni_sansheavy_caps";
     margin: 0;
-    background-color: var(--black);
+    background-color: var(--yellow);
 }
 
 html {
@@ -92,7 +94,7 @@ nav ul.navigation-buttons a {
     text-decoration: none;
     font-family: "uni_sansheavy_caps";
     font-size: 1.5em;
-    color: var(--black);
+    color: var(--grey);
     transition: var(--transition-time);
 }
 
@@ -105,7 +107,7 @@ nav ul.navigation-buttons a:hover {
 .burger-button::before,
 .burger-button::after {
     display: block;
-    background-color: var(--black);
+    background-color: var(--grey);
     position: absolute;
     height: var(--burger-button-line-height);
     width: 30px;
@@ -152,15 +154,16 @@ nav ul.navigation-buttons a:hover {
     transform: rotate(-405deg);
 }
 
-.yellowbar {
+.greybar {
     margin-top: 15px;
     height: 9px;
-    background-color: var(--yellow);
+    background-color: var(--grey);
     width: 100%;
 }
 
 section.welcome {
     color: white;
+    background-color: var(--black);
 }
 
 .bigger-text {
@@ -175,8 +178,7 @@ section.welcome p {
 }
 
 .welcome-wrapper {
-    margin-top: 1vh;
-    width: 50%;
+    padding: 0.8em;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -188,10 +190,9 @@ section.welcome p {
     padding: 30px;
     background-color: var(--yellow);
     text-decoration: none;
-    color: var(--black);
+    color: var(--grey);
     border-radius: 10px;
     transition: var(--transition-time);
-    margin-bottom: 15px;
     font-size: 250%;
 }
 
@@ -204,7 +205,7 @@ section.welcome p {
 }
 
 section.about-us {
-    margin-top: 2vh;
+    background-color: var(--black);
 }
 
 
@@ -256,17 +257,19 @@ section#services,
 section#roadsideAssistance,
 section#fleet{
     margin-top: 2vh;
-
 }
 .sectionBox{
-    background-color: var(--yellow);
-    color:var(--black);
+    background-color: var(--grey);
+    color:white;
     padding: 15px;
     border-radius: 10px;
-    font-size: 200%;
+    font-size: 2em;
     display: flex;
     justify-content: space-between;
     gap:5vw;
+}
+.sectionBox .list{
+    margin-left: 1em;
 }
 .sectionBox div{
     display: flex;
@@ -287,9 +290,7 @@ section#fleet{
     width: 45%;
     border-radius: 10px;
 }
-section#roadsideAssistance h3{
-    font-size: 1.5em;
-}
+
 section#roadsideAssistance .sectionBox-left ul{
     margin-left: 1em;
 }
@@ -498,8 +499,8 @@ input#phoneNumber {
 
 #contact-form input:focus,
 #contact-form textarea:focus {
-    box-shadow: 0 0 5px var(--yellow);
-    border: 1px solid var(--yellow);
+    box-shadow: 0 0 5px var(--grey);
+    border: 1px solid var(--grey);
 }
 
 #contact-form input::placeholder,
@@ -512,22 +513,23 @@ input#phoneNumber {
     font-family: "uni_sansheavy_caps";
     border: none;
     border-radius: 10px;
-    background-color: var(--yellow);
+    background-color: var(--grey);
     padding: 15px;
     font-size: 1.3em;
     width: 100%;
     transition: var(--transition-time);
+    color:white
 }
 
 #contact-form button:hover {
     cursor: pointer;
-    background-color: var(--yellow-dim);
+    background-color: var(--transparent-grey);
 }
 
 
 
 section#company-info p {
-    color: var(--black);
+    color: white;
 }
 
 .info-wrapper {
@@ -547,7 +549,9 @@ section#company-info iframe {
     height: 50vh;
     border:0px;
 }
-
+footer{
+    background-color: var(--grey);
+}
 .socials {
     display: flex;
     justify-content: space-between;
