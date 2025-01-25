@@ -15,7 +15,7 @@ import { Session } from './entity/Session';
 import { authRoutes } from './routes/authRoutes';
 import { listingRoutes } from './routes/listingRoutes';
 import { fleetRoutes } from './routes/fleetRoutes';
-
+import cors from "cors"
 
 declare module "express-session" {
     interface SessionData {
@@ -68,19 +68,30 @@ export const bootstrap = async () => {
         },
 
     }))
+    const domainWhitelist: string[] = (process.env.NODE_ENV === "production") 
+    ? ["https://kaczormaszyny.pl", "https://kaczortransport.pl"] 
+    : ["http://localhost:41491", "http://127.0.0.1:5500"];
 
-
+    const corsOptions = {
+        origin: function (
+            origin: string | undefined, 
+            callback: (err: Error | null, allow?: boolean) => void
+        ): void {
+            if (origin && domainWhitelist.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        }
+    };
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'ejs');
 
     app.set('trust proxy', 1)
 
-
-
-
     app.use("/", express.static("static/kaczormaszyny.pl"));
     app.use("/dashboard", dashboardRoutes());
-    app.use("/api", apiRoutes());
+    app.use("/api",cors(corsOptions), apiRoutes());
     app.use("/auth", authRoutes());
     app.use("/listings", listingRoutes());
     app.use("/fleet", fleetRoutes());

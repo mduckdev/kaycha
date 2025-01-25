@@ -10,7 +10,7 @@ export interface ListingsResponseI {
     year: number,
     imgSrc: string
 }
-export interface VehicleResponseI {
+export interface FleetResponseI {
     id: number;
     model: string;
     loadCapacity: number;
@@ -24,4 +24,5 @@ export interface VehicleResponseI {
     rampLength: number;
     maxLoadHeight: number;
     passengerSeats: number;
+    imgSrc:string;
   }

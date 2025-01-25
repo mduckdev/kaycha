@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, IntegerType } from "typeorm"
-import { IsInt, IsString, Max, Min, Length } from 'class-validator';
-import { VehicleResponseI } from "../interfaces/responses";
+import { IsInt, IsString, Max, Min, Length, MaxLength, MinLength, isURL, IsUrl } from 'class-validator';
+import { FleetResponseI } from "../interfaces/responses";
 @Entity("Fleet")
 export class FleetVehicle {
   @PrimaryGeneratedColumn()
@@ -66,7 +66,14 @@ export class FleetVehicle {
   @Min(0)
   @Max(10)
   passengerSeats: number; // Liczba miejsc pasażera
-    toResponseObject(): VehicleResponseI {
+
+  @Column({ type: 'varchar', length:300 , nullable:true })
+  @IsUrl()
+  @MinLength(0)
+  @MaxLength(300)
+  imgSrc: string; 
+
+    toResponseObject(): FleetResponseI {
         const {
           id,
           model,
@@ -80,7 +87,8 @@ export class FleetVehicle {
           loadingSlopeHeight,
           rampLength,
           maxLoadHeight,
-          passengerSeats
+          passengerSeats,
+          imgSrc
         } = this;
     
         return {
@@ -96,7 +104,8 @@ export class FleetVehicle {
           loadingSlopeHeight,
           rampLength,
           maxLoadHeight,
-          passengerSeats
+          passengerSeats,
+          imgSrc
         };
       }
 }

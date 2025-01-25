@@ -1,7 +1,6 @@
 var userLanguage = navigator.language || navigator.userLanguage;
 document.documentElement.lang = userLanguage;
 let dict = {};
-
 const languages = {
     "en": {
        services: "SERVICES",
@@ -32,14 +31,14 @@ const languages = {
        loadingDamagedVehicle: "LOADING DAMAGED VEHICLE",
        transportToDesignatedPlace: "TRANSPORT TO DESIGNATED PLACE",
        vehicleStorageAtParking: "VEHICLE STORAGE AT PARKING",
-       payload: "PAYLOAD",
-       gvw: "GVW",
-       rampDimensions: "RAMP DIMENSIONS",
+       loadCapacity: "PAYLOAD",
+       gvm: "gvm",
+       platformLength: "RAMP DIMENSIONS",
        length: "LENGTH",
        flatPartLength: "FLAT PART LENGTH",
        slopeLength: "SLOPE LENGTH",
-       width: "WIDTH",
-       heightLeveledForDriving: "HEIGHT (LEVELED FOR DRIVING)",
+       platformWidth: "WIDTH",
+       platformHeight: "HEIGHT (LEVELED FOR DRIVING)",
        loadingSlopeHeight: "LOADING SLOPE HEIGHT",
        rampLength: "RAMP LENGTH",
        maxLoadHeight: "MAXIMUM LOAD HEIGHT",
@@ -57,7 +56,8 @@ const languages = {
        companyHeadquarters: "COMPANY HEADQUARTERS:",
        privacyPolicy: "PRIVACY POLICY",
        loadingAddress:"Loading address:",
-       unloadingAddress:"Unloading address:"
+       unloadingAddress:"Unloading address:",
+       model:"Model"
    },
    "pl":{
        services:"USŁUGI",
@@ -88,14 +88,14 @@ const languages = {
        loadingDamagedVehicle: "ZAŁADUNEK USZKODZONEGO POJAZDU",
        transportToDesignatedPlace: "TRANSPORT W WYZNACZONE MIEJSCE",
        vehicleStorageAtParking: "PRZECHOWANIE POJAZDU NA PARKINGU",
-       payload: "ŁADOWNOŚĆ",
-       gvw: "DMC",
-       rampDimensions: "WYMIARY NAJAZDU",
+       loadCapacity: "ŁADOWNOŚĆ",
+       gvm: "DMC",
+       platformLength: "WYMIARY NAJAZDU",
        length: "DŁUGOŚĆ",
        flatPartLength: "CZĘŚĆ PŁASKA",
        slopeLength: "SKOS",
-       width: "SZEROKOŚĆ",
-       heightLeveledForDriving: "WYSOKOŚĆ (WYPOZIOMOWANA DO JAZDY)",
+       platformWidth: "SZEROKOŚĆ",
+       platformHeight: "WYSOKOŚĆ (WYPOZIOMOWANA DO JAZDY)",
        loadingSlopeHeight: "WYSOKOŚĆ SKOSU DO ZAŁADUNKU",
        rampLength: "DŁUGOŚĆ NAJAZDÓW",
        maxLoadHeight: "MAKSYMALNA WYSOKOŚĆ ŁADUNKU",
@@ -113,7 +113,8 @@ const languages = {
        companyHeadquarters:"SIEDZIBA FIRMY:",
        privacyPolicy:"POLITYKA PRYWATNOŚCI",
        loadingAddress:"Adres załadunku:",
-       unloadingAddress:"Adres rozładunku:"
+       unloadingAddress:"Adres rozładunku:",
+       model:"Model"
    }
 }
 
@@ -138,3 +139,6 @@ elements.forEach(element=>{
         element.innerText=translation;
     }
 })
+const getTranslation = (key)=>{
+    return dict[key];
+}

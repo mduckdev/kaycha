@@ -10,12 +10,15 @@
     }
 
     section.welcome p {
-        font-size: 3cqw;
+        font-size: 4cqw;
     }
    
 }
 
 @media (max-width:1045px) {
+    .welcome-wrapper {
+        justify-content: center;
+    }
     section.about-us div.pictograms-container {
         flex-direction: column;
         align-items: center;
@@ -142,15 +145,14 @@
 @media (max-width:600px) {
     .welcome-wrapper {
         width: 95%;
+        flex-direction: column;
     }
 
     section.welcome p {
-        font-size: 3.8cqw;
+        font-size: 1.55em;
     }
 
-    section.welcome {
-        height: 50vh;
-    }
+   
 
     section#buying p,
     section#selling p,
@@ -186,13 +188,24 @@
         width: 70%;
     }
    
+    h2{
+        font-size: 4em;
+    }
+    .sectionBox{
+        font-size: 1em;
+    }
 
-
+    section#contact h2{
+        text-align: center;
+    }
 
     /* 600px */
 }
 
 @media (max-width:420px) {
+    h2{
+        font-size: 3em;
+    }
     nav.navigation-bar img {
         width: 100%;
     }
@@ -205,10 +218,6 @@
         top: 116%;
     }
 
-    section.welcome {
-        height: 45vh;
-    }
-
     section#buying p,
     section#selling p,
     section#services div.services-description p,
@@ -216,6 +225,9 @@
         font-size: 1.25em;
     }
 
+    .sectionBox{
+        flex-direction: column;
+    }
 
 
     .info-wrapper {

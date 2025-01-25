@@ -15,9 +15,15 @@ export class Fleet {
     async getEdit(req: Request, res: Response): Promise<void> {
         const fleetRepository = (await AppDataSource).getRepository(FleetVehicle);
         const id = Number(req.params.id);
-        const vehicle = await fleetRepository.findOneBy({ id: id });
-        res.render('fleet/edit', { vehicle, user: req.session.user, csrfToken: req.session.csrfToken });
+        const vehicle:FleetVehicle|null = await fleetRepository.findOneBy({ id: id });
+        if(vehicle){
+            res.render('fleet/edit', { vehicle, user: req.session.user, csrfToken: req.session.csrfToken });
+        }else{
+            res.status(400).send("Nieprawidłowe ID");
+        }
     }
+   
+
     async put(req: Request, res: Response): Promise<void> {
         const fleetRepository = (await AppDataSource).getRepository(FleetVehicle);
         const newVehicle = new FleetVehicle();
@@ -33,6 +39,8 @@ export class Fleet {
         newVehicle.rampLength = Number(req.body.rampLength);
         newVehicle.maxLoadHeight = Number(req.body.maxLoadHeight);
         newVehicle.passengerSeats = Number(req.body.passengerSeats);
+        newVehicle.imgSrc = String(req.body.imgSrc);
+
         const errors = await validate(newVehicle);
         if (errors.length > 0) {
             res.status(400).json({ errors });
@@ -58,6 +66,7 @@ export class Fleet {
             vehicleToUpdate.rampLength = Number(req.body.rampLength);
             vehicleToUpdate.maxLoadHeight = Number(req.body.maxLoadHeight);
             vehicleToUpdate.passengerSeats = Number(req.body.passengerSeats);
+            vehicleToUpdate.imgSrc = String(req.body.imgSrc);
 
             const errors = await validate(vehicleToUpdate);
             if (errors.length > 0) {
@@ -66,8 +75,11 @@ export class Fleet {
             }
 
             await fleetRepository.save(vehicleToUpdate);
+            res.json({ success: true, message: "Pomyślnie zaktualizowano pojazd" });
+        }else{
+            res.json({ success: false, message: "Nie znaleziono pojazdu z podanym id" });
+
         }
-        res.json({ success: true, message: "Pomyślnie zaktualizowano pojazd" });
     }
     async delete(req: Request, res: Response): Promise<void> {
         const fleetRepository = (await AppDataSource).getRepository(FleetVehicle);
@@ -77,7 +89,5 @@ export class Fleet {
         } else {
             res.status(404).json({ success: false, message: 'Nie znaleziono pojazdu o podanym ID do usunięcia.' });
         }
-
-
     }
 }

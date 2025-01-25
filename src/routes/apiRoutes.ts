@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { rateLimit } from 'express-rate-limit'
 import { contactController } from '../controllers/api/contact';
 import { getListingsController } from '../controllers/api/getListings';
+import { getFleetController } from '../controllers/api/getFleet';
 
 dotenv.config()
 
@@ -26,6 +27,6 @@ export function apiRoutes(): Router {
     const router = express.Router();
     router.post("/contact", contactLimiter, contactController);
     router.get("/get-listings",listingsLimiter, getListingsController);
-
+    router.get("/get-fleet",listingsLimiter, getFleetController);
     return router;
 }
