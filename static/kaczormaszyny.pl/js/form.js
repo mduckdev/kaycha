@@ -8,7 +8,7 @@ const contactFormHandler = (e) => {
     formDataObj["phoneNumber"] = iti.getNumber();
     const params = new URLSearchParams(formDataObj);
 
-    fetch('/api/contact', {
+    fetch(`${backendURL}/api/contact`, {
         method: 'POST',
 
         body: params

@@ -5,16 +5,18 @@ document.addEventListener('DOMContentLoaded',  () => {
     sendButtons.forEach(button => {
         button.addEventListener('click', async () => {
             const messageId = button.getAttribute('data-id');
+            const messageSource = button.getAttribute('data-src');
+
             // Wyślij żądanie do serwera w celu usunięcia rekordu o określonym ID
             const confirmation = await showConfirmModal(`Wysłać wiadomość nr: ${messageId}?`).catch(err=>console.log("Modal rejected."))
-
+            const url = messageSource === "kaczortransport.pl"?"/dashboard/send-transport-message/":"/dashboard/send-message/";
             if (confirmation) {
-                fetch(`/dashboard/send-message/`, { 
+                fetch(url, { 
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     }, 
-                    body:JSON.stringify({csrfToken:csrfToken , messageId:messageId})})
+                    body:JSON.stringify({csrfToken:csrfToken , messageId:messageId, src:messageSource})})
                     .then(response => response.json())
                     .then(data => {
                         // Przeładuj stronę po pomyślnym usunięciu rekordu
@@ -39,11 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
     deleteButtons.forEach(button => {
         button.addEventListener('click', async () => {
             const messageId = button.getAttribute('data-id');
+            const messageSource = button.getAttribute('data-src');
             // Wyślij żądanie do serwera w celu usunięcia rekordu o określonym ID
             const confirmation = await showConfirmModal(`Usunąć wiadomość nr: ${messageId}?`).catch(err=>console.log("Modal rejected."))
+            const url = messageSource === "kaczortransport.pl"?"/dashboard/delete-transport-message/":"/dashboard/delete-message/";
 
             if (confirmation) {
-                fetch(`/dashboard/delete-message/`, { 
+                fetch(url, { 
                     method: 'DELETE',
                     headers: {
                     'Content-Type': 'application/json',

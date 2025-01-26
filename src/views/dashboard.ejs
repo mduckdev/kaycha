@@ -77,10 +77,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            
                             <% messages.forEach(message=> { %>
+                                <% 
+                            let messageSource = message.unloadingAddress ? 'kaczortransport.pl' : 'kaczormaszyny.pl'; 
+                            %>
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="messageCheckbox" data-id="<%= message.id %>" />
+                                        <input type="checkbox" class="messageCheckbox" data-id="<%= message.id %>" data-src="<%= messageSource %>" />
                                     </td>
                                     <td>
                                         <%= new Date(message.timestamp).toLocaleString() %>
@@ -102,13 +106,14 @@
                                         <%= message.message.substring(0,100) %>...
                                     </td>
                                     <td>
-                                        <%= message.unloadingAddress ? 'kaczortransport.pl' : 'kaczormaszyny.pl' %>
+                                        
+                                        <%= messageSource %>
                                     </td>
                                       
                                     <td>
-                                        <a href="/dashboard/message-details/<%= message.id %>">Szczegóły</a>
-                                        <button class="delete-button" data-id="<%= message.id %>">Usuń</button>
-                                        <button class="send-button" data-id="<%= message.id %>">Wyślij na
+                                        <a href="/dashboard/message-details/<%= message.id %>?src=<%= messageSource %>">Szczegóły</a>
+                                        <button class="delete-button" data-id="<%= message.id %>" data-src="<%= messageSource %>">Usuń</button>
+                                        <button class="send-button" data-id="<%= message.id %>" data-src="<%= messageSource %>">Wyślij na
                                             e-mail</button>
 
                                     </td>

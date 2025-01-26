@@ -2,13 +2,13 @@ import express, { Request, Response, Router } from 'express';
 import "reflect-metadata"
 import dotenv from 'dotenv';
 import { dashboardController } from '../controllers/dashboard/dashboard';
-import { deleteMessageController } from '../controllers/dashboard/deleteMessage';
-import { sendMessageController } from '../controllers/dashboard/sendMessage';
+import { deleteMessageController, deleteTransportMessageController } from '../controllers/dashboard/deleteMessage';
+import { sendMessageController, sendTransportMessageController } from '../controllers/dashboard/sendMessage';
 import { messageDetailsController } from '../controllers/dashboard/messageDetails';
 import { changeProfileController } from '../controllers/dashboard/changeProfile';
 import { exportMessagesCsvController } from '../controllers/dashboard/exportMessagesCsv';
 import { exportMessagesEmlController } from '../controllers/dashboard/exportMessagesEml';
-import { deleteMessagesController } from '../controllers/dashboard/deleteMessages';
+import { deleteMessagesController, deleteTransportMessagesController } from '../controllers/dashboard/deleteMessages';
 import { profileController } from '../controllers/dashboard/profile';
 import { rateLimit } from 'express-rate-limit'
 import { assureCSRF, verifyCSRF } from '../utils';
@@ -55,10 +55,16 @@ export function dashboardRoutes(): Router {
     router.delete("/logout-devices/", logoutDevicesController)
 
     router.delete('/delete-message/', deleteMessageController);
+    router.delete('/delete-transport-message/', deleteTransportMessageController);
+
 
     router.delete('/delete-messages/', deleteMessagesController);
+    router.delete('/delete-transport-messages/', deleteTransportMessagesController);
+
 
     router.post('/send-message/', sendMessageController);
+    router.post('/send-transport-message/', sendTransportMessageController);
+
 
     router.post("/add-mfa", new mfa().post);
 

@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         switch (selectedAction) {
             case 'export-csv':
-                exportSelectedMessages('/dashboard/export-messages-csv', "exported_messages.csv");
+                exportSelectedMessages('/dashboard/export-messages-csv', "exported_csv_messages.zip");
                 break;
             case 'export-eml':
-                exportSelectedMessages('/dashboard/export-messages-eml', "exported_messages.zip");
+                exportSelectedMessages('/dashboard/export-messages-eml', "exported_eml_messages.zip");
                 break;
             case 'delete':
                 deleteSelectedMessages();
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedMessages = [];
         messageCheckboxes.forEach(checkbox => {
             if (checkbox.checked) {
-                selectedMessages.push(checkbox.dataset.id);
+                selectedMessages.push({id:checkbox.dataset.id,src:checkbox.dataset.src});
             }
         });
         return selectedMessages;

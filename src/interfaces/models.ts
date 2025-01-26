@@ -10,7 +10,17 @@ export interface MessageI {
     homeNumber: string;
     message: string;
 }
-
+export interface TransportMessageI {
+    id: number;
+    timestamp: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
+    loadingAddress: string;
+    unloadingAddress: string;
+    message: string;
+}
 export interface UserI {
     id: number;
     username: string;

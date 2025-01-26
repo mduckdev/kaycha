@@ -29,7 +29,7 @@ function updateGalleryTransform() {
 
 
 
-fetch("/api/get-listings", { method: "GET" }).then(x => x.json()).then(response => {
+fetch(`${backendURL}/api/get-listings`, { method: "GET" }).then(x => x.json()).then(response => {
     const offerGallery = document.querySelector(".offer-gallery");
     offerGallery.innerHTML = "";
     response.forEach(item => {

@@ -3,7 +3,7 @@ import { ContactResponseI } from "./interfaces/responses"
 import { AppDataSource } from "./data-source";
 import { Message } from "./entity/Message";
 import { User } from "./entity/User";
-import { In } from "typeorm";
+import { In, Repository } from "typeorm";
 import { DictionaryI } from "./interfaces/data";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv"
@@ -99,19 +99,18 @@ export const setupDB = async (username: string, password: string, hashRounds: nu
     }
 };
 
-export const getSelectedMessagesFromDatabase = async (selectedMessageIds: number[]): Promise<any> => {
+export const getSelectedMessagesFromDatabase = async (selectedMessageIds: number[],repository:Repository<Message> | Repository<TransportMessage> ): Promise<any> => {
 
 
-    const messageRepository = (await AppDataSource).getRepository(Message);
 
     try {
         // Retrieve messages based on their IDs
-        const selectedMessages = await messageRepository.findBy({ id: In(selectedMessageIds) });
+        const selectedMessages = await repository.findBy({ id: In(selectedMessageIds) });
 
         if (selectedMessages && selectedMessages.length > 0) {
             return selectedMessages;
         } else {
-            throw new Error('No messages found with the provided IDs.');
+            console.error('No messages found with the provided IDs.');
         }
     } catch (error) {
         console.error('Error occurred while retrieving messages from the database:', error);
@@ -119,11 +118,10 @@ export const getSelectedMessagesFromDatabase = async (selectedMessageIds: number
     }
 };
 
-export const deleteSelectedMessagesFromDatabase = async (selectedMessageIds: number[]): Promise<void> => {
-    const messageRepository = (await AppDataSource).getRepository(Message);
+export const deleteSelectedMessagesFromDatabase = async (selectedMessageIds: number[],repository:Repository<Message> | Repository<TransportMessage> ): Promise<void> => {
 
     try {
-        const deleteResult = await messageRepository.delete({ id: In(selectedMessageIds) });
+        const deleteResult = await repository.delete({ id: In(selectedMessageIds) });
 
         if (deleteResult.affected && deleteResult.affected > 0) {
             console.log('Messages successfully deleted from the database.');
@@ -207,7 +205,7 @@ export const notifyAboutMessages = async (transporter: any, newMessages: (Messag
             <p>${currentMessage.message}</p>
     `
         }else{
-            `
+            plainTextMessage=`
             Wiadomość nr ${index + 1}
             Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}
         Nr telefonu: ${currentMessage.phoneNumber}
