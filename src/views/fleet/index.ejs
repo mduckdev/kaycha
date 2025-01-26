@@ -23,6 +23,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Miniaturka</th>
                     <th>Model</th>
                     <th>Ładowność (kg)</th>
                     <th>DMC (kg)</th>
@@ -36,6 +37,14 @@
                 <% vehicles.forEach(function(vehicle) { %>
                     <tr>
                         <td><%= vehicle.id %></td>
+                        <td>
+                            <% if (vehicle.imgSrc) { %>
+                                <img src="<%= vehicle.imgSrc %>" alt="Miniaturka" class="img-thumbnail thumbnail-small" width="150px">
+
+                            <% } else { %>
+                                <span>Brak zdjęcia</span>
+                            <% } %>
+                        </td>
                         <td><%= vehicle.model %></td>
                         <td><%= vehicle.loadCapacity %></td>
                         <td><%= vehicle.gvm %></td>

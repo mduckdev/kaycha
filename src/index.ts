@@ -61,7 +61,7 @@ export const bootstrap = async () => {
                 "script-src": ["'self'", "https://code.jquery.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://*.hcaptcha.com", "https://hcaptcha.com"],
                 "style-src": ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://*.hcaptcha.com", "https://hcaptcha.com", "https://fonts.googleapis.com"],
                 "font-src": ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
-                "img-src": ["'self'", "https://*.olxcdn.com", "https://cdnjs.cloudflare.com", "data:"],
+                "img-src": ["*"],
                 "frame-src": ["https://*.hcaptcha.com", "https://hcaptcha.com", "https://maps.googleapis.com"],
                 "connect-src": ["'self'", "https://*.hcaptcha.com", "https://hcaptcha.com"]
             }
