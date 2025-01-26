@@ -2,6 +2,7 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from '../../data-source';
 import { Message } from '../../entity/Message';
+import { TransportMessage } from '../../entity/TransportMessages';
 
 export const deleteMessageController = async (req: Request, res: Response) => {
     const messageId = req.body.messageId;
@@ -17,6 +18,4 @@ export const deleteMessageController = async (req: Request, res: Response) => {
         await messageRepository.remove(messageToRemove);
         return res.json({ success: true });
     }
-
-
 }

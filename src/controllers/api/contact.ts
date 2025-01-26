@@ -5,6 +5,7 @@ import { Message } from '../../entity/Message';
 import { notifyAboutMessages, validateContactForm } from '../../utils';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import nodemailer from 'nodemailer';
+import { TransportMessage } from '../../entity/TransportMessages';
 
 const transporterOptions: SMTPTransport.Options = {
     host: process.env.EMAIL_HOST,
@@ -17,7 +18,7 @@ const transporterOptions: SMTPTransport.Options = {
 }
 const transporter = nodemailer.createTransport(transporterOptions);
 
-let newMessages: Message[] = [];
+let newMessages: (Message|TransportMessage)[] = [];
 async function delay(ms: number): Promise<void> {
     // return await for better async stack trace support in case of errors.
     return await new Promise(resolve => setTimeout(resolve, ms));
@@ -39,7 +40,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 export const contactController = async (req: Request, res: Response): Promise<Response> => {
-    const { firstName, lastName = "", phoneNumber, email, city, street = "", homeNumber = "", message } = req.body;
+    const { firstName, lastName = "", phoneNumber, email, city, street = "", homeNumber = "", message, transport="", loadingAddress="", unloadingAddress="" } = req.body;
     const response = await validateContactForm(req.body, "PL", process.env.HCAPTCHA_PRIVATE_KEY || "");
     const { isValid } = response;
     const clientIP = req?.header('x-forwarded-for')?.split(",")[0] ||
@@ -50,27 +51,52 @@ export const contactController = async (req: Request, res: Response): Promise<Re
     }
     const timestamp = Date.now();
 
-    try {
-        const messageRepository = (await AppDataSource).getRepository(Message);
-        const newMessage = messageRepository.create({
-            firstName: firstName,
-            lastName: lastName,
-            phoneNumber: phoneNumber,
-            email: email,
-            city: city,
-            street: street,
-            homeNumber: homeNumber,
-            message: message,
-            ipAddress: clientIP,
-            timestamp: timestamp,
-            portNumber: clientPort
-        });
-        await messageRepository.save(newMessage);
-        console.log(`Successfully added new message to the database from: ${firstName}`);
-        newMessages.push(newMessage);
-    } catch (error) {
-        console.error('Error occurred while adding message to the database:', error);
-        throw error;
+    if(transport ==="true"){
+        try {
+            const messageRepository = (await AppDataSource).getRepository(TransportMessage);
+            const newMessage = messageRepository.create({
+                firstName: firstName,
+                lastName: lastName,
+                phoneNumber: phoneNumber,
+                email: email,
+                loadingAddress:loadingAddress,
+                unloadingAddress:unloadingAddress,
+                message: message,
+                ipAddress: clientIP,
+                timestamp: timestamp,
+                portNumber: clientPort
+            });
+            await messageRepository.save(newMessage);
+            console.log(`Successfully added new message to the database from: ${firstName}`);
+            newMessages.push(newMessage);
+        } catch (error) {
+            console.error('Error occurred while adding message to the database:', error);
+            throw error;
+        }
+    }else{
+        try {
+            const messageRepository = (await AppDataSource).getRepository(Message);
+            const newMessage = messageRepository.create({
+                firstName: firstName,
+                lastName: lastName,
+                phoneNumber: phoneNumber,
+                email: email,
+                city: city,
+                street: street,
+                homeNumber: homeNumber,
+                message: message,
+                ipAddress: clientIP,
+                timestamp: timestamp,
+                portNumber: clientPort
+            });
+            await messageRepository.save(newMessage);
+            console.log(`Successfully added new message to the database from: ${firstName}`);
+            newMessages.push(newMessage);
+        } catch (error) {
+            console.error('Error occurred while adding message to the database:', error);
+            throw error;
+        }
     }
+
     return res.json(response);
 }

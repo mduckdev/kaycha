@@ -89,7 +89,7 @@ export const bootstrap = async () => {
 
     app.set('trust proxy', 1)
 
-    app.use("/", express.static("static/kaczormaszyny.pl"));
+    app.use("/", express.static("src/static"));
     app.use("/dashboard", dashboardRoutes());
     app.use("/api",cors(corsOptions), apiRoutes());
     app.use("/auth", authRoutes());

@@ -569,6 +569,7 @@ footer{
     background-color: var(--grey);
 }
 .socials {
+    padding: 10px;
     display: flex;
     justify-content: space-between;
 }

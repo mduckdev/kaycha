@@ -9,6 +9,7 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv"
 import { Request, Response } from 'express';
 import * as crypto from "crypto"
+import { TransportMessage } from "./entity/TransportMessages";
 dotenv.config();
 
 
@@ -24,7 +25,7 @@ export const dict: DictionaryI = {
 
 
 export const validateContactForm = async (body: any, language: string, captchaSecretKey: string): Promise<ContactResponseI> => {
-    let { firstName, phoneNumber, email, city, message, consent } = body;
+    let { firstName, phoneNumber, email, city, message, consent, transport } = body;
     const hcaptchaResponse = body["g-recaptcha-response"];
 
     const response: ContactResponseI = {
@@ -32,7 +33,7 @@ export const validateContactForm = async (body: any, language: string, captchaSe
         errorMessages: []
     };
 
-    if (!firstName || !phoneNumber || !email || !city || !message || consent != "on") {
+    if (!firstName || !phoneNumber || !email || (!city && !transport) || !message || consent != "on") {
         response.isValid = false;
         response.errorMessages.push(dict[language].allFieldsRequired);
         return response;
@@ -140,7 +141,7 @@ export const randomProperty = (obj: any): any => {
     return obj[keys[keys.length * Math.random() << 0]];
 };
 
-export const notifyAboutMessages = async (transporter: any, newMessages: Message[]): Promise<void> => {
+export const notifyAboutMessages = async (transporter: any, newMessages: (Message|TransportMessage)[]): Promise<void> => {
     let text = "nowych wiadomości";
     if (newMessages.length == 1) {
         text = "nową wiadomość";
@@ -181,7 +182,10 @@ export const notifyAboutMessages = async (transporter: any, newMessages: Message
     const htmlMessages: string[] = []
     for (let index = 0; index < newMessages.length; index++) {
         const currentMessage = newMessages[index];
-        const plainTextMessage =
+        let plainTextMessage="Fail";
+        let htmlMessage="Fail";
+        if(currentMessage instanceof Message){
+             plainTextMessage =
             `
             Wiadomość nr ${index + 1}
             Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}
@@ -190,7 +194,7 @@ export const notifyAboutMessages = async (transporter: any, newMessages: Message
         Treść wiadomości:
         ${currentMessage.message}
         `;
-        const htmlMessage =
+         htmlMessage =
             `
             <h1>Wiadomość nr ${index + 1}</h1>
             <h2>Dane klienta:</h2>
@@ -202,6 +206,31 @@ export const notifyAboutMessages = async (transporter: any, newMessages: Message
             <h2>ℹ️ Treść wiadomości:</h2>
             <p>${currentMessage.message}</p>
     `
+        }else{
+            `
+            Wiadomość nr ${index + 1}
+            Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}
+        Nr telefonu: ${currentMessage.phoneNumber}
+        Adres załadunku: ${currentMessage.loadingAddress}
+        Adres rozładunku: ${currentMessage.unloadingAddress}
+        Treść wiadomości:
+        ${currentMessage.message}
+        `;
+         htmlMessage =
+            `
+            <h1>Wiadomość nr ${index + 1}</h1>
+            <h2>Dane klienta:</h2>
+            <ul>
+                <li>🗄️ Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}</li>
+                <li>☎️ Nr telefonu: ${currentMessage.phoneNumber}</li>
+                <li>📦 Adres załadunku: ${currentMessage.loadingAddress}</li>
+                <li>🚚 Adres rozładunku: ${currentMessage.unloadingAddress}</li>
+            </ul>
+            <h2>ℹ️ Treść wiadomości:</h2>
+            <p>${currentMessage.message}</p>
+    `
+        }
+        
         plainTextMessages.push(plainTextMessage);
         htmlMessages.push(htmlMessage);
     }

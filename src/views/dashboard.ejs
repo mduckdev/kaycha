@@ -102,8 +102,9 @@
                                         <%= message.message.substring(0,100) %>...
                                     </td>
                                     <td>
-                                        kaczormaszyny.pl
+                                        <%= message.unloadingAddress ? 'kaczortransport.pl' : 'kaczormaszyny.pl' %>
                                     </td>
+                                      
                                     <td>
                                         <a href="/dashboard/message-details/<%= message.id %>">Szczegóły</a>
                                         <button class="delete-button" data-id="<%= message.id %>">Usuń</button>

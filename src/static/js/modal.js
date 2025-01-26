@@ -80,6 +80,48 @@ const showConfirmModal = (message, title = "Komunikat", button01Text = "OK", but
   })
 }
 
+const showMfaModal = (message, title = "Uwierzytelnianie wieloetapowe", button01Text = "OK", button02Text = "Anuluj") => {
+  return new Promise((resolve, reject) => {
+    const mfaCode = document.getElementById("mfa");
+    const modalMessage = document.getElementById("modal-message");
+    const modalTitle = document.getElementById("modal-title");
+    const button01 = document.getElementById("modal-button-1");
+    const button02 = document.getElementById("modal-button-2");
+
+    modalMessage.innerText = message;
+    modalTitle.innerText = title;
+    button01.innerText = button01Text;
+    button02.innerText = button02Text;
+
+
+    modal.style.display = "block";
+    modalButtons.style.display = "block";
+    mfaCode.style.display = "block"
+
+
+    button01.onclick = () => {
+      modal.style.display = "none";
+      resolve(true);
+    }
+
+    button02.onclick = () => {
+      modal.style.display = "none";
+      reject(false);
+    }
+
+    // Funkcja do ukrycia modala po kliknięciu na przycisk zamknięcia
+    span.onclick = () => {
+      modal.style.display = "none";
+      reject(false);
+    }
+    window.onclick = (event) => {
+      if (event.target == modal) {
+        modal.style.display = "none";
+        reject(false);
+      }
+    }
+  })
+}
 
 // Funkcja do ukrycia modala po kliknięciu w dowolne miejsce poza nim
 window.onclick = function (event) {
