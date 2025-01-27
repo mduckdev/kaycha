@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="/js/listings/overrideMethod.js"></script>
+
+    <title>Edytuj Pojazd</title>
+</head>
+
+<body>
+    <%- include('../modal.ejs') %>
+    <%- include('../navbar.ejs') %>
+
+    <div class="container mt-5">
+        <h1>Edytuj Pojazd</h1>
+
+        <form action="/fleet/edit/<%= vehicle.id %>" method="POST" httpMethod="PATCH">
+            <input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
+
+            <div class="form-group">
+                <label for="model">Model</label>
+                <input type="text" class="form-control" id="model" name="model" value="<%= vehicle.model %>" required>
+            </div>
+            <div class="form-group">
+                <label for="loadCapacity">Ładowność (kg)</label>
+                <input type="number" class="form-control" id="loadCapacity" name="loadCapacity"
+                    value="<%= vehicle.loadCapacity %>" required>
+            </div>
+            <div class="form-group">
+                <label for="gvm">DMC (kg)</label>
+                <input type="number" class="form-control" id="gvm" name="gvm" value="<%= vehicle.gvm %>" required>
+            </div>
+            <div class="form-group">
+                <label for="platformLength">Długość najazdu (cm)</label>
+                <input type="number" class="form-control" id="platformLength" name="platformLength"
+                    value="<%= vehicle.platformLength %>" required>
+            </div>
+            <div class="form-group">
+                <label for="flatPartLength">Część płaska (cm)</label>
+                <input type="number" class="form-control" id="flatPartLength" name="flatPartLength"
+                    value="<%= vehicle.flatPartLength %>" required>
+            </div>
+            <div class="form-group">
+                <label for="slopeLength">Długość skosu (cm)</label>
+                <input type="number" class="form-control" id="slopeLength" name="slopeLength"
+                    value="<%= vehicle.slopeLength %>" required>
+            </div>
+            <div class="form-group">
+                <label for="platformWidth">Szerokość najazdu (cm)</label>
+                <input type="number" class="form-control" id="platformWidth" name="platformWidth"
+                    value="<%= vehicle.platformWidth %>" required>
+            </div>
+            <div class="form-group">
+                <label for="platformHeight">Wysokość wypoziomowana (cm)</label>
+                <input type="number" class="form-control" id="platformHeight" name="platformHeight"
+                    value="<%= vehicle.platformHeight %>" required>
+            </div>
+            <div class="form-group">
+                <label for="loadingSlopeHeight">Wysokość skosu do załadunku (cm)</label>
+                <input type="number" class="form-control" id="loadingSlopeHeight" name="loadingSlopeHeight"
+                    value="<%= vehicle.loadingSlopeHeight %>" required>
+            </div>
+            <div class="form-group">
+                <label for="rampLength">Długość najazdów (cm)</label>
+                <input type="number" class="form-control" id="rampLength" name="rampLength"
+                    value="<%= vehicle.rampLength %>" required>
+            </div>
+            <div class="form-group">
+                <label for="maxLoadHeight">Maksymalna wysokość ładunku (cm)</label>
+                <input type="number" class="form-control" id="maxLoadHeight" name="maxLoadHeight"
+                    value="<%= vehicle.maxLoadHeight %>" required>
+            </div>
+            <div class="form-group">
+                <label for="passengerSeats">Liczba miejsc pasażera</label>
+                <input type="number" class="form-control" id="passengerSeats" name="passengerSeats"
+                    value="<%= vehicle.passengerSeats %>" required>
+            </div>
+            <div class="form-group">
+                <label for="imgSrc">URL zdjęcia</label>
+                <input type="text" class="form-control" id="imgSrc" name="imgSrc" minlength="0" maxlength="300" required value="<%= vehicle.imgSrc %>">
+            </div>
+            <button type="submit" class="btn btn-primary mt-1">Zapisz</button>
+        </form>
+    </div>
+</body>
+
+</html>

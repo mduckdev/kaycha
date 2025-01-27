@@ -50,8 +50,11 @@ function dashboardRoutes() {
     router.delete("/add-mfa", new mfa_1.mfa().delete);
     router.delete("/logout-devices/", logoutDevices_1.logoutDevicesController);
     router.delete('/delete-message/', deleteMessage_1.deleteMessageController);
+    router.delete('/delete-transport-message/', deleteMessage_1.deleteTransportMessageController);
     router.delete('/delete-messages/', deleteMessages_1.deleteMessagesController);
+    router.delete('/delete-transport-messages/', deleteMessages_1.deleteTransportMessagesController);
     router.post('/send-message/', sendMessage_1.sendMessageController);
+    router.post('/send-transport-message/', sendMessage_1.sendTransportMessageController);
     router.post("/add-mfa", new mfa_1.mfa().post);
     router.post("/change-profile", changeProfile_1.changeProfileController);
     router.post('/export-messages-csv', exportMessagesCsv_1.exportMessagesCsvController);

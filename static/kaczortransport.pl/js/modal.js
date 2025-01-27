@@ -4,14 +4,12 @@ const modal = document.getElementById("myModal");
 // Pobierz element do zamknięcia modala
 const span = document.querySelector("span.close");
 
-const modalButtons = document.getElementById("modal-buttons")
 
 // Funkcja do pokazania modala z komunikatem
 //resolves with true when clicked outside or on close button
 const showModal = (message, title = "Komunikat") => {
   return new Promise((resolve, reject) => {
     const modalMessage = document.getElementById("modal-message");
-    const mfaCode = document.getElementById("mfa");
 
     const modalTitle = document.getElementById("modal-title");
 
@@ -19,8 +17,6 @@ const showModal = (message, title = "Komunikat") => {
     modalTitle.innerText = title;
 
     modal.style.display = "block";
-    modalButtons.style.display = "none"
-    mfaCode.style.display = "none"
 
 
     // Funkcja do ukrycia modala po kliknięciu na przycisk zamknięcia

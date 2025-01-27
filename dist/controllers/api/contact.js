@@ -17,6 +17,7 @@ const data_source_1 = require("../../data-source");
 const Message_1 = require("../../entity/Message");
 const utils_1 = require("../../utils");
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const TransportMessages_1 = require("../../entity/TransportMessages");
 const transporterOptions = {
     host: process.env.EMAIL_HOST,
     port: Number(process.env.EMAIL_PORT) || 465,
@@ -51,7 +52,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 const contactController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const { firstName, lastName = "", phoneNumber, email, city, street = "", homeNumber = "", message } = req.body;
+    const { firstName, lastName = "", phoneNumber, email, city, street = "", homeNumber = "", message, transport = "", loadingAddress = "", unloadingAddress = "" } = req.body;
     const response = yield (0, utils_1.validateContactForm)(req.body, "PL", process.env.HCAPTCHA_PRIVATE_KEY || "");
     const { isValid } = response;
     const clientIP = ((_a = req === null || req === void 0 ? void 0 : req.header('x-forwarded-for')) === null || _a === void 0 ? void 0 : _a.split(",")[0]) ||
@@ -61,28 +62,54 @@ const contactController = (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.status(400).json(response);
     }
     const timestamp = Date.now();
-    try {
-        const messageRepository = (yield data_source_1.AppDataSource).getRepository(Message_1.Message);
-        const newMessage = messageRepository.create({
-            firstName: firstName,
-            lastName: lastName,
-            phoneNumber: phoneNumber,
-            email: email,
-            city: city,
-            street: street,
-            homeNumber: homeNumber,
-            message: message,
-            ipAddress: clientIP,
-            timestamp: timestamp,
-            portNumber: clientPort
-        });
-        yield messageRepository.save(newMessage);
-        console.log(`Successfully added new message to the database from: ${firstName}`);
-        newMessages.push(newMessage);
+    if (transport === "true") {
+        try {
+            const messageRepository = (yield data_source_1.AppDataSource).getRepository(TransportMessages_1.TransportMessage);
+            const newMessage = messageRepository.create({
+                firstName: firstName,
+                lastName: lastName,
+                phoneNumber: phoneNumber,
+                email: email,
+                loadingAddress: loadingAddress,
+                unloadingAddress: unloadingAddress,
+                message: message,
+                ipAddress: clientIP,
+                timestamp: timestamp,
+                portNumber: clientPort
+            });
+            yield messageRepository.save(newMessage);
+            console.log(`Successfully added new message to the database from: ${firstName}`);
+            newMessages.push(newMessage);
+        }
+        catch (error) {
+            console.error('Error occurred while adding message to the database:', error);
+            throw error;
+        }
     }
-    catch (error) {
-        console.error('Error occurred while adding message to the database:', error);
-        throw error;
+    else {
+        try {
+            const messageRepository = (yield data_source_1.AppDataSource).getRepository(Message_1.Message);
+            const newMessage = messageRepository.create({
+                firstName: firstName,
+                lastName: lastName,
+                phoneNumber: phoneNumber,
+                email: email,
+                city: city,
+                street: street,
+                homeNumber: homeNumber,
+                message: message,
+                ipAddress: clientIP,
+                timestamp: timestamp,
+                portNumber: clientPort
+            });
+            yield messageRepository.save(newMessage);
+            console.log(`Successfully added new message to the database from: ${firstName}`);
+            newMessages.push(newMessage);
+        }
+        catch (error) {
+            console.error('Error occurred while adding message to the database:', error);
+            throw error;
+        }
     }
     return res.json(response);
 });

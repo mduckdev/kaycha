@@ -12,15 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.dashboardController = void 0;
 const data_source_1 = require("../../data-source");
 const Message_1 = require("../../entity/Message");
+const TransportMessages_1 = require("../../entity/TransportMessages");
 const dashboardController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const sortColumns = {
         "firstName": "firstName",
         "lastName": "lastName",
         "phoneNumber": "phoneNumber",
         "email": "email",
-        "city": "city",
-        "street": "street",
-        "homeNumber": "homeNumber",
         "message": "message",
     };
     const searchQuery = (!req.query.search) ? "%%" : ("%" + req.query.search + "%");
@@ -32,7 +30,12 @@ const dashboardController = (req, res) => __awaiter(void 0, void 0, void 0, func
             .where('message.firstName LIKE :searchQuery OR message.lastName LIKE :searchQuery OR message.phoneNumber LIKE :searchQuery OR message.email LIKE :searchQuery OR message.city LIKE :searchQuery OR message.street LIKE :searchQuery OR message.homeNumber LIKE :searchQuery OR message.message LIKE :searchQuery', { searchQuery })
             .orderBy(`message.${sortBy}`, sortDirection == "asc" ? "ASC" : "DESC")
             .getMany();
-        res.render('dashboard', { messages, user: req.session.user, csrfToken: req.session.csrfToken });
+        const transportMessageRepository = (yield data_source_1.AppDataSource).getRepository(TransportMessages_1.TransportMessage);
+        const transportMessages = yield transportMessageRepository.createQueryBuilder('message')
+            .where('message.firstName LIKE :searchQuery OR message.lastName LIKE :searchQuery OR message.phoneNumber LIKE :searchQuery OR message.email LIKE :searchQuery OR message.unloadingAddress LIKE :searchQuery OR message.loadingAddress LIKE :searchQuery OR message.message LIKE :searchQuery', { searchQuery })
+            .orderBy(`message.${sortBy}`, sortDirection == "asc" ? "ASC" : "DESC")
+            .getMany();
+        res.render('dashboard', { messages: [...messages, ...transportMessages], user: req.session.user, csrfToken: req.session.csrfToken });
     }
     catch (error) {
         console.error('Error occurred while fetching messages from the database:', error);

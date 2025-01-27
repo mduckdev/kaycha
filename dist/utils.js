@@ -55,13 +55,13 @@ exports.dict = {
     }
 };
 const validateContactForm = (body, language, captchaSecretKey) => __awaiter(void 0, void 0, void 0, function* () {
-    let { firstName, phoneNumber, email, city, message, consent } = body;
+    let { firstName, phoneNumber, email, city, message, consent, transport } = body;
     const hcaptchaResponse = body["g-recaptcha-response"];
     const response = {
         isValid: true,
         errorMessages: []
     };
-    if (!firstName || !phoneNumber || !email || !city || !message || consent != "on") {
+    if (!firstName || !phoneNumber || !email || (!city && !transport) || !message || consent != "on") {
         response.isValid = false;
         response.errorMessages.push(exports.dict[language].allFieldsRequired);
         return response;
@@ -119,16 +119,15 @@ const setupDB = (username, password, hashRounds) => __awaiter(void 0, void 0, vo
     }
 });
 exports.setupDB = setupDB;
-const getSelectedMessagesFromDatabase = (selectedMessageIds) => __awaiter(void 0, void 0, void 0, function* () {
-    const messageRepository = (yield data_source_1.AppDataSource).getRepository(Message_1.Message);
+const getSelectedMessagesFromDatabase = (selectedMessageIds, repository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Retrieve messages based on their IDs
-        const selectedMessages = yield messageRepository.findBy({ id: (0, typeorm_1.In)(selectedMessageIds) });
+        const selectedMessages = yield repository.findBy({ id: (0, typeorm_1.In)(selectedMessageIds) });
         if (selectedMessages && selectedMessages.length > 0) {
             return selectedMessages;
         }
         else {
-            throw new Error('No messages found with the provided IDs.');
+            console.error('No messages found with the provided IDs.');
         }
     }
     catch (error) {
@@ -137,10 +136,9 @@ const getSelectedMessagesFromDatabase = (selectedMessageIds) => __awaiter(void 0
     }
 });
 exports.getSelectedMessagesFromDatabase = getSelectedMessagesFromDatabase;
-const deleteSelectedMessagesFromDatabase = (selectedMessageIds) => __awaiter(void 0, void 0, void 0, function* () {
-    const messageRepository = (yield data_source_1.AppDataSource).getRepository(Message_1.Message);
+const deleteSelectedMessagesFromDatabase = (selectedMessageIds, repository) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deleteResult = yield messageRepository.delete({ id: (0, typeorm_1.In)(selectedMessageIds) });
+        const deleteResult = yield repository.delete({ id: (0, typeorm_1.In)(selectedMessageIds) });
         if (deleteResult.affected && deleteResult.affected > 0) {
             console.log('Messages successfully deleted from the database.');
         }
@@ -201,7 +199,11 @@ const notifyAboutMessages = (transporter, newMessages) => __awaiter(void 0, void
     const htmlMessages = [];
     for (let index = 0; index < newMessages.length; index++) {
         const currentMessage = newMessages[index];
-        const plainTextMessage = `
+        let plainTextMessage = "Fail";
+        let htmlMessage = "Fail";
+        if (currentMessage instanceof Message_1.Message) {
+            plainTextMessage =
+                `
             Wiadomość nr ${index + 1}
             Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}
         Nr telefonu: ${currentMessage.phoneNumber}
@@ -209,7 +211,8 @@ const notifyAboutMessages = (transporter, newMessages) => __awaiter(void 0, void
         Treść wiadomości:
         ${currentMessage.message}
         `;
-        const htmlMessage = `
+            htmlMessage =
+                `
             <h1>Wiadomość nr ${index + 1}</h1>
             <h2>Dane klienta:</h2>
             <ul>
@@ -220,6 +223,31 @@ const notifyAboutMessages = (transporter, newMessages) => __awaiter(void 0, void
             <h2>ℹ️ Treść wiadomości:</h2>
             <p>${currentMessage.message}</p>
     `;
+        }
+        else {
+            plainTextMessage = `
+            Wiadomość nr ${index + 1}
+            Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}
+        Nr telefonu: ${currentMessage.phoneNumber}
+        Adres załadunku: ${currentMessage.loadingAddress}
+        Adres rozładunku: ${currentMessage.unloadingAddress}
+        Treść wiadomości:
+        ${currentMessage.message}
+        `;
+            htmlMessage =
+                `
+            <h1>Wiadomość nr ${index + 1}</h1>
+            <h2>Dane klienta:</h2>
+            <ul>
+                <li>🗄️ Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}</li>
+                <li>☎️ Nr telefonu: ${currentMessage.phoneNumber}</li>
+                <li>📦 Adres załadunku: ${currentMessage.loadingAddress}</li>
+                <li>🚚 Adres rozładunku: ${currentMessage.unloadingAddress}</li>
+            </ul>
+            <h2>ℹ️ Treść wiadomości:</h2>
+            <p>${currentMessage.message}</p>
+    `;
+        }
         plainTextMessages.push(plainTextMessage);
         htmlMessages.push(htmlMessage);
     }

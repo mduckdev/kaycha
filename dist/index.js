@@ -28,6 +28,8 @@ const connect_typeorm_1 = require("connect-typeorm");
 const Session_1 = require("./entity/Session");
 const authRoutes_1 = require("./routes/authRoutes");
 const listingRoutes_1 = require("./routes/listingRoutes");
+const fleetRoutes_1 = require("./routes/fleetRoutes");
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const bootstrap = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
@@ -58,20 +60,34 @@ const bootstrap = () => __awaiter(void 0, void 0, void 0, function* () {
                 "script-src": ["'self'", "https://code.jquery.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://*.hcaptcha.com", "https://hcaptcha.com"],
                 "style-src": ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://*.hcaptcha.com", "https://hcaptcha.com", "https://fonts.googleapis.com"],
                 "font-src": ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
-                "img-src": ["'self'", "https://*.olxcdn.com", "https://cdnjs.cloudflare.com", "data:"],
+                "img-src": ["*"],
                 "frame-src": ["https://*.hcaptcha.com", "https://hcaptcha.com", "https://maps.googleapis.com"],
                 "connect-src": ["'self'", "https://*.hcaptcha.com", "https://hcaptcha.com"]
             }
         },
     }));
+    const domainWhitelist = (process.env.NODE_ENV === "production")
+        ? ["https://kaczormaszyny.pl", "https://kaczortransport.pl"]
+        : ["http://localhost:41491", "http://127.0.0.1:5500"];
+    const corsOptions = {
+        origin: function (origin, callback) {
+            if (origin && domainWhitelist.includes(origin)) {
+                callback(null, true);
+            }
+            else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        }
+    };
     app.set('views', path_1.default.join(__dirname, 'views'));
     app.set('view engine', 'ejs');
     app.set('trust proxy', 1);
-    app.use("/", express_1.default.static("static"));
+    app.use("/", express_1.default.static("src/static"));
     app.use("/dashboard", (0, dashboardRoutes_1.dashboardRoutes)());
-    app.use("/api", (0, apiRoutes_1.apiRoutes)());
+    app.use("/api", (0, cors_1.default)(corsOptions), (0, apiRoutes_1.apiRoutes)());
     app.use("/auth", (0, authRoutes_1.authRoutes)());
     app.use("/listings", (0, listingRoutes_1.listingRoutes)());
+    app.use("/fleet", (0, fleetRoutes_1.fleetRoutes)());
     if (process.env.NODE_ENV !== 'test') {
         app.listen(port, () => {
             console.log(`Server is running at: http://localhost:${port}`);

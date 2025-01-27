@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Pojazdów</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="/js/listings/overrideMethod.js"></script>
+</head>
+
+<body>
+    <%- include('../modal.ejs') %>
+    <%- include('../navbar.ejs') %>
+
+    <div class="container-fluid mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Lista Pojazdów</h1>
+            <a href="/fleet/add" class="btn btn-primary">Dodaj nowy pojazd</a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Miniaturka</th>
+                    <th>Model</th>
+                    <th>Ładowność (kg)</th>
+                    <th>DMC (kg)</th>
+                    <th>Długość najazdu (cm)</th>
+                    <th>Maks. wys. ładunku (cm)</th>
+                    <th>Liczba miejsc pasażera</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% vehicles.forEach(function(vehicle) { %>
+                    <tr>
+                        <td><%= vehicle.id %></td>
+                        <td>
+                            <% if (vehicle.imgSrc) { %>
+                                <img src="<%= vehicle.imgSrc %>" alt="Miniaturka" class="img-thumbnail thumbnail-small" width="150px">
+
+                            <% } else { %>
+                                <span>Brak zdjęcia</span>
+                            <% } %>
+                        </td>
+                        <td><%= vehicle.model %></td>
+                        <td><%= vehicle.loadCapacity %></td>
+                        <td><%= vehicle.gvm %></td>
+                        <td><%= vehicle.platformLength %></td>
+                        <td><%= vehicle.maxLoadHeight %></td>
+                        <td><%= vehicle.passengerSeats %></td>
+                        <td>
+                            <a href="/fleet/edit/<%= vehicle.id %>" class="btn btn-warning btn-sm">Edytuj</a>
+                            <form action="/fleet/delete/<%= vehicle.id %>" method="POST" httpMethod="DELETE"
+                                class="mt-1">
+                                <input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
+                                <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

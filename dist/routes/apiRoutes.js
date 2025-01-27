@@ -10,6 +10,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const express_rate_limit_1 = require("express-rate-limit");
 const contact_1 = require("../controllers/api/contact");
 const getListings_1 = require("../controllers/api/getListings");
+const getFleet_1 = require("../controllers/api/getFleet");
 dotenv_1.default.config();
 const contactLimiter = (0, express_rate_limit_1.rateLimit)({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
@@ -29,6 +30,7 @@ function apiRoutes() {
     const router = express_1.default.Router();
     router.post("/contact", contactLimiter, contact_1.contactController);
     router.get("/get-listings", listingsLimiter, getListings_1.getListingsController);
+    router.get("/get-fleet", listingsLimiter, getFleet_1.getFleetController);
     return router;
 }
 exports.apiRoutes = apiRoutes;

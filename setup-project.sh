@@ -2,10 +2,15 @@ rm -rf ~/kaycha/
 mkdir ~/kaycha
 cd ~/kaycha
 
-git init
-git remote add kaycha https://github.com/mduckdev/kaycha.git
-git pull kaycha master
-npm install --omit=dev
+wget https://github.com/mduckdev/kaycha/releases/download/Releases/dist.tar.gz
+tar -xvzf dist.tar.gz
+
+wget https://github.com/mduckdev/kaycha/releases/download/Releases/kaczortransport.pl.tar.gz 
+tar -xvzf kaczortransport.pl.tar.gz 
+
+wget https://github.com/mduckdev/kaycha/releases/download/Releases/kaczormaszyny.pl.tar.gz 
+tar -xvzf kaczormaszyny.pl.tar.gz 
+
 
 if [ -f ~/.env ]
 then
@@ -14,6 +19,11 @@ else
     cp -r ./env.example ./.env
     nano .env
 fi
+
+cp ./dist/package.json ./
+
+npm install 
+
 pm2 delete all
-NODE_ENV=production pm2 start dist/index.js --name kaycha -f --update-env
+export NODE_ENV=production && pm2 start dist/index.js --name kaycha -f --update-env
 pm2 save

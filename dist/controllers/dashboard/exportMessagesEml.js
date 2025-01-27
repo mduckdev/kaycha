@@ -17,34 +17,41 @@ const utils_1 = require("../../utils");
 const path_1 = __importDefault(require("path"));
 const fs_1 = require("fs");
 const archiver_1 = __importDefault(require("archiver"));
+const TransportMessages_1 = require("../../entity/TransportMessages");
+const Message_1 = require("../../entity/Message");
+const data_source_1 = require("../../data-source");
 const exportMessagesEmlController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const selectedMessageIds = req.body.messages;
-    if (!selectedMessageIds || selectedMessageIds.length === 0) {
+    const selectedMessagesObj = req.body.messages;
+    if (!selectedMessagesObj || selectedMessagesObj.length === 0) {
         return res.status(400).json({ error: 'Brak wiadomości do eksportu.' });
     }
+    const transportMessagesIds = selectedMessagesObj.filter((e) => e.src === "kaczortransport.pl").map((e) => e.id);
+    const machinesMessagesIds = selectedMessagesObj.filter((e) => e.src === "kaczormaszyny.pl").map((e) => e.id);
+    const selectedTransportMessages = yield (0, utils_1.getSelectedMessagesFromDatabase)(transportMessagesIds, (yield data_source_1.AppDataSource).getRepository(TransportMessages_1.TransportMessage)).catch(err => { console.error(err); return res.status(500).json({ error: 'Wystąpił błąd podczas pobierania wiadomości z bazy danych.' }); });
+    const selectedMachinesMessages = yield (0, utils_1.getSelectedMessagesFromDatabase)(machinesMessagesIds, (yield data_source_1.AppDataSource).getRepository(Message_1.Message)).catch(err => { console.error(err); return res.status(500).json({ error: 'Wystąpił błąd podczas pobierania wiadomości z bazy danych.' }); });
     const tempDir = path_1.default.join(__dirname, 'temp_eml');
+    if (selectedTransportMessages.length === 0 && selectedMachinesMessages.length === 0) {
+        return res.status(404).json({ error: 'Brak wiadomości o podanych ID.' });
+    }
+    let emlMachinesPromises = [];
+    let emlTransportPromises = [];
     try {
-        // Użyj funkcji getSelectedMessagesFromDatabase z użyciem async/await
-        const selectedMessages = yield (0, utils_1.getSelectedMessagesFromDatabase)(selectedMessageIds);
-        if (selectedMessages.length === 0) {
-            return res.status(404).json({ error: 'Brak wiadomości o podanych ID.' });
-        }
         // Utwórz katalog tymczasowy do zapisywania plików .eml
         yield fs_1.promises.mkdir(tempDir, { recursive: true });
-        // Twórz pliki .eml dla każdej wiadomości
-        const emlPromises = selectedMessages.map((message) => __awaiter(void 0, void 0, void 0, function* () {
-            const emlContent = `Delivered-To: ${message.email}
-Return-Path: <${message.email}>
-From: =?UTF-8?Q?${message.firstName} ${message.lastName}?= <${message.email}>
-To: <test@test.com>
-Subject: Wiadomość od ${message.firstName} ${message.lastName} 
-Date: ${new Date(message.timestamp).toUTCString()}
-Content-Type: text/html; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: pl-PL
-Reply-To: ${message.firstName} ${message.lastName} <${message.email}>
+        if (selectedMachinesMessages) {
+            emlMachinesPromises = selectedMachinesMessages.map((message) => __awaiter(void 0, void 0, void 0, function* () {
+                const emlContent = `Delivered-To: ${message.email}
+        Return-Path: <${message.email}>
+        From: =?UTF-8?Q?${message.firstName} ${message.lastName}?= <${message.email}>
+        To: <test@test.com>
+        Subject: Wiadomość od ${message.firstName} ${message.lastName} 
+        Date: ${new Date(message.timestamp).toUTCString()}
+        Content-Type: text/html; charset=utf-8; format=flowed
+        Content-Transfer-Encoding: 7bit
+        Content-Language: pl-PL
+        Reply-To: ${message.firstName} ${message.lastName} <${message.email}>
 
-<!DOCTYPE html>
+        <!DOCTYPE html>
         <html lang="pl">
         <head>
             <meta charset="UTF-8">
@@ -57,20 +64,20 @@ Reply-To: ${message.firstName} ${message.lastName} <${message.email}>
                     margin: 0;
                     padding: 20px;
                 }
-        
+
                 h2 {
                     color: #007bff;
                 }
-        
+
                 ul {
                     list-style-type: none;
                     padding: 0;
                 }
-        
+
                 li {
                     margin-bottom: 10px;
                 }
-        
+
                 p {
                     margin-top: 0;
                 }
@@ -87,12 +94,77 @@ Reply-To: ${message.firstName} ${message.lastName} <${message.email}>
             <p>${message.message}</p>
         </body>
         </html>`;
-            const fileName = `${tempDir}/message_${Number(message.id)}.eml`;
-            yield fs_1.promises.writeFile(fileName, emlContent);
-            return fileName;
-        }));
+                const fileName = `${tempDir}/message_${Number(message.id)}.eml`;
+                yield fs_1.promises.writeFile(fileName, emlContent);
+                return fileName;
+            }));
+        }
+        if (selectedTransportMessages) {
+            emlTransportPromises = selectedTransportMessages.map((message) => __awaiter(void 0, void 0, void 0, function* () {
+                const emlContent = `Delivered-To: ${message.email}
+                Return-Path: <${message.email}>
+                From: =?UTF-8?Q?${message.firstName} ${message.lastName}?= <${message.email}>
+                To: <test@test.com>
+                Subject: Wiadomość od ${message.firstName} ${message.lastName} 
+                Date: ${new Date(message.timestamp).toUTCString()}
+                Content-Type: text/html; charset=utf-8; format=flowed
+                Content-Transfer-Encoding: 7bit
+                Content-Language: pl-PL
+                Reply-To: ${message.firstName} ${message.lastName} <${message.email}>
+                
+                <!DOCTYPE html>
+                        <html lang="pl">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <style>
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    background-color: #f4f4f4;
+                                    color: #333;
+                                    margin: 0;
+                                    padding: 20px;
+                                }
+                        
+                                h2 {
+                                    color: #007bff;
+                                }
+                        
+                                ul {
+                                    list-style-type: none;
+                                    padding: 0;
+                                }
+                        
+                                li {
+                                    margin-bottom: 10px;
+                                }
+                        
+                                p {
+                                    margin-top: 0;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h2>Dane klienta:</h2>
+                            <ul>
+                                <li>🗄️ Dane klienta: ${message.firstName} ${message.lastName}</li>
+                                <li>☎️ Nr telefonu: ${message.phoneNumber}</li>
+                                <li>📦 Adres załadunku: ${message.loadingAddress}</li>
+                                <li>🚚 Adres rozładunku: ${message.unloadingAddress}</li>
+                            </ul>
+                            <h2>ℹ️ Treść wiadomości:</h2>
+                            <p>${message.message}</p>
+                        </body>
+                        </html>`;
+                const fileName = `${tempDir}/message_${Number(message.id)}.eml`;
+                yield fs_1.promises.writeFile(fileName, emlContent);
+                return fileName;
+            }));
+        }
         // Czekaj na zakończenie wszystkich obietnic .eml
-        const emlFiles = yield Promise.all(emlPromises);
+        const emlMachineFiles = yield Promise.all(emlMachinesPromises);
+        const emlTransportFiles = yield Promise.all(emlTransportPromises);
+        const emlFiles = [...emlMachineFiles, ...emlTransportFiles];
         // Twórz plik ZIP i dodaj pliki .eml
         const archive = (0, archiver_1.default)('zip');
         emlFiles.forEach((emlFile) => {

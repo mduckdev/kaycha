@@ -37,7 +37,6 @@
                         <option value="timestamp">Data</option>
                         <option value="firstName">Imię</option>
                         <option value="lastName">Nazwisko</option>
-                        <!-- Dodaj inne opcje sortowania -->
                     </select>
 
                     <label for="sortDirection">Kierunek sortowania:</label>
@@ -72,18 +71,20 @@
                                 <th>Nazwisko</th>
                                 <th>Numer telefonu</th>
                                 <th>Email</th>
-                                <th>Miejscowość</th>
-                                <th>Ulica</th>
-                                <th>Numer domu/mieszkania</th>
                                 <th>Treść wiadomości</th>
+                                <th>Źródło</th>
                                 <th>Akcje</th>
                             </tr>
                         </thead>
                         <tbody>
+                            
                             <% messages.forEach(message=> { %>
+                                <% 
+                            let messageSource = message.unloadingAddress ? 'kaczortransport.pl' : 'kaczormaszyny.pl'; 
+                            %>
                                 <tr>
                                     <td>
-                                        <input type="checkbox" class="messageCheckbox" data-id="<%= message.id %>" />
+                                        <input type="checkbox" class="messageCheckbox" data-id="<%= message.id %>" data-src="<%= messageSource %>" />
                                     </td>
                                     <td>
                                         <%= new Date(message.timestamp).toLocaleString() %>
@@ -100,22 +101,19 @@
                                     <td>
                                         <%= message.email %>
                                     </td>
-                                    <td>
-                                        <%= message.city %>
-                                    </td>
-                                    <td>
-                                        <%= message.street %>
-                                    </td>
-                                    <td>
-                                        <%= message.homeNumber %>
-                                    </td>
+                                    
                                     <td>
                                         <%= message.message.substring(0,100) %>...
                                     </td>
                                     <td>
-                                        <a href="/dashboard/message-details/<%= message.id %>">Szczegóły</a>
-                                        <button class="delete-button" data-id="<%= message.id %>">Usuń</button>
-                                        <button class="send-button" data-id="<%= message.id %>">Wyślij na
+                                        
+                                        <%= messageSource %>
+                                    </td>
+                                      
+                                    <td>
+                                        <a href="/dashboard/message-details/<%= message.id %>?src=<%= messageSource %>">Szczegóły</a>
+                                        <button class="delete-button" data-id="<%= message.id %>" data-src="<%= messageSource %>">Usuń</button>
+                                        <button class="send-button" data-id="<%= message.id %>" data-src="<%= messageSource %>">Wyślij na
                                             e-mail</button>
 
                                     </td>

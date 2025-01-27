@@ -8,12 +8,14 @@ const Message_1 = require("./entity/Message");
 const Session_1 = require("./entity/Session");
 const ResetEmails_1 = require("./entity/ResetEmails");
 const Listing_1 = require("./entity/Listing");
+const Fleet_1 = require("./entity/Fleet");
+const TransportMessages_1 = require("./entity/TransportMessages");
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "sqlite",
     database: "database.db",
     synchronize: true,
     logging: (process.env.NODE_ENV == "production") ? true : false,
-    entities: [User_1.User, Message_1.Message, Session_1.Session, ResetEmails_1.ResetEmail, Listing_1.Listing],
+    entities: [User_1.User, Message_1.Message, Session_1.Session, ResetEmails_1.ResetEmail, Listing_1.Listing, Fleet_1.FleetVehicle, TransportMessages_1.TransportMessage],
     migrations: [],
     subscribers: [],
 }).initialize().then(x => { return x; }).catch(error => { console.error(error); throw error; });

@@ -12,9 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.messageDetailsController = void 0;
 const data_source_1 = require("../../data-source");
 const Message_1 = require("../../entity/Message");
+const TransportMessages_1 = require("../../entity/TransportMessages");
 const messageDetailsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const messageId = req.params.id;
-    const messageRepository = (yield data_source_1.AppDataSource).getRepository(Message_1.Message);
+    const src = req.query.src;
+    let messageRepository;
+    if (src === "kaczormaszyny.pl") {
+        messageRepository = (yield data_source_1.AppDataSource).getRepository(Message_1.Message);
+    }
+    if (src === "kaczortransport.pl") {
+        messageRepository = (yield data_source_1.AppDataSource).getRepository(TransportMessages_1.TransportMessage);
+    }
+    if (!messageRepository) {
+        return res.status(404).send('Wiadomość o podanym ID nie została znaleziona.');
+    }
     try {
         const messageDetails = yield messageRepository.findOneByOrFail({ id: Number(messageId) });
         res.render('message-details', { message: messageDetails });
