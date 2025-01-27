@@ -8,4 +8,4 @@ coverage
 *cache*
 deploy.py
 *.tar.gz
-./dist/
+dist
