@@ -39,9 +39,11 @@ export function listingRoutes(): Router {
 
     router.put('/add', new listing().put);
 
+    router.post('/edit-preferences', new listing().editPreferences);
+
     router.patch('/edit/:id', new listing().patch);
 
-    router.delete("/delete/:id", new listing().delete)
+    router.delete("/delete/:id", new listing().delete);
 
     return router;
 }

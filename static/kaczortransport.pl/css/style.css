@@ -558,6 +558,7 @@ section#company-info p {
 
 .info-wrapper img {
     width: 50%;
+    border-radius: 7px;
 }
 
 section#company-info iframe {

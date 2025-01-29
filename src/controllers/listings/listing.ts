@@ -3,12 +3,15 @@ import { AppDataSource } from '../../data-source';
 import { User } from '../../entity/User';
 import { Listing } from '../../entity/Listing';
 import { validate } from 'class-validator';
+import { ListingsPreferences } from '../../entity/ListingsPreferences';
 
 export class listing {
     async getIndex(req: Request, res: Response): Promise<void> {
         const listingRepository = (await AppDataSource).getRepository(Listing);
         const listings = await listingRepository.find();
-        res.render('listings/index', { listings, user: req.session.user, csrfToken: req.session.csrfToken });
+        const prefRepository = (await AppDataSource).getRepository(ListingsPreferences);
+        const preferences = await prefRepository.findOne({where:{id:1}});
+        res.render('listings/index', { listings, preferences, user: req.session.user, csrfToken: req.session.csrfToken });
     }
     async getAdd(req: Request, res: Response): Promise<void> {
         res.render('listings/add', { user: req.session.user, csrfToken: req.session.csrfToken });
@@ -65,7 +68,35 @@ export class listing {
         } else {
             res.status(404).json({ success: false, message: 'Nie znaleziono ogłoszenia o podanym ID do usunięcia.' });
         }
+    }
+    async editPreferences(req: Request, res: Response): Promise<void> {
+        try{
+            const {showDashboard,showOtomoto} = req.body;
+            const prefRepository = (await AppDataSource).getRepository(ListingsPreferences);
+            const preferences = await prefRepository.findOne({where:{id:1}});
+            if (!preferences) {
+                res.status(404).json({ success: false, message: "Brak ustawień w bazie" });
+                return
+            }
+            const newShowDashboard = showDashboard==="yes"?true:false;
+            const newShowOtomoto = showOtomoto==="yes"?true:false;
 
+            if (
+                preferences.showDashboard === newShowDashboard &&
+                preferences.showOtomoto === newShowOtomoto
+            ) {
+                res.status(200).json({success: true, message: "Brak zmian" });
+                return 
+            }
+            preferences.showDashboard = newShowDashboard;
+            preferences.showOtomoto = newShowOtomoto;
 
+            await prefRepository.save(preferences);
+
+            res.status(200).json({success: true, message: "Preferencje zaktualizowane" });
+        } catch (error) {
+            console.error("Błąd podczas edycji preferencji:", error);
+            res.status(500).json({ success: false,message: "Wewnętrzny błąd serwera" });
+        }
     }
 }
