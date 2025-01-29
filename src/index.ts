@@ -89,7 +89,7 @@ export const bootstrap = async () => {
 
     app.set('trust proxy', 1)
 
-    app.use("/", express.static((process.env.NODE_ENV === "production") ?"./static/":"src/static"));
+    app.use("/", express.static((process.env.NODE_ENV === "production") ?"dist/static/":"src/static"));
     app.use("/dashboard", dashboardRoutes());
     app.use("/api",cors(corsOptions), apiRoutes());
     app.use("/auth", authRoutes());
