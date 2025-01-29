@@ -24,7 +24,7 @@ const helmet_1 = __importDefault(require("helmet"));
 require("reflect-metadata");
 const apiRoutes_1 = require("./routes/apiRoutes");
 const express_session_1 = __importDefault(require("express-session"));
-const connect_typeorm_1 = require("connect-typeorm");
+const connect_typeorm_1 = require("connect-typeorm"); 
 const Session_1 = require("./entity/Session");
 const authRoutes_1 = require("./routes/authRoutes");
 const listingRoutes_1 = require("./routes/listingRoutes");

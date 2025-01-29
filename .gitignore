@@ -7,5 +7,5 @@ temp*
 coverage
 *cache*
 deploy.py
-*.tar.gz
 dist
+*.tar.gz
