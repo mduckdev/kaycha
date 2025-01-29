@@ -1,3 +1,4 @@
+cp ~/kaycha/database.db ~/
 rm -rf ~/kaycha/
 mkdir ~/kaycha
 cd ~/kaycha
@@ -27,6 +28,8 @@ cp ~/node_modules.tar.gz ./
 tar -xvzf node_modules.tar.gz 
 
 npm install
+
+cp ~/database.db ~/kaycha/
 
 pm2 delete all
 export NODE_ENV=production && pm2 start dist/index.js --name kaycha -f --update-env
