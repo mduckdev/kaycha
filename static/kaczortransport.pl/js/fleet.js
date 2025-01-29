@@ -34,15 +34,29 @@ fetch(`${backendURL}/api/get-fleet`, { method: "GET",mode:"cors" }).then(x => x.
             { key: "loadingSlopeHeight", unit: "cm" },
             { key: "rampLength", unit: "cm" },
             { key: "maxLoadHeight", unit: "cm" },
-            { key: "passengerSeats", unit: "" }
+            { key: "passengerSeats", unit: "" },
+            { key: "additionalInfo", unit: "" }
         ];
         
         textSection.appendChild(title);
         dataFields.forEach(field => {
-            if(item[field.key] && (item[field.key]>0)){
-                const paragraph = document.createElement("p");
-                paragraph.innerText = `${getTranslation(field.key)}: ${item[field.key]} ${field.unit}`.trim();
-                textSection.appendChild(paragraph);
+            if(item[field.key] && (item[field.key] !== 0)){
+                if(field==="additionalInfo"){
+                    const newLines = item[field.key].split("\n");
+                    const paragraph = document.createElement("p");
+                    paragraph.innerText = `${getTranslation(field.key)}:`;
+                    textSection.appendChild(paragraph);
+                    newLines.forEach((line)=>{
+                        const paragraph = document.createElement("p");
+                        paragraph.innerText = line;
+                        textSection.appendChild(paragraph);
+                    })
+                }else{
+                    const paragraph = document.createElement("p");
+                    paragraph.innerText = `${getTranslation(field.key)}: ${item[field.key]} ${field.unit}`.trim();
+                    textSection.appendChild(paragraph);
+                }
+                
             }
             
         });

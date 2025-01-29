@@ -17,6 +17,7 @@ const axios_1 = __importDefault(require("axios"));
 const utils_1 = require("../../utils");
 const data_source_1 = require("../../data-source");
 const Listing_1 = require("../../entity/Listing");
+const ListingsPreferences_1 = require("../../entity/ListingsPreferences");
 const otomotoData = {
     url: "https://www.otomoto.pl/api/open",
     access_token: null,
@@ -24,10 +25,16 @@ const otomotoData = {
 };
 const getListingsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    const listingRepository = (yield data_source_1.AppDataSource).getRepository(Listing_1.Listing);
-    const listings = yield listingRepository.find();
-    const placeholder = listings.map(listing => listing.toResponseObject());
-    if (!otomotoData.access_token || otomotoData.expires < Date.now()) {
+    const listingsPreferencesRepository = (yield data_source_1.AppDataSource).getRepository(ListingsPreferences_1.ListingsPreferences);
+    const preferences = yield listingsPreferencesRepository.findOne({ where: { id: 1 } });
+    const response = [];
+    if (preferences === null || preferences === void 0 ? void 0 : preferences.showDashboard) {
+        const listingRepository = (yield data_source_1.AppDataSource).getRepository(Listing_1.Listing);
+        const listings = yield listingRepository.find();
+        const mapped = listings.map(listing => listing.toResponseObject());
+        response.push(...mapped);
+    }
+    if ((!otomotoData.access_token || otomotoData.expires < Date.now()) && (preferences === null || preferences === void 0 ? void 0 : preferences.showOtomoto)) {
         console.log("Authenticating to otomoto API...");
         const url = otomotoData.url + "/oauth/token";
         const body = new URLSearchParams({
@@ -44,38 +51,39 @@ const getListingsController = (req, res) => __awaiter(void 0, void 0, void 0, fu
             otomotoData.expires = Date.now() + (response.data.expires_in * 1000);
         }
         else {
-            return res.json(placeholder);
+            return res.json(response);
         }
     }
-    const url = otomotoData.url + "/account/adverts";
-    const config = {
-        headers: {
-            Authorization: `Bearer ${otomotoData.access_token}`,
-            "User-Agent": process.env.OTOMOTO_USERNAME,
-            "Content-Type": "application/json"
-        }
-    };
-    const advertsList = yield axios_1.default.get(url, config);
-    if (advertsList.data.results.length == 0) {
-        console.log("No active listings, sending the placeholder");
-        return res.json(placeholder);
-    }
-    const response = [];
-    yield advertsList.data.results.forEach((auction) => __awaiter(void 0, void 0, void 0, function* () {
-        if (auction.status != "active") {
-            return;
-        }
-        const url = otomotoData.url + `/account/adverts/${auction.id}`;
-        const auctionData = yield axios_1.default.get(url, config);
-        const temp = {
-            title: auctionData.data.title,
-            href: auctionData.data.url,
-            price: auctionData.data.params.price["1"],
-            year: 0,
-            imgSrc: auctionData.data.photos["1"][(0, utils_1.randomProperty)(auctionData.data.photos["1"])]
+    if (preferences === null || preferences === void 0 ? void 0 : preferences.showOtomoto) {
+        const url = otomotoData.url + "/account/adverts";
+        const config = {
+            headers: {
+                Authorization: `Bearer ${otomotoData.access_token}`,
+                "User-Agent": process.env.OTOMOTO_USERNAME,
+                "Content-Type": "application/json"
+            }
         };
-        response.push(temp);
-    }));
+        const advertsList = yield axios_1.default.get(url, config);
+        if (advertsList.data.results.length == 0) {
+            console.log("No active listings, sending the placeholder");
+            return res.json(response);
+        }
+        yield advertsList.data.results.forEach((auction) => __awaiter(void 0, void 0, void 0, function* () {
+            if (auction.status != "active") {
+                return;
+            }
+            const url = otomotoData.url + `/account/adverts/${auction.id}`;
+            const auctionData = yield axios_1.default.get(url, config);
+            const temp = {
+                title: auctionData.data.title,
+                href: auctionData.data.url,
+                price: auctionData.data.params.price["1"],
+                year: 0,
+                imgSrc: auctionData.data.photos["1"][(0, utils_1.randomProperty)(auctionData.data.photos["1"])]
+            };
+            response.push(temp);
+        }));
+    }
     return res.json(response);
 });
 exports.getListingsController = getListingsController;

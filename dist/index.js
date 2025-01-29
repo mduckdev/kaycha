@@ -60,7 +60,7 @@ const bootstrap = () => __awaiter(void 0, void 0, void 0, function* () {
                 "script-src": ["'self'", "https://code.jquery.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://*.hcaptcha.com", "https://hcaptcha.com"],
                 "style-src": ["'self'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://*.hcaptcha.com", "https://hcaptcha.com", "https://fonts.googleapis.com"],
                 "font-src": ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
-                "img-src": ["*"],
+                "img-src": ["*", 'self', 'data:'],
                 "frame-src": ["https://*.hcaptcha.com", "https://hcaptcha.com", "https://maps.googleapis.com"],
                 "connect-src": ["'self'", "https://*.hcaptcha.com", "https://hcaptcha.com"]
             }
@@ -82,7 +82,7 @@ const bootstrap = () => __awaiter(void 0, void 0, void 0, function* () {
     app.set('views', path_1.default.join(__dirname, 'views'));
     app.set('view engine', 'ejs');
     app.set('trust proxy', 1);
-    app.use("/", express_1.default.static("src/static"));
+    app.use("/", express_1.default.static((process.env.NODE_ENV === "production") ? "./static/" : "src/static"));
     app.use("/dashboard", (0, dashboardRoutes_1.dashboardRoutes)());
     app.use("/api", (0, cors_1.default)(corsOptions), (0, apiRoutes_1.apiRoutes)());
     app.use("/auth", (0, authRoutes_1.authRoutes)());

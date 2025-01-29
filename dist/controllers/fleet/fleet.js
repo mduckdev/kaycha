@@ -56,6 +56,7 @@ class Fleet {
             newVehicle.maxLoadHeight = Number(req.body.maxLoadHeight);
             newVehicle.passengerSeats = Number(req.body.passengerSeats);
             newVehicle.imgSrc = String(req.body.imgSrc);
+            newVehicle.additionalInfo = String(req.body.additionalInfo);
             const errors = yield (0, class_validator_1.validate)(newVehicle);
             if (errors.length > 0) {
                 res.status(400).json({ errors });
@@ -83,6 +84,7 @@ class Fleet {
                 vehicleToUpdate.maxLoadHeight = Number(req.body.maxLoadHeight);
                 vehicleToUpdate.passengerSeats = Number(req.body.passengerSeats);
                 vehicleToUpdate.imgSrc = String(req.body.imgSrc);
+                vehicleToUpdate.additionalInfo = String(req.body.additionalInfo);
                 const errors = yield (0, class_validator_1.validate)(vehicleToUpdate);
                 if (errors.length > 0) {
                     res.status(400).json({ errors });

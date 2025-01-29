@@ -37,6 +37,7 @@ function listingRoutes() {
     router.get("/edit/:id", new listing_1.listing().getEdit);
     router.get("/add", new listing_1.listing().getAdd);
     router.put('/add', new listing_1.listing().put);
+    router.post('/edit-preferences', new listing_1.listing().editPreferences);
     router.patch('/edit/:id', new listing_1.listing().patch);
     router.delete("/delete/:id", new listing_1.listing().delete);
     return router;

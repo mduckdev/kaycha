@@ -73,6 +73,11 @@ export class FleetVehicle {
   @MaxLength(300)
   imgSrc: string; 
 
+  @Column({ type: 'varchar', length:1000 , nullable:true })
+  @MinLength(0)
+  @MaxLength(1000)
+  additionalInfo: string; 
+
     toResponseObject(): FleetResponseI {
         const {
           id,
@@ -88,7 +93,8 @@ export class FleetVehicle {
           rampLength,
           maxLoadHeight,
           passengerSeats,
-          imgSrc
+          imgSrc,
+          additionalInfo
         } = this;
     
         return {
@@ -105,7 +111,8 @@ export class FleetVehicle {
           rampLength,
           maxLoadHeight,
           passengerSeats,
-          imgSrc
+          imgSrc,
+          additionalInfo
         };
       }
 }

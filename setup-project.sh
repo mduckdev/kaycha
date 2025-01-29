@@ -22,7 +22,11 @@ fi
 
 cp ./dist/package.json ./
 
-npm install 
+cp ~/node_modules.tar.gz ./
+
+tar -xvzf node_modules.tar.gz 
+
+npm install
 
 pm2 delete all
 export NODE_ENV=production && pm2 start dist/index.js --name kaycha -f --update-env

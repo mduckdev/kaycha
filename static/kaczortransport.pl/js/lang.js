@@ -57,7 +57,9 @@ const languages = {
        privacyPolicy: "PRIVACY POLICY",
        loadingAddress:"Loading address:",
        unloadingAddress:"Unloading address:",
-       model:"Model"
+       model:"Model",
+       additionalInfo:"Additional info",
+
    },
    "pl":{
        services:"USŁUGI",
@@ -114,7 +116,8 @@ const languages = {
        privacyPolicy:"POLITYKA PRYWATNOŚCI",
        loadingAddress:"Adres załadunku:",
        unloadingAddress:"Adres rozładunku:",
-       model:"Model"
+       model:"Model",
+       additionalInfo:"Dodatkowe informacje",
    }
 }
 

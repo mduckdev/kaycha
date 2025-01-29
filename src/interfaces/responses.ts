@@ -25,4 +25,5 @@ export interface FleetResponseI {
     maxLoadHeight: number;
     passengerSeats: number;
     imgSrc:string;
+    additionalInfo:string;
   }

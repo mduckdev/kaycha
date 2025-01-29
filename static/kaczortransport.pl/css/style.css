@@ -486,9 +486,7 @@ section#selling img {
 }
 
 #contact-form div#consent-checkbox input {
-    flex-shrink: 0;
-    flex-grow: 0;
-    flex-basis: 15%;
+    width: 25%;
 }
 
 div.iti {

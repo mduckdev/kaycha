@@ -14,7 +14,7 @@ const typeorm_1 = require("typeorm");
 const class_validator_1 = require("class-validator");
 let FleetVehicle = class FleetVehicle {
     toResponseObject() {
-        const { id, model, loadCapacity, gvm, platformLength, flatPartLength, slopeLength, platformWidth, platformHeight, loadingSlopeHeight, rampLength, maxLoadHeight, passengerSeats, imgSrc } = this;
+        const { id, model, loadCapacity, gvm, platformLength, flatPartLength, slopeLength, platformWidth, platformHeight, loadingSlopeHeight, rampLength, maxLoadHeight, passengerSeats, imgSrc, additionalInfo } = this;
         return {
             id,
             model,
@@ -29,7 +29,8 @@ let FleetVehicle = class FleetVehicle {
             rampLength,
             maxLoadHeight,
             passengerSeats,
-            imgSrc
+            imgSrc,
+            additionalInfo
         };
     }
 };
@@ -118,6 +119,12 @@ __decorate([
     (0, class_validator_1.MaxLength)(300),
     __metadata("design:type", String)
 ], FleetVehicle.prototype, "imgSrc", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 1000, nullable: true }),
+    (0, class_validator_1.MinLength)(0),
+    (0, class_validator_1.MaxLength)(1000),
+    __metadata("design:type", String)
+], FleetVehicle.prototype, "additionalInfo", void 0);
 exports.FleetVehicle = FleetVehicle = __decorate([
     (0, typeorm_1.Entity)("Fleet")
 ], FleetVehicle);
