@@ -25,7 +25,7 @@ async function delay(ms: number): Promise<void> {
 }
 const checkForMessages = (async (): Promise<void> => {
     while (true) {
-        await delay(15 * 60 * 1000); // x minutes * 60 seconds * 1000 miliseconds
+        await delay(2 * 60 * 1000); // x minutes * 60 seconds * 1000 miliseconds
         if (newMessages.length == 0) {
             continue;
         } else {

@@ -140,14 +140,25 @@ export const randomProperty = (obj: any): any => {
 };
 
 export const notifyAboutMessages = async (transporter: any, newMessages: (Message|TransportMessage)[]): Promise<void> => {
+    
+   
+    const machineMessages = newMessages.filter(x=>x instanceof Message);
+    const TransportMessages = newMessages.filter(x=>x instanceof TransportMessage);
+
+
+    const plainTextMachineMessages: string[] = [];
+    const plainTextTransportMessages: string[] = [];
+
+    const htmlMachineMessages: string[] = [];
+    const htmlTransportMessages: string[] = [];
     let text = "nowych wiadomości";
-    if (newMessages.length == 1) {
+    if (machineMessages.length == 1) {
         text = "nową wiadomość";
-    } else if (newMessages.length < 5) {
+    } else if (machineMessages.length < 5) {
         text = "nowe wiadomości";
     }
-    const plainTextMessage = `Masz ${newMessages.length} ${text}!`;
-    const htmlMessage = `
+    let plaintextHeader = `Masz ${machineMessages.length} ${text}!`;
+    let htmlHeader = `
     <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -174,16 +185,15 @@ export const notifyAboutMessages = async (transporter: any, newMessages: (Messag
                     margin-top: 0;
                 }
             </style>
-    <h1>ℹ️ Masz ${newMessages.length} ${text}!</h1><br>
+    <h1>ℹ️ Masz ${machineMessages.length} ${text}!</h1><br>
     `;
-    const plainTextMessages: string[] = []
-    const htmlMessages: string[] = []
-    for (let index = 0; index < newMessages.length; index++) {
-        const currentMessage = newMessages[index];
-        let plainTextMessage="Fail";
-        let htmlMessage="Fail";
+    plainTextMachineMessages.push(plaintextHeader);
+    htmlMachineMessages.push(htmlHeader);
+    for (let index = 0; index < machineMessages.length; index++){
+        const currentMessage = machineMessages[index];
+        
         if(currentMessage instanceof Message){
-             plainTextMessage =
+            let plainTextMessage =
             `
             Wiadomość nr ${index + 1}
             Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}
@@ -192,7 +202,7 @@ export const notifyAboutMessages = async (transporter: any, newMessages: (Messag
         Treść wiadomości:
         ${currentMessage.message}
         `;
-         htmlMessage =
+        let htmlMessage =
             `
             <h1>Wiadomość nr ${index + 1}</h1>
             <h2>Dane klienta:</h2>
@@ -204,8 +214,66 @@ export const notifyAboutMessages = async (transporter: any, newMessages: (Messag
             <h2>ℹ️ Treść wiadomości:</h2>
             <p>${currentMessage.message}</p>
     `
-        }else{
-            plainTextMessage=`
+        plainTextMachineMessages.push(plainTextMessage);
+        htmlMachineMessages.push(htmlMessage);
+    }
+}
+let emailObject = {
+    from: `"System powiadomień" <${process.env.EMAIL_USER_ADDRESS}>`, // sender address
+    to: "kontakt@kaczormaszyny.pl", // kontakt@kaczormaszyny.pl
+    subject: `Nowe wiadomości kaczormaszyny.pl`, // Subject line
+    text: (plainTextMachineMessages.join("\n")), // plain text body
+    html: (htmlMachineMessages.join("<br>")), // html body
+};
+
+await transporter.sendMail(emailObject).then((x: any) => {
+    console.log("Pomyślnie wysłano powiadomienie o nowych wiadomościach: kaczormaszyny.pl");
+}).catch((err: any) => { console.error(err); });
+
+
+     text = "nowych wiadomości";
+    if (TransportMessages.length == 1) {
+        text = "nową wiadomość";
+    } else if (TransportMessages.length < 5) {
+        text = "nowe wiadomości";
+    }
+     plaintextHeader = `Masz ${TransportMessages.length} ${text}!`;
+ htmlHeader = `
+<style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+                margin: 0;
+                padding: 20px;
+            }
+    
+            h2 {
+                color: #007bff;
+            }
+    
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+    
+            li {
+                margin-bottom: 10px;
+            }
+    
+            p {
+                margin-top: 0;
+            }
+        </style>
+<h1>ℹ️ Masz ${TransportMessages.length} ${text}!</h1><br>
+`;
+plainTextTransportMessages.push(plaintextHeader);
+htmlTransportMessages.push(htmlHeader);
+    for (let index = 0; index < TransportMessages.length; index++){
+        const currentMessage = TransportMessages[index];
+        
+        if(currentMessage instanceof TransportMessage){
+            let plainTextMessage=`
             Wiadomość nr ${index + 1}
             Dane klienta: ${currentMessage.firstName} ${currentMessage.lastName}
         Nr telefonu: ${currentMessage.phoneNumber}
@@ -214,7 +282,7 @@ export const notifyAboutMessages = async (transporter: any, newMessages: (Messag
         Treść wiadomości:
         ${currentMessage.message}
         `;
-         htmlMessage =
+         let htmlMessage =
             `
             <h1>Wiadomość nr ${index + 1}</h1>
             <h2>Dane klienta:</h2>
@@ -227,22 +295,23 @@ export const notifyAboutMessages = async (transporter: any, newMessages: (Messag
             <h2>ℹ️ Treść wiadomości:</h2>
             <p>${currentMessage.message}</p>
     `
+    plainTextTransportMessages.push(plainTextMessage);
+    htmlTransportMessages.push(htmlMessage);
         }
-        
-        plainTextMessages.push(plainTextMessage);
-        htmlMessages.push(htmlMessage);
     }
-    const emailObject = {
+     emailObject = {
         from: `"System powiadomień" <${process.env.EMAIL_USER_ADDRESS}>`, // sender address
-        to: process.env.EMAIL_DESTINATION, // list of receivers
-        subject: `Masz ${newMessages.length} ${text}`, // Subject line
-        text: (plainTextMessage + plainTextMessages.join("\n")), // plain text body
-        html: (htmlMessage + htmlMessages.join("<br>")), // html body
+        to: "kontakt@kaczortransport.pl", // kontakt@kaczortransport.pl
+        subject: `Nowe wiadomości kaczortransport.pl`, // Subject line
+        text: (plainTextTransportMessages.join("\n")), // plain text body
+        html: (htmlTransportMessages.join("<br>")), // html body
     };
 
     await transporter.sendMail(emailObject).then((x: any) => {
-        console.log("Pomyślnie wysłano powiadomienie o nowych wiadomościach");
+        console.log("Pomyślnie wysłano powiadomienie o nowych wiadomościach: kaczortransport.pl");
     }).catch((err: any) => { console.error(err); });
+
+    
 };
 const generateCSRFToken = (): Promise<string> => {
     return new Promise((resolve, reject) => {

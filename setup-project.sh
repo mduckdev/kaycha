@@ -12,14 +12,8 @@ tar -xvzf kaczortransport.pl.tar.gz
 wget https://github.com/mduckdev/kaycha/releases/download/Releases/kaczormaszyny.pl.tar.gz 
 tar -xvzf kaczormaszyny.pl.tar.gz 
 
+cp ~/.env ./
 
-if [ -f ~/.env ]
-then
-    cp ~/.env ./
-else
-    cp -r ./env.example ./.env
-    nano .env
-fi
 
 cp ./dist/package.json ./
 
@@ -27,7 +21,7 @@ cp ~/node_modules.tar.gz ./
 
 tar -xvzf node_modules.tar.gz 
 
-npm install
+npm install --omit=dev
 
 cp ~/database.db ~/kaycha/
 
